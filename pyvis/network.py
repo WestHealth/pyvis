@@ -31,25 +31,24 @@ class Network(object):
     :type directed: bool
     """
 
-    def __init__(self, height="500px", width="500px", directed=False):
+    def __init__(self, height="500px", width="500px", directed=False, notebook=False):
         self.nodes = []
         self.edges = []
         self.height = height
         self.width = width
         self.html = ""
-        self.shape = 'dot'			# default node shape should be dot
+        self.shape = "dot"			
         self.directed = directed
-        self.use_DOT = False 		# to let jinja know if translating from DOT
-        self.dot_lang = ""			# variable holding string rep of dot format
+        self.use_DOT = False
+        self.dot_lang = ""
         self.options = Options()
         self.widget = False
         self.node_ids = []
         self.template = None
-        if not hasattr(main, "__file__"):
-            # use relative path if in interactive mode from cwd
-            self.path = "templates/template.html"
-        else:
-            self.path = os.path.dirname(__file__) + "/templates/template.html"
+        self.path = os.path.dirname(__file__) + "/templates/template.html"
+        
+        if notebook:
+            self.prep_notebook()
 
     def __str__(self):
         """
@@ -416,9 +415,7 @@ class Network(object):
             webbrowser.open(name)
 
     def prep_notebook(self,
-                      path=os.path.dirname(__file__) +
-                      "/templates/template.html",
-                      custom_template=False):
+                      custom_template=False, custom_template_path=None):
         """
         Loads the template data into the template attribute of the network.
         This should be done in a jupyter notebook environment before showing
@@ -432,19 +429,13 @@ class Network(object):
         :param path: the relative path pointing to a template html file
         :type path: string
         """
-        if custom_template:
-            self.set_template(path)
-        if not os.path.exists("out/"):
-            os.makedirs("out/")
-        with open(path) as html:
+        if custom_template and custom_template_path:
+            self.set_template(custom_template_path)
+        with open(self.path) as html:
             content = html.read()
         self.template = Template(content)
-        self.path = path
 
     def set_template(self, path_to_template):
-        # TODO: re-check this code
-        # with open(path_to_template) as html:
-        #     content = html.read()
         self.path = path_to_template
 
     def from_DOT(self, dot):
