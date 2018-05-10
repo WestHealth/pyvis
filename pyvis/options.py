@@ -1,5 +1,7 @@
-from physics import *
-
+try:
+    from physics import *
+except:
+    from .physics import *
 
 class EdgeOptions(object):
 

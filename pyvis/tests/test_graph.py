@@ -40,8 +40,8 @@ class NodeTestCase(unittest.TestCase):
         self.g.add_node(1, "n2")
         self.g.add_node(2, "n3")
         self.g.add_node(3, "n4")
-        self.assertEqual(map(lambda s: s["label"], self.g.nodes), [
-                         "n2", "n3", "n4"])
+        self.assertEqual(set(map(lambda s: s["label"], self.g.nodes)),
+                         set(["n2", "n3", "n4"]))
 
     def test_node_titles(self):
         self.g.add_nodes(range(10))
@@ -50,7 +50,7 @@ class NodeTestCase(unittest.TestCase):
             n["title"] = "node #" + str(n["id"])
 
         ref = ["node #" + str(i) for i in range(10)]
-        self.assertEqual(map(lambda s: s["title"], self.g.nodes), ref)
+        self.assertEqual(set(map(lambda s: s["title"], self.g.nodes)), set(ref))
 
     def test_node_sizes(self):
         self.g.add_nodes(range(10))
@@ -59,7 +59,7 @@ class NodeTestCase(unittest.TestCase):
             n["size"] = n["id"] * 2
 
         ref = [i * 2 for i in range(10)]
-        self.assertEqual(map(lambda s: s["size"], self.g.nodes), ref)
+        self.assertEqual(set(map(lambda s: s["size"], self.g.nodes)), set(ref))
 
     def test_adding_nodes(self):
         g = self.g
@@ -176,8 +176,8 @@ class EdgeTestCase(unittest.TestCase):
         for edges in self.g.edges:
             self.assertTrue("width" in edges)
         self.assertEqual(
-            [1, 2, 3, 4, 5, 6],
-            map(lambda x: x["width"], self.g.edges))
+            list([1, 2, 3, 4, 5, 6]),
+            list(map(lambda x: x["width"], self.g.edges)))
 
     def test_add_edges_mixed_weights(self):
         self.g.add_edges(
@@ -192,8 +192,8 @@ class EdgeTestCase(unittest.TestCase):
         self.assertEqual(self.g.neighbors(2), set([0, 1, 3]))
         self.assertEqual(self.g.neighbors(3), set([0, 1, 2]))
         self.assertEqual(
-            [1, None, 3, None, 5, None],
-            map(lambda x: x.get("width", None), self.g.edges))
+            list([1, None, 3, None, 5, None]),
+            list(map(lambda x: x.get("width", None), self.g.edges)))
 
     def test_add_edge_directed(self):
         self.g.directed = True

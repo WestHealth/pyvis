@@ -219,7 +219,7 @@ class Network(object):
 
         nd = defaultdict(dict)
         for i in range(len(nodes)):
-            for k, v in kwargs.iteritems():
+            for k, v in kwargs.items():
                 assert(
                     len(v) == len(nodes)
                 ), "keyword arg %s [length %s] does not match" \
