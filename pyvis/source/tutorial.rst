@@ -165,7 +165,7 @@ If you want to try out the above code, the csv data source can be found :downloa
 
 
 Using pyviz within `Jupyter <https://jupyter.org>`_ notebook
------------------------------------------------------------
+------------------------------------------------------------
 
 Pyviz supports `Jupyter <https://jupyter.org>`_ notebook embedding through the
 use of the

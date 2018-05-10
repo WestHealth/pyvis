@@ -504,7 +504,7 @@ class Network(object):
         assert(node in self.node_ids), "error: %s node not in network" % node
         return self.get_adj_list()[node]
 
-    def from_nx(self, nx_graph, threshold=40):
+    def from_nx(self, nx_graph):
         """
         This method takes an exisitng Networkx graph and translates
         it to a PyVis graph format that can be accepted by the VisJs
@@ -539,7 +539,7 @@ class Network(object):
 
     def get_edges(self):
         """
-        This method returns an iterable list of edges
+        This method returns an iterable list of edge objects
 
         :returns: list
         """
