@@ -1,0 +1,80 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork1 {
+            width: 100%;
+            height: 300px;
+            border: 1px solid lightgray;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id = "mynetwork1"></div>
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork1');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = [{'title': 'I am node 1', 'color': '#00ff1e', 'value': 10, 'label': 'NODE 1', 'shape': 'dot', 'y': 100.2, 'x': 21.4, 'id': 1}, {'title': 'node 2 here', 'color': '#162347', 'value': 100, 'label': 'NODE 2', 'shape': 'dot', 'y': 23.54, 'x': 54.2, 'id': 2}, {'title': 'and im node 3', 'color': '#dd4b39', 'value': 400, 'label': 'NODE 3', 'shape': 'dot', 'y': 32.1, 'x': 11.2, 'id': 3}];
+        edges = [];
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    }, 
+    "edges": {
+        "color": {
+            "inherit": true
+        }, 
+        "smooth": {
+            "enabled": false, 
+            "type": "continuous"
+        }
+    }, 
+    "interaction": {}, 
+    "physics": {
+        "enabled": true
+    }
+};
+        
+        
+
+        // default to using dot shape for nodes
+        options.nodes = {
+            shape: "dot"
+        }
+
+        network = new vis.Network(container, data, options);
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

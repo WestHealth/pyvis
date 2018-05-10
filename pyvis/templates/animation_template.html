@@ -1,0 +1,144 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+   		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+		<style type="text/css">
+		        #mynetwork {
+		            width: {{width}};
+		            height: {{height}};
+		            border: 1px solid lightgray;
+		        }
+		</style>
+</head>
+
+<body>
+<div id="mynetwork"></div>
+
+
+<button onclick="getNextData()">Next Data!</button>
+
+
+<input type="button" onclick="addNextData()" value="add node dynamically"> <br />
+
+
+<script type="text/javascript">
+	var row_index = 0;
+	function addNextData() {
+		console.log(row_index);
+		row_index++;
+		document.button_form.row.value = row_index;
+	}
+
+</script>
+
+<script type="text/javascript">
+
+    var edges;
+    var network; 
+    var container;
+    var options, data;
+    var edge_ids; 
+
+    function drawGraph() {
+
+        var container = document.getElementById('mynetwork');
+
+
+
+        {% if use_DOT %}
+        alert("using DOT");
+        var DOTstring = "{{dot_lang|safe}}";
+        var parsedData = vis.network.convertDot(DOTstring);
+
+        data = {
+          nodes: parsedData.nodes,
+          edges: parsedData.edges
+        }
+
+
+
+        var options = parsedData.options;
+
+        options.nodes = {
+            shape: "dot"
+        }
+
+
+
+        {% else %}
+        
+
+        var nodes = {{nodes|safe}};
+
+        edges = {{edges|safe}};
+
+        var e_values = [];
+
+
+        console.log("edges: " + e_values);
+
+        data = {nodes: nodes, edges: edges};
+        var options = {{options|safe}};
+
+        {% endif %}
+
+        {% if widget %}
+        var widgetFn = function(option, path) {
+                        if(path.indexOf('nodes') !== -1 && option == 'size') {
+                            return true;
+                        }
+                        return false;
+                    };   
+
+        options.configure.filter = widgetFn;
+        {% endif %}
+
+
+
+        network = new vis.Network(container, data, options);
+        return network;
+
+    }
+
+
+    function getEdges() {
+        old_edges = {};
+        for (var i = 0; i < edges.length; i++) {
+            old_edges[i] = edges[i]["width"];
+        }
+        return old_edges;
+    }
+
+    function outputUpdate(vol) {
+        document.querySelector('#volume').value = vol;
+        updateEdges(vol);
+    }
+
+    function updateEdges(vol) {
+        //console.log("Updating edges based off original widths of " + JSON.stringify(edge_ids));
+        for (var i = 0; i < edges.length; i++) {
+            
+            var originalVal = old_edges[i];
+            //console.log("original value: " + originalVal);
+            edges[i]["width"] = originalVal + ((vol/10) * originalVal);
+            //console.log("new edge width: " + edges[i]["width"]);
+
+        }
+
+        data.edges = edges;
+        //console.log(data);
+        network.setData(data);
+    }
+
+    new_network = drawGraph();
+    old_edges = getEdges();
+
+
+    
+</script>
+
+
+
+</body>
+</html>
