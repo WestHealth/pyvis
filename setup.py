@@ -4,7 +4,7 @@ setup(
     name="pyvis",
     version="0.1.1",
     description="A Python network visualization library",
-    url="someurl (eventually)",
+    url="https://github.com/WestHealth/pyvis",
     author="Giancarlo Perrone",
     author_email="gperrone@westhealth.org",
     license="BSD",
