@@ -4,8 +4,7 @@
 Pyvis is built around [visjs](http://visjs.org/), a JavaScript visualization library.
 
 ## Documentation
-Pyvis' full documentation can be found at http://something.foo
-
+Pyvis' full documentation can be found at http://pyvis.readthedocs.io/en/latest/
 ## Installation
 You can install pyvis through pip:
 
