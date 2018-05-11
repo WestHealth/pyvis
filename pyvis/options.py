@@ -1,4 +1,4 @@
-from pyvis.physics import *
+from .physics import *
 
 class EdgeOptions(object):
 

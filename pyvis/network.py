@@ -1,7 +1,7 @@
-from pyvis.node import Node
-from pyvis.edge import Edge
-from pyvis.options import Options
-from pyvis.utils import check_html
+from .node import Node
+from .edge import Edge
+from .options import Options
+from .utils import check_html
 from jinja2 import Template
 import webbrowser
 from IPython.display import IFrame
