@@ -297,7 +297,6 @@ class Network(object):
         :type value: num
         :type width: num
         """
-        directed = self.directed
         edge_exists = False
 
         # verify nodes exists
@@ -318,7 +317,7 @@ class Network(object):
                 edge_exists = True
 
         if not edge_exists:
-            e = Edge(source, to, directed, **options)
+            e = Edge(source, to, self.directed, **options)
             self.edges.append(e.options)
 
     def add_edges(self, edges):
@@ -334,6 +333,7 @@ class Network(object):
         :type arrowStrikethrough: list of tuples
         """
         for edge in edges:
+            # if incoming tuple contains a weight
             if len(edge) == 3:
                 self.add_edge(edge[0], edge[1], width=edge[2])
             else:
