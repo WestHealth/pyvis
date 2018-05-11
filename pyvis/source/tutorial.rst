@@ -8,12 +8,6 @@ Javascript visJS library found at this link_.
 
 .. _link: http://visjs.org/network_examples.html
 
-.. image:: net.png
-    :width: 30%
-.. image:: net2.png
-    :width: 30%
-.. image:: net3.png
-	:width: 30%
 
 
 Getting started
