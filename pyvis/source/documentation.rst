@@ -2,7 +2,5 @@
 Documentation
 =============
 
-.. automodule:: network
-	:members:
-.. autoclass:: Network
+.. automodule:: pyvis.network
 	:members:
