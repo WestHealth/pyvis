@@ -9,7 +9,6 @@ from collections import defaultdict
 import networkx as nx
 import json
 import os
-import __main__ as main
 
 
 class Network(object):
