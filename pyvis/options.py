@@ -41,9 +41,9 @@ class EdgeOptions(object):
 class Interaction(object):
 
     def __init__(self):
-        self.hide_edges_on_drag = False
-        self.hide_nodes_on_drag = False
-        self.drag_nodes = True
+        self.hideEdgesOnDrag = False
+        self.hideNodesOnDrag = False
+        self.dragNodes = True
 
     def __getitem__(self, item):
         return self.__dict__[item]

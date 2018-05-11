@@ -522,8 +522,8 @@ class Network(object):
         nodes = nx_graph.nodes()
         if len(edges) > 0:
             for e in edges:
-                self.add_node(e[0], e[0])
-                self.add_node(e[1], e[1])
+                self.add_node(e[0], e[0], title=e[0])
+                self.add_node(e[1], e[1], title=e[1])
                 self.add_edge(e[0], e[1])
         else:
             self.add_nodes(nodes)
@@ -591,7 +591,7 @@ class Network(object):
         Displays or hides edges while dragging the network. This makes
         panning of the network easy.
         """
-        self.options.interaction.hide_edges_on_drag = status
+        self.options.interaction.hideEdgesOnDrag = status
 
     def toggle_hide_nodes_on_drag(self, status):
         """
@@ -603,7 +603,7 @@ class Network(object):
 
         :type status: bool
         """
-        self.options.interaction.hide_nodes_on_drag = status
+        self.options.interaction.hideNodesOnDrag = status
 
     def inherit_edge_colors_from(self, status):
         self.options.edges.inherit_colors(status)
@@ -642,7 +642,7 @@ class Network(object):
 
         :type status: bool
         """
-        self.options.interaction.drag_nodes = status
+        self.options.interaction.dragNodes = status
 
     def toggle_stabilization(self, status):
         """
