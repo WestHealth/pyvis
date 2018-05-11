@@ -1,7 +1,4 @@
-try:
-    from physics import *
-except:
-    from .physics import *
+from pyvis.physics import *
 
 class EdgeOptions(object):
 
