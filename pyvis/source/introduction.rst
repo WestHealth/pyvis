@@ -2,7 +2,12 @@
 Introduction
 ============
 
-Pyvis is built around the VisJS_ library and serves to be a simple way of creating graph data structures and visualizing
-them in a single space.
+The goal of this project is to build a python based approach to constructing and visualizing
+network graphs in the same space. A pyvis network can be customized on a per node or per edge
+basis. Nodes can be given colors, sizes, labels, and other metadata. Each graph can be interacted
+with, allowing the dragging, hovering, and selection of nodes and edges. Each graph's layout
+algorith mcan be tweaked as well to allow experimentation with rendering of larger graphs.
+
+Pyvis is built around the amazing VisJS_ library.
 
 .. _VisJS: http://visjs.org/network_examples.html

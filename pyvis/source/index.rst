@@ -6,6 +6,9 @@
 .. image:: net3.png
 	:width: 30%
 
+Interactive network visualizations
+==================================
+.. image:: tut.gif
 
 Contents:
 =========
