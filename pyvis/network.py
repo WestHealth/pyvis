@@ -57,7 +57,6 @@ class Network(object):
         if notebook:
             self.prep_notebook()
             
-
     def __str__(self):
         """
         override print to show readable graph data
