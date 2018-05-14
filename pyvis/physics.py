@@ -7,6 +7,9 @@ class Physics(object):
 
     def __getitem__(self, item):
         return self.__dict__[item]
+    
+    def __repr__(self):
+        return str(self.__dict__)
 
     class barnesHut(object):
         """

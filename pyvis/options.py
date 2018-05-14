@@ -2,6 +2,19 @@ from .physics import *
 
 class EdgeOptions(object):
 
+    def __init__(self):
+        self.smooth = self.Smooth()
+        self.color = self.Color()
+
+    def inherit_colors(self, status):
+        self.color.inherit = status
+
+    def toggle_smoothness(self, smooth_type):
+        self.smooth.type = smooth_type
+
+    def __repr__(self):
+        return str(self.__dict__)
+
     class Smooth(object):
         """
         When the edges are made to be smooth, the edges are drawn as a
@@ -13,6 +26,9 @@ class EdgeOptions(object):
         of edges, another kind of smooth than dynamic would be better for
         performance.
         """
+        def __repr__(self):
+            return str(self.__dict__)
+
         def __init__(self):
             self.enabled = False
             self.type = "continuous"
@@ -24,21 +40,17 @@ class EdgeOptions(object):
         like 'rgb(120,32,14)', '#ffffff' or 'red' can be supplied instead
         of an object.
         """
+        def __repr__(self):
+            return str(self.__dict__)
+
         def __init__(self):
             self.inherit = True
 
-    def __init__(self):
-        self.smooth = self.Smooth()
-        self.color = self.Color()
-
-    def inherit_colors(self, status):
-        self.color.inherit = status
-
-    def toggle_smoothness(self, smooth_type):
-        self.smooth.type = smooth_type
-
-
+    
 class Interaction(object):
+
+    def __repr__(self):
+        return str(self.__dict__)
 
     def __init__(self):
         self.hideEdgesOnDrag = False
@@ -51,6 +63,9 @@ class Interaction(object):
 
 class Configure(object):
 
+    def __repr__(self):
+        return str(self.__dict__)
+
     def __init__(self):
         self.enabled = False
 
@@ -60,6 +75,9 @@ class Configure(object):
 
 
 class Options(object):
+
+    def __repr__(self):
+        return str(self.__dict__)
 
     def __init__(self):
         # self.layout = Layout()
