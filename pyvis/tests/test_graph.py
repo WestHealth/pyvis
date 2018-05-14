@@ -260,19 +260,19 @@ class InteractionTestCase(unittest.TestCase):
         self.g.add_nodes([0, 1, 2, 3])
 
     def test_toggle_drag_nodes(self):
-        self.assertTrue(self.g.options.interaction['drag_nodes'])
+        self.assertTrue(self.g.options.interaction['dragNodes'])
         self.g.toggle_drag_nodes(False)
-        self.assertFalse(self.g.options.interaction['drag_nodes'])
+        self.assertFalse(self.g.options.interaction['dragNodes'])
 
     def test_toggle_hide_edges_on_drag(self):
-        self.assertFalse(self.g.options.interaction['hide_edges_on_drag'])
+        self.assertFalse(self.g.options.interaction['hideEdgesOnDrag'])
         self.g.toggle_hide_edges_on_drag(True)
-        self.assertTrue(self.g.options.interaction['hide_edges_on_drag'])
+        self.assertTrue(self.g.options.interaction['hideEdgesOnDrag'])
 
     def test_toggle_hide_nodes_on_drag(self):
-        self.assertFalse(self.g.options.interaction['hide_nodes_on_drag'])
+        self.assertFalse(self.g.options.interaction['hideNodesOnDrag'])
         self.g.toggle_hide_nodes_on_drag(True)
-        self.assertTrue(self.g.options.interaction['hide_nodes_on_drag'])
+        self.assertTrue(self.g.options.interaction['hideNodesOnDrag'])
 
 
 class ConfigureTestCase(unittest.TestCase):

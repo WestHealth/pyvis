@@ -30,13 +30,20 @@ class Network(object):
     :type directed: bool
     """
 
-    def __init__(self, height="500px", width="500px", directed=False, notebook=False, bgcolor="#ffffff"):
+    def __init__(self,
+                 height="500px",
+                 width="500px",
+                 directed=False,
+                 notebook=False,
+                 bgcolor="#ffffff",
+                 font_color=False):
         self.nodes = []
         self.edges = []
         self.height = height
         self.width = width
         self.html = ""
-        self.shape = "dot"			
+        self.shape = "dot"
+        self.font_color = font_color
         self.directed = directed
         self.bgcolor = bgcolor
         self.use_DOT = False
@@ -49,6 +56,7 @@ class Network(object):
         
         if notebook:
             self.prep_notebook()
+            
 
     def __str__(self):
         """
@@ -185,7 +193,7 @@ class Network(object):
         else:
             node_label = n_id
         if n_id not in self.node_ids:
-            n = Node(n_id, shape, label=node_label, **options)
+            n = Node(n_id, shape, label=node_label, font_color=self.font_color, **options)
             self.nodes.append(n.options)
             self.node_ids.append(n_id)
 
