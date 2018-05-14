@@ -15,6 +15,6 @@ and run the following in the top-level directory:
 
 .. code-block:: bash
 
-    $ pip install .
+    $ python setup.py install
 
-.. _here: https://bitbucket.whidsc.net/projects/VIS/repos/pyvis/browse/pyvis
+.. _here: https://github.com/WestHealth/pyvis/

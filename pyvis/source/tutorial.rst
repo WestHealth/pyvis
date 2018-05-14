@@ -14,12 +14,11 @@ Getting started
 ---------------
 All networks must be instantiated as a Network class instance
 
->>> from pyvis import network as nt
->>> net = nt.Network()
+>>> from pyvis.network import Network
+>>> net = Network()
 
 Add nodes to the network
-------------------------
->>> net.add_node(0, label="Node 0")
+------------------------ 
 >>> net.add_node(1, label="Node 1") # node id = 1 and label = Node 1
 >>> net.add_node(2) # node id and label = 2
 
@@ -32,7 +31,10 @@ the node id will be used as a label.
 Or add a list of nodes
 
 >>> nodes = ["a", "b", "c", "d"]
->>> net.add_nodes(nodes)
+>>> net.add_nodes(nodes) # node ids and labels = ["a", "b", "c", "d"]
+>>> net.add_nodes("hello") # node ids and labels = ["h", "e", "l", "o"]
+
+.. note:: :meth:`network.Network.add_nodes` accepts any iterable as long as the contents are strings or numerics 
 
 Node properties
 ---------------
@@ -88,11 +90,11 @@ An easy way  to visualize and construct pyvis networks is to use `networkx
 <https://networkx.github.io>`_ and use pyvis's built-in networkx helper
 function to translate the graph.
 
->>> from pyvis import network as net
+>>> from pyvis.network import Network
 >>> import networkx as nx
->>> G = nx.complete_graph(10)
->>> nxg = net.Network()
->>> nxg.from_nx(G)
+>>> nxg = nx.complete_graph(10)
+>>> G = Network()
+>>> G.from_nx(nxg)
 
 .. note:: This method does not respect any properties nodes and edges may have on the networkx instance. Properties would need to reassigned through the pyvis layer.
 
@@ -114,10 +116,10 @@ The following code block is a minimal example of the capabilities of pyvis.
 
 .. code-block:: python
 
-    from pyvis import network as net
+    from pyvis.network import Network
     import pandas as pd
 
-    got_net = net.Network(height="100%", width="100%")
+    got_net = Network(height="100%", width="100%")
 
     # set the physics layout of the network
     got_net.barnes_hut()
@@ -162,10 +164,9 @@ Using pyviz within `Jupyter <https://jupyter.org>`_ notebook
 ------------------------------------------------------------
 
 Pyviz supports `Jupyter <https://jupyter.org>`_ notebook embedding through the
-use of the
-:meth:`network.Network.prep_notebook` method.  The network instance must be
-"prepped" prior to visualization through the use of
-:meth:`network.Network.prep_notebook` and :meth:`network.Network.show`.
+use of the 
+:meth:`network.Network` contructor.  The network instance must be
+"prepped" during instantiation by supplying the `notebook=True` kwarg.
 Example:
 
 .. image:: jup.png
