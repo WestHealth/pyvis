@@ -152,7 +152,7 @@ The following code block is a minimal example of the capabilities of pyvis.
     got_net.show(name="gameofthrones.html")
 
     
-If you want to try out the above code, the csv data source can be found :download:`here <stormofswords.csv>`
+If you want to try out the above code, the csv data source can be found `here <https://www.macalester.edu/~abeverid/data/stormofswords.csv>`_
 
 .. note:: The ``title`` attribute of each node is responsible for rendering data on node hover.
 
