@@ -30,7 +30,7 @@ class Network(object):
     :type directed: bool
     """
 
-    def __init__(self, height="500px", width="500px", directed=False, notebook=False):
+    def __init__(self, height="500px", width="500px", directed=False, notebook=False, bgcolor="#ffffff"):
         self.nodes = []
         self.edges = []
         self.height = height
@@ -38,6 +38,7 @@ class Network(object):
         self.html = ""
         self.shape = "dot"			
         self.directed = directed
+        self.bgcolor = bgcolor
         self.use_DOT = False
         self.dot_lang = ""
         self.options = Options()
@@ -391,7 +392,8 @@ class Network(object):
                                     options=options,
                                     use_DOT=self.use_DOT,
                                     dot_lang=self.dot_lang,
-                                    widget=self.widget)
+                                    widget=self.widget,
+                                    bgcolor=self.bgcolor)
 
         with open(name, "w+") as out:
             out.write(self.html)
