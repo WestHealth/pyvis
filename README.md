@@ -1,5 +1,7 @@
 ## Pyvis - a Python library for visualizing networks
 
+![](pyvis/source/tut.gif?raw=true)
+
 ## Description
 Pyvis is built around [visjs](http://visjs.org/), a JavaScript visualization library.
 
