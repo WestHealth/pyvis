@@ -553,25 +553,55 @@ class Network(object):
         """
         return self.edges
 
-    def barnes_hut(self):
+    def barnes_hut(
+        self,
+        gravity=-80000,
+        central_gravity=0.3,
+        spring_length=250,
+        spring_strength=0.001,
+        damping=0.09,
+        overlap=0
+    ):
         """
         BarnesHut is a quadtree based gravity model. It is the fastest. default
         and recommended solver for non-heirarchical layouts.
         """
-        self.options.physics.use_barnes_hut()
+        self.options.physics.use_barnes_hut(locals())
 
-    def repulsion(self):
+    def repulsion(
+        self,
+        node_distance=100,
+        central_gravity=0.2,
+        spring_length=200,
+        spring_strength=0.05,
+        damping=0.09
+    ):
         """
         Set the physics attribute of the entire network to repulsion.
         When called, it sets the solver attribute of physics to repulsion.
         """
-        self.options.physics.use_repulsion()
+        self.options.physics.use_repulsion(locals())
 
-    def hrepulsion(self):
-        self.options.physics.use_hrepulsion()
+    def hrepulsion(
+        self,
+        node_distance=120,
+        central_gravity=0.0,
+        spring_length=100,
+        spring_strength=0.01,
+        damping=0.09
+    ):
+        self.options.physics.use_hrepulsion(locals())
 
-    def force_atlas_2based(self):
-        self.options.physics.use_force_atlas_2based()
+    def force_atlas_2based(
+        self,
+        gravity=-50,
+        central_gravity=0.01,
+        spring_length=100,
+        spring_strength=0.08,
+        damping=0.4,
+        overlap=0
+    ):
+        self.options.physics.use_force_atlas_2based(locals())
 
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__,
@@ -592,7 +622,7 @@ class Network(object):
 
         :type smooth_type: string
         """
-
+        self.options.edges.smooth.enabled = True
         self.options.edges.smooth.type = smooth_type
 
     def toggle_hide_edges_on_drag(self, status):
