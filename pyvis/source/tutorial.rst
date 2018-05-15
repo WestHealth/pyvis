@@ -104,9 +104,9 @@ The displaying of a graph is achieved by a single method call on :meth:`network.
 The visual is presented as a static html file and is interactive.
 
 >>> net.enable_physics(True)
->>> net.show()
+>>> net.show("mygraph.html")
 
-.. note:: Triggering the :meth:`enable_physics` method allows for more fluid graph interactions 
+.. note:: Triggering the :meth:`toggle_physics` method allows for more fluid graph interactions 
 
 Example: Visualizing a Game of Thrones character network
 --------------------------------------------------------
@@ -158,6 +158,16 @@ If you want to try out the above code, the csv data source can be `downloaded <h
 .. raw:: html
 	:file: gameofthrones.html
 
+Using the configuration UI to dynamically tweak Network settings
+----------------------------------------------------------------
+You also have the option of supplying your visualization with a 
+UI used to dynamically alter some of the settings pertaining to
+your network. This could be useful for finding the most optimal
+parameters to your graph's physics and layout function.
+
+>>> net.show_buttons(filter_=['physics'])
+
+.. image:: buttons.gif
 
 Using pyviz within `Jupyter <https://jupyter.org>`_ notebook
 ------------------------------------------------------------
