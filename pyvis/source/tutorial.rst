@@ -86,9 +86,8 @@ Edges can be customized and documentation on options can be found at :meth:`netw
 `Networkx <https://networkx.github.io/>`_ integration
 ------------------------------------------------------
 
-An easy way  to visualize and construct pyvis networks is to use `networkx
-<https://networkx.github.io>`_ and use pyvis's built-in networkx helper
-function to translate the graph.
+An easy way  to visualize and construct pyvis networks is to use networkx and use pyvis's built-in networkx helper
+method to translate the graph.
 
 >>> from pyvis.network import Network
 >>> import networkx as nx
@@ -119,7 +118,7 @@ The following code block is a minimal example of the capabilities of pyvis.
     from pyvis.network import Network
     import pandas as pd
 
-    got_net = Network(height="100%", width="100%")
+    got_net = Network(height="750px", width="100%". bgcolor="#222222", font_color="white")
 
     # set the physics layout of the network
     got_net.barnes_hut()
@@ -146,13 +145,13 @@ The following code block is a minimal example of the capabilities of pyvis.
 
     # add neighbor data to node hover data
     for node in got_net.nodes:
-        node["title"] += "<br>Neighbors: " + str(neighbor_map[node["id"]])
+        node["title"] += " Neighbors:<br>" + "<br>".join(neighbor_map[node["id"]])
         node["value"] = len(neighbor_map[node["id"]])
 
-    got_net.show(name="gameofthrones.html")
+    got_net.show("gameofthrones.html")
 
     
-If you want to try out the above code, the csv data source can be found `here <https://www.macalester.edu/~abeverid/data/stormofswords.csv>`_
+If you want to try out the above code, the csv data source can be `downloaded <https://www.macalester.edu/~abeverid/data/stormofswords.csv>`_
 
 .. note:: The ``title`` attribute of each node is responsible for rendering data on node hover.
 
