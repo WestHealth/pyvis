@@ -1,6 +1,6 @@
 from .node import Node
 from .edge import Edge
-from .options import Options
+from .options import Options, Configure
 from .utils import check_html
 from jinja2 import Template
 import webbrowser
@@ -52,6 +52,7 @@ class Network(object):
         self.widget = False
         self.node_ids = []
         self.template = None
+        self.conf = False
         self.path = os.path.dirname(__file__) + "/templates/template.html"
         
         if notebook:
@@ -400,7 +401,8 @@ class Network(object):
                                     use_DOT=self.use_DOT,
                                     dot_lang=self.dot_lang,
                                     widget=self.widget,
-                                    bgcolor=self.bgcolor)
+                                    bgcolor=self.bgcolor,
+                                    conf=self.conf)
 
         with open(name, "w+") as out:
             out.write(self.html)
@@ -647,7 +649,7 @@ class Network(object):
     def inherit_edge_colors_from(self, status):
         self.options.edges.inherit_colors(status)
 
-    def toggle_buttons(self, status):
+    def toggle_buttons(self, status, filter_=None):
         """
         Displays or hides certain widgets to dynamically modify the
         network.
@@ -657,7 +659,9 @@ class Network(object):
 
         :type status: bool
         """
-        self.options.configure.enabled = status
+        if status:
+            self.conf = True
+        self.options.configure = Configure(enabled=status, filter_=filter_)        
         self.widget = status
 
     def toggle_physics(self, status):
