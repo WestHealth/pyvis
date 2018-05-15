@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pyvis",
-    version="0.1.2.2",
+    version="0.1.3",
     description="A Python network visualization library",
     url="https://github.com/WestHealth/pyvis",
     author="Giancarlo Perrone",
