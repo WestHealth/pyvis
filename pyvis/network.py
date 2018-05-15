@@ -1,6 +1,6 @@
 from .node import Node
 from .edge import Edge
-from .options import Options
+from .options import Options, Configure
 from .utils import check_html
 from jinja2 import Template
 import webbrowser
@@ -18,16 +18,7 @@ class Network(object):
 
     To instantiate:
 
-    >>> nt = Network("500px", "500px")
-
-    :param height: The height of the canvas
-    :param width: The width of the canvas
-    :param directed: Whether or not to use a directed graph. This is false
-                     by default.
-
-    :type height: num or str
-    :type width: num or str
-    :type directed: bool
+    >>> nt = Network()
     """
 
     def __init__(self,
@@ -37,6 +28,22 @@ class Network(object):
                  notebook=False,
                  bgcolor="#ffffff",
                  font_color=False):
+        """
+        :param height: The height of the canvas
+        :param width: The width of the canvas
+        :param directed: Whether or not to use a directed graph. This is false
+                         by default.
+        :param notebook: True if using jupyter notebook.
+        :param bgcolor: The background color of the canvas.
+        :font_color: The color of the node labels text
+
+        :type height: num or str
+        :type width: num or str
+        :type directed: bool
+        :type notebook: bool
+        :type bgcolor: str
+        :type font_color: str
+        """
         self.nodes = []
         self.edges = []
         self.height = height
@@ -52,6 +59,7 @@ class Network(object):
         self.widget = False
         self.node_ids = []
         self.template = None
+        self.conf = False
         self.path = os.path.dirname(__file__) + "/templates/template.html"
         
         if notebook:
@@ -400,7 +408,8 @@ class Network(object):
                                     use_DOT=self.use_DOT,
                                     dot_lang=self.dot_lang,
                                     widget=self.widget,
-                                    bgcolor=self.bgcolor)
+                                    bgcolor=self.bgcolor,
+                                    conf=self.conf)
 
         with open(name, "w+") as out:
             out.write(self.html)
@@ -565,6 +574,27 @@ class Network(object):
         """
         BarnesHut is a quadtree based gravity model. It is the fastest. default
         and recommended solver for non-heirarchical layouts.
+
+        :param gravity: The more negative the gravity value is, the stronger the
+                        repulsion is.
+        :param central_gravity: The gravity attractor to pull the entire network
+                                to the center. 
+        :param spring_length: The rest length of the edges
+        :param spring_strength: The strong the edges springs are
+        :param damping: A value ranging from 0 to 1 of how much of the velocity
+                        from the previous physics simulation iteration carries
+                        over to the next iteration.
+        :param overlap: When larger than 0, the size of the node is taken into
+                        account. The distance will be calculated from the radius
+                        of the encompassing circle of the node for both the
+                        gravity model. Value 1 is maximum overlap avoidance.
+
+        :type gravity: int
+        :type central_gravity: float
+        :type spring_length: int
+        :type spring_strength: float
+        :type damping: float
+        :type overlap: float
         """
         self.options.physics.use_barnes_hut(locals())
 
@@ -579,6 +609,21 @@ class Network(object):
         """
         Set the physics attribute of the entire network to repulsion.
         When called, it sets the solver attribute of physics to repulsion.
+
+        :param node_distance: This is the range of influence for the repulsion.
+        :param central_gravity: The gravity attractor to pull the entire network
+                                to the center.
+        :param spring_length: The rest length of the edges
+        :param spring_strength: The strong the edges springs are
+        :param damping: A value ranging from 0 to 1 of how much of the velocity
+                        from the previous physics simulation iteration carries
+                        over to the next iteration.
+
+        :type node_distance: int
+        :type central_gravity float
+        :type spring_length: int
+        :type spring_strength: float
+        :type damping: float
         """
         self.options.physics.use_repulsion(locals())
 
@@ -590,6 +635,25 @@ class Network(object):
         spring_strength=0.01,
         damping=0.09
     ):
+        """
+        This model is based on the repulsion solver but the levels are
+        taken into account and the forces are normalized.
+
+        :param node_distance: This is the range of influence for the repulsion.
+        :param central_gravity: The gravity attractor to pull the entire network
+                                to the center.
+        :param spring_length: The rest length of the edges
+        :param spring_strength: The strong the edges springs are
+        :param damping: A value ranging from 0 to 1 of how much of the velocity
+                        from the previous physics simulation iteration carries
+                        over to the next iteration.
+
+        :type node_distance: int
+        :type central_gravity float
+        :type spring_length: int
+        :type spring_strength: float
+        :type damping: float
+        """
         self.options.physics.use_hrepulsion(locals())
 
     def force_atlas_2based(
@@ -601,6 +665,35 @@ class Network(object):
         damping=0.4,
         overlap=0
     ):
+        """
+        The forceAtlas2Based solver makes use of some of the equations provided
+        by them and makes use of the barnesHut implementation in vis. The main
+        differences are the central gravity model, which is here distance
+        independent, and the repulsion being linear instead of quadratic. Finally,
+        all node masses have a multiplier based on the amount of connected edges
+        plus one.
+
+        :param gravity: The more negative the gravity value is, the stronger the
+                        repulsion is.
+        :param central_gravity: The gravity attractor to pull the entire network
+                                to the center. 
+        :param spring_length: The rest length of the edges
+        :param spring_strength: The strong the edges springs are
+        :param damping: A value ranging from 0 to 1 of how much of the velocity
+                        from the previous physics simulation iteration carries
+                        over to the next iteration.
+        :param overlap: When larger than 0, the size of the node is taken into
+                        account. The distance will be calculated from the radius
+                        of the encompassing circle of the node for both the
+                        gravity model. Value 1 is maximum overlap avoidance.
+
+        :type gravity: int
+        :type central_gravity: float
+        :type spring_length: int
+        :type spring_strength: float
+        :type damping: float
+        :type overlap: float
+        """
         self.options.physics.use_force_atlas_2based(locals())
 
     def to_json(self):
@@ -629,6 +722,10 @@ class Network(object):
         """
         Displays or hides edges while dragging the network. This makes
         panning of the network easy.
+
+        :param status: True if edges should be hidden on drag
+        
+        :type status: bool
         """
         self.options.interaction.hideEdgesOnDrag = status
 
@@ -645,20 +742,37 @@ class Network(object):
         self.options.interaction.hideNodesOnDrag = status
 
     def inherit_edge_colors_from(self, status):
+        """
+        Edges take on the color of the node they are coming from.
+
+        :param status: True if edges should adopt color coming from.
+        :type status: bool
+        """
         self.options.edges.inherit_colors(status)
 
-    def toggle_buttons(self, status):
+    def show_buttons(self, filter_=None):
         """
         Displays or hides certain widgets to dynamically modify the
         network.
 
+        Usage:
+        >>> g.toggle_buttons(filter_=['nodes', 'edges', 'physics'])
+
         :param status: When set to True, the widgets will be shown.
                        Default is set to False.
+        :param filter_: Only include widgets specified by `filter_`.
+                        Valid options: True (gives all widgets)
+                                       List of `nodes`, `edges`,
+                                       `layout`, `interaction`,
+                                       `manipulation`, `physics`,
+                                       `selection`, `renderer`.
 
         :type status: bool
+        :type filter_: bool or list:
         """
-        self.options.configure.enabled = status
-        self.widget = status
+        self.conf = True
+        self.options.configure = Configure(enabled=True, filter_=filter_)        
+        self.widget = True
 
     def toggle_physics(self, status):
         """

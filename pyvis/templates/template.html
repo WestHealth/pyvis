@@ -9,19 +9,29 @@
 <style type="text/css">
 
         #mynetwork {
-            max-width: {{width}};
-            max-height: {{height}};
+            width: {{width}};
+            height: {{height}};
             background-color: {{bgcolor}};
             border: 1px solid lightgray;
             position: relative;
-            overflow: hidden;
+            float: left;
         }
+        {% if conf %}
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        {% endif %}
 </style>
 
 </head>
 
 <body>
 <div id = "mynetwork"></div>
+{% if conf %}
+<div id = "config"></div>
+{% endif %}
 <script type="text/javascript">
 
     // initialize global variables.
@@ -68,6 +78,11 @@
         options.nodes = {
             shape: "dot"
         }
+        {% if conf %}
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        {% endif %}
 
         network = new vis.Network(container, data, options);
         return network;

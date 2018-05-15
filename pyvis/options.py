@@ -66,8 +66,10 @@ class Configure(object):
     def __repr__(self):
         return str(self.__dict__)
 
-    def __init__(self):
-        self.enabled = False
+    def __init__(self, enabled=False, filter_=None):
+        self.enabled = enabled
+        if filter_:
+            self.filter = filter_ 
 
     def __getitem__(self, item):
         return self.__dict__[item]
