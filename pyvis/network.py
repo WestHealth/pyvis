@@ -415,7 +415,7 @@ class Network(object):
             out.write(self.html)
 
         if notebook:
-            return IFrame(name, self.height, self.width)
+            return IFrame(name, width=self.width, height=self.height)
 
     def show(self, name):
         """
