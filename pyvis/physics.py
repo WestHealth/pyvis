@@ -97,12 +97,15 @@ class Physics(object):
 
     def use_force_atlas_2based(self, params):
         self.forceAtlas2Based = self.forceAtlas2Based(params)
+        self.solver = 'forceAtlas2Based'
 
     def use_repulsion(self, params):
         self.repulsion = self.Repulsion(params)
+        self.solver = 'repulsion'
 
     def use_hrepulsion(self, params):
         self.hierarchicalRepulsion = self.hierarchicalRepulsion(params)
+        self.solver = 'hierarchicalRepulsion'
 
     def toggle_stabilization(self, status):
         self.stabilization.toggle_stabilization(status)
