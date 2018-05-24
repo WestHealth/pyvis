@@ -281,12 +281,10 @@ class ConfigureTestCase(unittest.TestCase):
         self.g = Network()
         self.g.add_nodes([0, 1, 2, 3])
 
-    def test_toggle_buttons(self):
+    def test_show_buttons(self):
         self.assertFalse(self.g.options.configure['enabled'])
-        self.g.toggle_buttons(True)
+        self.g.show_buttons(True)
         self.assertTrue(self.g.options.configure['enabled'])
-        self.g.toggle_buttons(False)
-        self.assertFalse(self.g.options.configure['enabled'])
 
 
 class EdgeOptionsTestCase(unittest.TestCase):
