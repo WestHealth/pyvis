@@ -387,18 +387,22 @@ class Network(object):
         and options and updates the template to write the HTML holding
         the visualization.
 
-
         :type name_html: str
-
         """
         check_html(name)
         # here, check if an href is present in the hover data
         use_link_template = False
-        for n_title in list(map(lambda n: n["title"], self.nodes)):
-            if "href" in n_title:
-                # this tells the template to override default hover mechanics
-                use_link_template = True
-                break
+        for n in self.nodes:
+            title = n.get("title", None)
+            if title:
+                if "href" in title:
+                    """
+                    this tells the template to override default hover
+                    mechanic, as the tooltip would move with the mouse
+                    cursor which made interacting with hover data useless.
+                    """
+                    use_link_template = True
+                    break
         if not notebook:
             with open(self.path) as html:
                 content = html.read()
