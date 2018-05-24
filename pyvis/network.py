@@ -392,6 +392,13 @@ class Network(object):
 
         """
         check_html(name)
+        # here, check if an href is present in the hover data
+        use_link_template = False
+        for n_title in list(map(lambda n: n["title"], self.nodes)):
+            if "href" in n_title:
+                # this tells the template to override default hover mechanics
+                use_link_template = True
+                break
         if not notebook:
             with open(self.path) as html:
                 content = html.read()
@@ -409,7 +416,8 @@ class Network(object):
                                     dot_lang=self.dot_lang,
                                     widget=self.widget,
                                     bgcolor=self.bgcolor,
-                                    conf=self.conf)
+                                    conf=self.conf,
+                                    tooltip_link=use_link_template)
 
         with open(name, "w+") as out:
             out.write(self.html)
