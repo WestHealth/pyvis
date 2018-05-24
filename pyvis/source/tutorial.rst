@@ -130,8 +130,6 @@ The following code block is a minimal example of the capabilities of pyvis.
 
     edge_data = zip(sources, targets, weights)
 
-    print got_net.get_adj_list()
-
     for e in edge_data:
         src = e[0]
         dst = e[1]
