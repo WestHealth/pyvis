@@ -95,6 +95,27 @@
             height: 600px;
         }
         {% endif %}
+
+        {% if tooltip_link %}
+        /* position absolute is important and the container has to be relative or absolute as well. */
+	    div.popup {
+            position:absolute;
+            top:0px;
+            left:0px;
+            display:none;
+            background-color:#f5f4ed;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            border: 1px solid #808074;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+	    }
+
+	    /* hide the original tooltip */
+	    .vis-network-tooltip {
+	      display:none;
+	    }
+        {% endif %}
 </style>
 
 </head>
@@ -146,8 +167,8 @@
         {% else %}
 
         // parsing and collecting nodes and edges from the python
-        nodes = {{nodes|safe}};
-        edges = {{edges|safe}};
+        nodes = new vis.DataSet({{nodes|safe}});
+        edges = new vis.DataSet({{edges|safe}});
 
         // adding nodes and edges to the graph
         data = {nodes: nodes, edges: edges};
@@ -167,6 +188,72 @@
         {% endif %}
 
         network = new vis.Network(container, data, options);
+
+        {% if tooltip_link %}
+        // make a custom popup
+        var popup = document.createElement("div");
+        popup.className = 'popup';
+        popupTimeout = null;
+        popup.addEventListener('mouseover', function () {
+            console.log(popup)
+            if (popupTimeout !== null) {
+                clearTimeout(popupTimeout);
+                popupTimeout = null;
+            }
+        });
+        popup.addEventListener('mouseout', function () {
+            if (popupTimeout === null) {
+                hidePopup();
+            }
+        });
+        container.appendChild(popup);
+
+
+        // use the popup event to show
+        network.on("showPopup", function (params) {
+            showPopup(params);
+        });
+
+        // use the hide event to hide it
+        network.on("hidePopup", function (params) {
+            hidePopup();
+        });
+
+
+        // hiding the popup through css
+        function hidePopup() {
+            popupTimeout = setTimeout(function () { popup.style.display = 'none'; }, 500);
+        }
+
+        // showing the popup
+        function showPopup(nodeId) {
+            // get the data from the vis.DataSet
+            var nodeData = nodes.get([nodeId]);
+            popup.innerHTML = nodeData[0].title;
+
+            // get the position of the node
+            var posCanvas = network.getPositions([nodeId])[nodeId];
+
+            // get the bounding box of the node
+            var boundingBox = network.getBoundingBox(nodeId);
+
+            //position tooltip:
+            posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+
+            // convert coordinates to the DOM space
+            var posDOM = network.canvasToDOM(posCanvas);
+
+            // Give it an offset
+            posDOM.x += 10;
+            posDOM.y -= 20;
+
+            // show and place the tooltip.
+            popup.style.display = 'block';
+            popup.style.top = posDOM.y + 'px';
+            popup.style.left = posDOM.x + 'px';
+        }
+        {% endif %}
+
 
         {% if nodes|length > 100 %}
         network.on("stabilizationProgress", function(params) {
