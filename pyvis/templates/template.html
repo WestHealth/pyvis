@@ -167,8 +167,8 @@
         {% else %}
 
         // parsing and collecting nodes and edges from the python
-        nodes = new vis.DataSet({{nodes|safe}});
-        edges = new vis.DataSet({{edges|safe}});
+        nodes = new vis.DataSet({{nodes|tojson}});
+        edges = new vis.DataSet({{edges|tojson}});
 
         // adding nodes and edges to the graph
         data = {nodes: nodes, edges: edges};

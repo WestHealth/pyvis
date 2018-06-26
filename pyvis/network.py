@@ -552,8 +552,8 @@ class Network(object):
         nodes = nx_graph.nodes()
         if len(edges) > 0:
             for e in edges:
-                self.add_node(e[0], e[0], title=e[0])
-                self.add_node(e[1], e[1], title=e[1])
+                self.add_node(e[0], e[0], title=str(e[0]))
+                self.add_node(e[1], e[1], title=str(e[1]))
                 self.add_edge(e[0], e[1])
         else:
             self.add_nodes(nodes)
