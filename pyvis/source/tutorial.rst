@@ -118,11 +118,11 @@ The following code block is a minimal example of the capabilities of pyvis.
     from pyvis.network import Network
     import pandas as pd
 
-    got_net = Network(height="750px", width="100%". bgcolor="#222222", font_color="white")
+    got_net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white")
 
     # set the physics layout of the network
     got_net.barnes_hut()
-    got_data = pd.read_csv("stormofswords.csv")
+    got_data = pd.read_csv("https://www.macalester.edu/~abeverid/data/stormofswords.csv")
 
     sources = got_data['Source']
     targets = got_data['Target']
