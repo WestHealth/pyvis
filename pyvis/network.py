@@ -5,6 +5,7 @@ from .utils import check_html
 from jinja2 import Template
 import webbrowser
 from IPython.display import IFrame
+from IPython.core.display import HTML
 from collections import defaultdict
 import networkx as nx
 import json
