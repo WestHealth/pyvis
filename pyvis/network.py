@@ -323,15 +323,17 @@ class Network(object):
         assert to in self.get_nodes(), \
             "non existent node '" + str(to) + "'"
 
-        for e in self.edges:
-            frm = e['from']
-            dest = e['to']
-            if (
-                (source == dest and to == frm) or
-                (source == frm and to == dest)
-            ):
-                # edge already exists
-                edge_exists = True
+        # we only check existing edge for undirected graphs
+        if not self.directed:
+            for e in self.edges:
+                frm = e['from']
+                dest = e['to']
+                if (
+                    (source == dest and to == frm) or
+                    (source == frm and to == dest)
+                ):
+                    # edge already exists
+                    edge_exists = True
 
         if not edge_exists:
             e = Edge(source, to, self.directed, **options)
