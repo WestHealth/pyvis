@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
 
+exec(open('pyvis/_version.py').read())
 setup(
     name="pyvis",
-    version="0.1.4.1",
+    version=__version__,
     description="A Python network visualization library",
     url="https://github.com/WestHealth/pyvis",
     author="Giancarlo Perrone",
