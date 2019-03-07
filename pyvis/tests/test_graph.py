@@ -200,7 +200,7 @@ class EdgeTestCase(unittest.TestCase):
         self.g.add_edge(0, 1)
         self.assertTrue(self.g.edges)
         for e in self.g.edges:
-            self.assertTrue(e["arrows"] == "from")
+            self.assertTrue(e["arrows"] == "to")
 
 
 class UtilsTestCase(unittest.TestCase):
