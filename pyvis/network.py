@@ -246,9 +246,15 @@ class Network(object):
                 nd[nodes[i]].update({k: v[i]})
 
         for node in nodes:
-            assert isinstance(node, int) or isinstance(node, str)
-            self.add_node(node, **nd[node])
-
+            # check if node is `number-like`
+            try:
+                node = int(node)
+                self.add_node(node, **nd[node])
+            except:
+                # or node could be string
+                assert isinstance(node, str)
+                self.add_node(node, **nd[node])
+            
     def num_nodes(self):
         """
         Return number of nodes

@@ -1,5 +1,5 @@
 from ..network import Network
-
+import numpy as np
 
 def test_canvas_size():
     """
@@ -68,3 +68,13 @@ def test_add_edge():
     net.add_edge(0, 9)
 
     assert(net.get_adj_list()[0] == set([2, 1, 3, 4, 5, 6, 7, 8, 9]))
+
+def test_add_numpy_nodes():
+    """
+    Test adding numpy array nodes since these
+    nodes will have specific numpy types
+    """
+    arrayNodes = np.array([1,2,3,4])
+    g = Network()
+    g.add_nodes(np.array([1,2,3,4]))
+    assert g.get_nodes() == [1,2,3,4]
