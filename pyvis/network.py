@@ -28,7 +28,8 @@ class Network(object):
                  directed=False,
                  notebook=False,
                  bgcolor="#ffffff",
-                 font_color=False):
+                 font_color=False,
+                 layout=None):
         """
         :param height: The height of the canvas
         :param width: The width of the canvas
@@ -37,6 +38,7 @@ class Network(object):
         :param notebook: True if using jupyter notebook.
         :param bgcolor: The background color of the canvas.
         :font_color: The color of the node labels text
+        :layout: Use hierarchical layout if this is set
 
         :type height: num or str
         :type width: num or str
@@ -44,6 +46,7 @@ class Network(object):
         :type notebook: bool
         :type bgcolor: str
         :type font_color: str
+        :type layout: bool
         """
         self.nodes = []
         self.edges = []
@@ -56,7 +59,7 @@ class Network(object):
         self.bgcolor = bgcolor
         self.use_DOT = False
         self.dot_lang = ""
-        self.options = Options()
+        self.options = Options(layout)
         self.widget = False
         self.node_ids = []
         self.template = None
@@ -65,6 +68,7 @@ class Network(object):
         
         if notebook:
             self.prep_notebook()
+        
             
     def __str__(self):
         """
@@ -344,7 +348,7 @@ class Network(object):
         if not edge_exists:
             e = Edge(source, to, self.directed, **options)
             self.edges.append(e.options)
-
+            
     def add_edges(self, edges):
         """
         This method serves to add multiple edges between existing nodes
@@ -720,6 +724,7 @@ class Network(object):
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True, indent=4)
+
 
     def set_edge_smooth(self, smooth_type):
         """

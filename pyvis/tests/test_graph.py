@@ -302,3 +302,52 @@ class EdgeOptionsTestCase(unittest.TestCase):
         self.assertTrue(self.g.options.edges.color.inherit)
         self.g.inherit_edge_colors_from(False)
         self.assertFalse(self.g.options.edges.color.inherit)
+
+
+class LayoutTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.g = Network(layout=True)
+
+    def test_can_enable_init(self):
+        self.assertTrue(self.g.options['layout'])
+    
+    def test_layout_disabled(self):
+        self.g = Network()
+        self.assertRaises(KeyError, lambda: self.g.options['layout'])
+    
+    def test_levelSeparation(self):
+        self.assertTrue(self.g.options.layout.hierarchical.levelSeparation)
+    
+    def test_treeSpacing(self):
+        self.assertTrue(self.g.options.layout.hierarchical.treeSpacing)
+    
+    def test_blockShifting(self):
+        self.assertTrue(self.g.options.layout.hierarchical.blockShifting)
+    
+    def test_edgeMinimization(self):
+        self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization)
+    
+    def test_parentCentralization(self):
+        self.assertTrue(self.g.options.layout.hierarchical.parentCentralization)
+
+    def test_sortMethod(self):
+        self.assertTrue(self.g.options.layout.hierarchical.sortMethod)
+
+    def test_set_edge_minimization(self):
+        self.g.options.layout.set_separation(10)
+        self.assertTrue(self.g.options.layout.hierarchical.levelSeparation == 10)
+    
+    def test_set_tree_spacing(self):
+        self.g.options.layout.set_tree_spacing(10)
+        self.assertTrue(self.g.options.layout.hierarchical.treeSpacing == 10)
+
+    def test_set_edge_minimization(self):
+        self.g.options.layout.set_edge_minimization(True)
+        self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization == True)
+        self.g.options.layout.set_edge_minimization(False)
+        self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization == False)
+
+        
+
+    
