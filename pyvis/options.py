@@ -1,15 +1,40 @@
 from .physics import *
 
 class EdgeOptions(object):
+    """
+    This is where the construction of the edges' options takes place.
+    So far, the edge smoothness can be switched through this object
+    as well as the edge color's inheritance. 
+    """
 
     def __init__(self):
         self.smooth = self.Smooth()
         self.color = self.Color()
 
     def inherit_colors(self, status):
+        """
+        Whether or not to inherit colors from the source node.
+        If this is set to `from` then the edge will take the color
+        of the source node. If it is set to `to` then the color will
+        be that of the destination node.
+
+        .. note:: If set to `True` then the `from` behavior is adopted
+                  and vice versa.
+        """
         self.color.inherit = status
 
     def toggle_smoothness(self, smooth_type):
+        """
+        Change smooth option for edges. When using dynamic, the edges will
+        have an invisible support node guiding the shape. This node is part
+        of the physics simulation,
+
+        :param smooth_type: Possible options are dynamic, continuous, discrete,
+                            diagonalCross, straightCross, horizontal, vertical,
+                            curvedCW, curvedCCW, cubicBezier
+        
+        :type smooth_type: str
+        """
         self.smooth.type = smooth_type
 
     def __repr__(self):
@@ -36,7 +61,7 @@ class EdgeOptions(object):
     class Color(object):
         """
         The color object contains the color information of the edge
-        in every situation. When the edge only needs a sngle color value
+        in every situation. When the edge only needs a single color value
         like 'rgb(120,32,14)', '#ffffff' or 'red' can be supplied instead
         of an object.
         """
@@ -48,7 +73,10 @@ class EdgeOptions(object):
 
     
 class Interaction(object):
-
+    """
+    Used for all user interaction with the network. Handles mouse
+    and touch events as well as the navigation buttons and the popups.
+    """
     def __repr__(self):
         return str(self.__dict__)
 
@@ -62,6 +90,10 @@ class Interaction(object):
 
 
 class Configure(object):
+    """
+    Handles the HTML part of the canvas and generates
+    an interactive option editor with filtering.
+    """
 
     def __repr__(self):
         return str(self.__dict__)
@@ -142,7 +174,21 @@ class Layout(object):
     
 
 class Options(object):
-
+    """
+    Represents the global options of the network.
+    This object consists of indiviual sub-objects
+    that map to VisJS's modules of:
+        - configure
+        - layout
+        - interaction
+        - physics
+        - edges
+    
+    The JSON representation of this object is directly passed
+    in to the VisJS framework.
+    In the future this can be expanded to completely mimic
+    the structure VisJS can expect.
+    """
     def __repr__(self):
         return str(self.__dict__)
 
