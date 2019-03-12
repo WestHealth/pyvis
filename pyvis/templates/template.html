@@ -9,12 +9,52 @@
 <style type="text/css">
 
         #mynetwork {
-            width: {{width}};
-            height: {{height}};
+            width: 100%;
+            height: 100%;
             background-color: {{bgcolor}};
             border: 1px solid lightgray;
+            position: absolute;
+            top: 0;
+        }
+
+        #text{
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .vis-container {
             position: relative;
-            float: left;
+            width: 100%;
+            height: {{height}};
+        }
+
+        .loader {
+            position: absolute;
+            z-index: 999;
+            width: 100%;
+            height: 100%;
+        }
+
+        .loader-content {
+            margin: auto;
+            position: relative;
+            top: 45%;
+            z-index: 999;
+        }
+
+        .loader::before{
+            content: '';
+            display: block;
+            background-color: rgb(85, 85, 85);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: .9;
+            z-index: 800;
+            top: 0;
+        }
+        .lds-roller{
+            margin: auto;
         }
 
         {% if nodes|length > 100 %}
@@ -55,17 +95,6 @@
             margin:auto auto auto auto;
             box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
             border-radius:10px;
-        }
-
-        #text {
-            position:absolute;
-            top:8px;
-            left:530px;
-            width:30px;
-            height:50px;
-            margin:auto auto auto auto;
-            font-size:22px;
-            color: #000000;
         }
 
         div.outerBorder {
@@ -116,25 +145,128 @@
 	      display:none;
 	    }
         {% endif %}
+        .lds-roller {
+            /* display: inline-block; */
+            position: relative;
+            width: 64px;
+            height: 64px;
+        }
+        .lds-roller div {
+            animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            transform-origin: 32px 32px;
+        }
+        .lds-roller div:after {
+            content: " ";
+            display: block;
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #000;
+            margin: -3px 0 0 -3px;
+        }
+        .lds-roller div:nth-child(1) {
+            animation-delay: -0.036s;
+        }
+        .lds-roller div:nth-child(1):after {
+            top: 50px;
+            left: 50px;
+        }
+        .lds-roller div:nth-child(2) {
+            animation-delay: -0.072s;
+        }
+        .lds-roller div:nth-child(2):after {
+            top: 54px;
+            left: 45px;
+        }
+        .lds-roller div:nth-child(3) {
+            animation-delay: -0.108s;
+        }
+        .lds-roller div:nth-child(3):after {
+            top: 57px;
+            left: 39px;
+        }
+        .lds-roller div:nth-child(4) {
+            animation-delay: -0.144s;
+        }
+        .lds-roller div:nth-child(4):after {
+            top: 58px;
+            left: 32px;
+        }
+        .lds-roller div:nth-child(5) {
+            animation-delay: -0.18s;
+        }
+        .lds-roller div:nth-child(5):after {
+            top: 57px;
+            left: 25px;
+        }
+        .lds-roller div:nth-child(6) {
+            animation-delay: -0.216s;
+        }
+        .lds-roller div:nth-child(6):after {
+            top: 54px;
+            left: 19px;
+        }
+        .lds-roller div:nth-child(7) {
+            animation-delay: -0.252s;
+        }
+        .lds-roller div:nth-child(7):after {
+            top: 50px;
+            left: 14px;
+        }
+        .lds-roller div:nth-child(8) {
+            animation-delay: -0.288s;
+        }
+        .lds-roller div:nth-child(8):after {
+            top: 45px;
+            left: 10px;
+        }
+        @keyframes lds-roller {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+
 </style>
 
 </head>
 
 <body>
-<div id = "mynetwork"></div>
-{% if nodes|length > 100 %}
-<div id="loadingBar">
-    <div class="outerBorder">
-        <div id="text">0%</div>
-        <div id="border">
-            <div id="bar"></div>
+    <div class="vis-container">
+    <div class="loader">
+        <div class="loader-content">
+            <div class="lds-roller">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div id="text">0%</div>
         </div>
     </div>
-</div>
-{% endif %}
-{% if conf %}
-<div id = "config"></div>
-{% endif %}
+        <div id = "mynetwork"></div>
+    </div>
+    {% if nodes|length > 100 %}
+    <!-- <div id="loadingBar">
+        <div class="outerBorder">
+            <div id="text">0%</div>
+            <div id="border">
+                <div id="bar"></div>
+            </div>
+        </div>
+    </div> -->
+    {% endif %}
+    {% if conf %}
+    <div id = "config"></div>
+    {% endif %}
 <script type="text/javascript">
 
     // initialize global variables.
@@ -255,25 +387,22 @@
         {% endif %}
 
 
-        {% if nodes|length > 100 %}
+
         network.on("stabilizationProgress", function(params) {
-      		document.getElementById('loadingBar').removeAttribute("style");
 	        var maxWidth = 496;
 	        var minWidth = 20;
 	        var widthFactor = params.iterations/params.total;
-	        var width = Math.max(minWidth,maxWidth * widthFactor);
-
-	        document.getElementById('bar').style.width = width + 'px';
+            var width = Math.max(minWidth,maxWidth * widthFactor);
+            
 	        document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
 	    });
 	    network.once("stabilizationIterationsDone", function() {
 	        document.getElementById('text').innerHTML = '100%';
-	        document.getElementById('bar').style.width = '496px';
-	        document.getElementById('loadingBar').style.opacity = 0;
 	        // really clean the dom element
-	        setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+	        setTimeout(function () {
+                var loader = document.getElementsByClassName('loader')[0].style.display = "none";
+            }, 500);
 	    });
-        {% endif %}
 
         return network;
 
