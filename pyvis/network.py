@@ -767,7 +767,7 @@ class Network(object):
         """
         self.options.interaction.hideNodesOnDrag = status
 
-    def inherit_edge_colors_from(self, status):
+    def inherit_edge_colors(self, status):
         """
         Edges take on the color of the node they are coming from.
 
@@ -782,7 +782,10 @@ class Network(object):
         network.
 
         Usage:
-        >>> g.toggle_buttons(filter_=['nodes', 'edges', 'physics'])
+        >>> g.show_buttons(filter_=['nodes', 'edges', 'physics'])
+
+        Or to show all options:
+        >>> g.show_buttons()
 
         :param status: When set to True, the widgets will be shown.
                        Default is set to False.
@@ -817,7 +820,7 @@ class Network(object):
         Toggles the dragging of the nodes in the network.
 
         :param status: When set to True, the nodes can be dragged around
-                       in the network. Default is set to False.
+                       in the network. Default is set to True.
 
         :type status: bool
         """
