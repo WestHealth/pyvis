@@ -38,3 +38,6 @@ g.add_node(1)
 g.add_edge(0, 1)
 g.show("basic.html")
 ```
+
+## Interactive Notebook playground with examples
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/WestHealth/pyvis/master?filepath=notebooks%2Fexample.ipynb)
