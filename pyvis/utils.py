@@ -8,6 +8,6 @@ def check_html(name):
     :param: name: the name to check
     :type name: str
     """
-    assert len(name.split(".")) == 2, "invalid file type for %s" % name
+    assert len(name.split(".")) >= 2, "invalid file type for %s" % name
     assert name.split(
-        ".")[1] == "html", "%s is not a valid html file" % name
+        ".")[-1] == "html", "%s is not a valid html file" % name
