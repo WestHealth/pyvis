@@ -117,12 +117,12 @@ class Layout(object):
         return str(self.__dict__)
 
     def __init__(self, randomSeed=None, improvedLayout=True):
-            if not randomSeed:
-                self.randomSeed = 0
-            else:
-                self.radnomSeed = randomSeed
-            self.improvedLayout = improvedLayout
-            self.hierarchical = self.Hierarchical(enabled=True)
+        if not randomSeed:
+            self.randomSeed = 0
+        else:
+            self.radnomSeed = randomSeed
+        self.improvedLayout = improvedLayout
+        self.hierarchical = self.Hierarchical(enabled=True)
     
     def set_separation(self, distance):
         """
@@ -202,6 +202,28 @@ class Options(object):
         self.configure = Configure()
         self.physics = Physics()
         self.edges = EdgeOptions()
+
+    def set(self, new_options):
+        """
+        This method should accept a JSON string and replace its internal
+        options structure with the given argument after parsing it.
+        In practice, this method should be called after using the browser
+        to experiment with different physics and layout options, using
+        the generated JSON options structure that is spit out from the
+        front end to serve as input to this method as a string.
+
+        :param new_options: The JSON like string of the options that will
+                            override.
+        
+        :type new_options: str
+        """
+        
+        options = new_options.replace("\n", "").replace(" ", "")
+        first_bracket = options.find("{")
+        options = options[first_bracket:]
+        options = json.loads(options)
+        return options
+        
 
     def to_json(self):
         return json.dumps(
