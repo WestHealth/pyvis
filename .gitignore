@@ -1,0 +1,8 @@
+# binaries
+*.pyc
+
+# package details
+pyvis.egg-info/
+
+# vscode specific
+.vscode/
