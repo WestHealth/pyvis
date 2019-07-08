@@ -381,7 +381,11 @@ class Network(object):
 
         >>> nodes, edges, height, width, options = net.get_network_data()
         """
-        return (self.nodes, self.edges, self.height,
+        if isinstance(self.options, dict):
+            return (self.nodes, self.edges, self.height,
+                self.width, json.dumps(self.options))
+        else:
+            return (self.nodes, self.edges, self.height,
                 self.width, self.options.to_json())
 
     def save_graph(self, name):
@@ -835,3 +839,6 @@ class Network(object):
         :type status: bool
         """
         self.options.physics.toggle_stabilization(status)
+
+    def set_options(self, options):
+        self.options = self.options.set(options)
