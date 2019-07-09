@@ -14,6 +14,6 @@ setup(
     install_requires=[
         "jinja2 >= 2.9.6",
         "networkx >= 1.11",
-        "ipython == 5.3.0"
+        "ipython >= 5.3.0"
     ]
 )
