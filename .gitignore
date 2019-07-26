@@ -1,8 +1,25 @@
 # binaries
 *.pyc
+.cache/
+.coverage
+
+# notebook checkpoints
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints
+
+# test related
+.pytest_cache/
+pyvis/test.py
+
+# local files
+pyvis/full_graph.txt
+pyvis/source/stormofswords.csv
 
 # package details
 pyvis.egg-info/
+build/
+dist/
+pyvis/make.bat
 
 # vscode specific
 .vscode/
