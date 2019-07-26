@@ -841,4 +841,13 @@ class Network(object):
         self.options.physics.toggle_stabilization(status)
 
     def set_options(self, options):
+        """
+        Overrides the default options object passed to the VisJS framework.
+        Delegates to the :meth:`options.Options.set` routine.
+
+        :param options: The string representation of the Javascript-like object
+                        to be used to override default options.
+        
+        :type options: str
+        """
         self.options = self.options.set(options)

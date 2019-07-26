@@ -167,6 +167,12 @@ parameters to your graph's physics and layout function.
 
 .. image:: buttons.gif
 
+.. note:: You can copy/paste the output from the `generate options` button in the above UI 
+          into :meth:`network.Network.set_options` to finalize your results from experimentation
+          with the settings. 
+
+.. image:: set_options_ex.gif
+
 Using pyviz within `Jupyter <https://jupyter.org>`_ notebook
 ------------------------------------------------------------
 
