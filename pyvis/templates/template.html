@@ -17,7 +17,7 @@
             float: left;
         }
 
-        {% if nodes|length > 100 %}
+        {% if nodes|length > 100 and physics_enabled %}
         #loadingBar {
             position:absolute;
             top:0px;
@@ -122,7 +122,7 @@
 
 <body>
 <div id = "mynetwork"></div>
-{% if nodes|length > 100 %}
+{% if nodes|length > 100 and physics_enabled %}
 <div id="loadingBar">
     <div class="outerBorder">
         <div id="text">0%</div>
@@ -251,7 +251,7 @@
         {% endif %}
 
 
-        {% if nodes|length > 100 %}
+        {% if nodes|length > 100 and physics_enabled %}
         network.on("stabilizationProgress", function(params) {
       		document.getElementById('loadingBar').removeAttribute("style");
 	        var maxWidth = 496;

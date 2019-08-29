@@ -428,11 +428,22 @@ class Network(object):
             template = self.template
 
         nodes, edges, height, width, options = self.get_network_data()
+
+        # check if physics is enabled
+        if isinstance(self.options, dict):
+            if 'physics' in self.options and 'enabled' in self.options['physics']:
+                physics_enabled = self.options['physics']['enabled']
+            else:
+                physics_enabled = True
+        else:
+            physics_enabled = self.options.physics.enabled
+
         self.html = template.render(height=height,
                                     width=width,
                                     nodes=nodes,
                                     edges=edges,
                                     options=options,
+                                    physics_enabled=physics_enabled,
                                     use_DOT=self.use_DOT,
                                     dot_lang=self.dot_lang,
                                     widget=self.widget,
