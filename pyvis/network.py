@@ -820,11 +820,12 @@ class Network(object):
 
     def toggle_physics(self, status):
         """
-        Displays or hides certain widgets to dynamically modify the
-        network.
+        Toggles physics simulation 
 
-        :param status: When set to True, the widgets will be shown.
-                       Default is set to False.
+        :param status: When False, nodes are not part of the physics
+                       simulation. They will not move except for from
+                       manual dragging.
+                       Default is set to True.
 
         :type status: bool
         """
