@@ -173,10 +173,10 @@ parameters to your graph's physics and layout function.
 
 .. image:: set_options_ex.gif
 
-Using pyviz within `Jupyter <https://jupyter.org>`_ notebook
+Using pyvis within `Jupyter <https://jupyter.org>`_ notebook
 ------------------------------------------------------------
 
-Pyviz supports `Jupyter <https://jupyter.org>`_ notebook embedding through the
+Pyvis supports `Jupyter <https://jupyter.org>`_ notebook embedding through the
 use of the 
 :meth:`network.Network` contructor.  The network instance must be
 "prepped" during instantiation by supplying the `notebook=True` kwarg.
