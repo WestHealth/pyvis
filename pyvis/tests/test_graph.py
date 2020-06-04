@@ -300,7 +300,7 @@ class EdgeOptionsTestCase(unittest.TestCase):
 
     def test_inherit_colors(self):
         self.assertTrue(self.g.options.edges.color.inherit)
-        self.g.inherit_edge_colors_from(False)
+        self.g.inherit_edge_colors(False)
         self.assertFalse(self.g.options.edges.color.inherit)
 
 
