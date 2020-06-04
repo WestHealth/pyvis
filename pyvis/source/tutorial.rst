@@ -6,7 +6,7 @@ The pyvis library is meant for quick generation of visual network graphs
 with minimal python code. It is designed as a wrapper around the popular 
 Javascript visJS library found at this link_.
 
-.. _link: http://visjs.org/network_examples.html
+.. _link: https://visjs.github.io/vis-network/examples/
 
 
 
