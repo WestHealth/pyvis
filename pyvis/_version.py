@@ -1,1 +1,1 @@
-__version__ = '0.1.7.0'
+__version__ = '0.1.8.0' # bump version includes full networkx integration
