@@ -561,7 +561,8 @@ class Network(object):
         assert(node in self.node_ids), "error: %s node not in network" % node
         return self.get_adj_list()[node]
 
-    def from_nx(self, nx_graph):
+    def from_nx(self, nx_graph, node_size_transf=(lambda x: x), edge_weight_transf=(lambda x: x),
+                default_node_size=10, default_edge_weight=1):
         """
         This method takes an exisitng Networkx graph and translates
         it to a PyVis graph format that can be accepted by the VisJs
@@ -569,7 +570,21 @@ class Network(object):
 
         :param nx_graph: The Networkx graph object that is to be translated.
         :type nx_graph: networkx.Graph instance
-        >>> nx_graph = Networkx.cycle_graph()
+        :param node_size_transf: function to transform the node size for plotting
+        :type node_size_transf: func
+        :param edge_weight_transf: function to transform the edge weight for plotting
+        :type edge_weight_transf: func
+        :param default_node_size: default node size if not specified
+        :param default_edge_weight: default edge weight if not specified
+        >>> nx_graph = nx.cycle_graph(10)
+        >>> nx_graph.nodes[1]['title'] = 'Number 1'
+        >>> nx_graph.nodes[1]['group'] = 1
+        >>> nx_graph.nodes[3]['title'] = 'I belong to a different group!'
+        >>> nx_graph.nodes[3]['group'] = 10
+        >>> nx_graph.add_node(20, size=20, title='couple', group=2)
+        >>> nx_graph.add_node(21, size=15, title='couple', group=2)
+        >>> nx_graph.add_edge(20, 21, weight=5)
+        >>> nx_graph.add_node(25, size=25, label='lonely', title='lonely node', group=3)
         >>> nt = Network("500px", "500px")
         # populates the nodes and edges data structures
         >>> nt.from_nx(nx_graph)
@@ -577,14 +592,28 @@ class Network(object):
         """
         assert(isinstance(nx_graph, nx.Graph))
         edges = nx_graph.edges(data=True)
-        nodes = nx_graph.nodes()
+        nodes = nx_graph.nodes(data=True)
+
         if len(edges) > 0:
             for e in edges:
-                self.add_node(e[0], e[0], title=str(e[0]))
-                self.add_node(e[1], e[1], title=str(e[1]))
-                self.add_edge(e[0], e[1])
-        else:
-            self.add_nodes(nodes)
+                if 'size' not in nodes[e[0]].keys():
+                    nodes[e[0]]['size'] = default_node_size
+                nodes[e[0]]['size'] = int(node_size_transf(nodes[e[0]]['size']))
+                if 'size' not in nodes[e[1]].keys():
+                    nodes[e[1]]['size'] = default_node_size
+                nodes[e[1]]['size'] = int(node_size_transf(nodes[e[1]]['size']))
+                self.add_node(e[0], **nodes[e[0]])
+                self.add_node(e[1], **nodes[e[1]])
+
+                if 'weight' not in e[2].keys():
+                    e[2]['weight'] = default_edge_weight
+                e[2]['weight'] = edge_weight_transf(e[2]['weight'])
+                self.add_edge(e[0], e[1], **e[2])
+
+        for node in nx.isolates(nx_graph):
+            if 'size' not in nodes[node].keys():
+                nodes[node]['size']=default_node_size
+            self.add_node(node, **nodes[node])
 
     def get_nodes(self):
         """
