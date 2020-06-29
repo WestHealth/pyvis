@@ -766,8 +766,8 @@ class Network(object):
         """
         self.options.physics.use_force_atlas_2based(locals())
 
-    def to_json(self, **args):
-        return jsonpickle.encode(self, **args)
+    def to_json(self, max_depth=1, **args):
+        return jsonpickle.encode(self, max_depth=max_depth, **args)
 
     def set_edge_smooth(self, smooth_type):
         """
