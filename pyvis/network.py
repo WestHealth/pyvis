@@ -9,6 +9,7 @@ from IPython.core.display import HTML
 from collections import defaultdict
 import networkx as nx
 import json
+import jsonpickle
 import os
 
 
@@ -765,10 +766,8 @@ class Network(object):
         """
         self.options.physics.use_force_atlas_2based(locals())
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-                          sort_keys=True, indent=4)
-
+    def to_json(self, **args):
+        return jsonpickle.encode(self, **args)
 
     def set_edge_smooth(self, smooth_type):
         """
