@@ -30,7 +30,8 @@ class Network(object):
                  notebook=False,
                  bgcolor="#ffffff",
                  font_color=False,
-                 layout=None):
+                 layout=None,
+                 heading=None):
         """
         :param height: The height of the canvas
         :param width: The width of the canvas
@@ -53,6 +54,7 @@ class Network(object):
         self.edges = []
         self.height = height
         self.width = width
+        self.heading = heading
         self.html = ""
         self.shape = "dot"
         self.font_color = font_color
@@ -81,7 +83,8 @@ class Network(object):
                     "Nodes": self.node_ids,
                     "Edges": self.edges,
                     "Height": self.height,
-                    "Width": self.width
+                    "Width": self.width,
+                    "Heading": self.heading
                 },
                 indent=4
             )
@@ -380,13 +383,13 @@ class Network(object):
 
         Usage:
 
-        >>> nodes, edges, height, width, options = net.get_network_data()
+        >>> nodes, edges, heading, height, width, options = net.get_network_data()
         """
         if isinstance(self.options, dict):
-            return (self.nodes, self.edges, self.height,
+            return (self.nodes, self.edges, self.heading, self.height,
                 self.width, json.dumps(self.options))
         else:
-            return (self.nodes, self.edges, self.height,
+            return (self.nodes, self.edges, self.heading, self.height,
                 self.width, self.options.to_json())
 
     def save_graph(self, name):
@@ -428,7 +431,7 @@ class Network(object):
         else:
             template = self.template
 
-        nodes, edges, height, width, options = self.get_network_data()
+        nodes, edges, heading, height, width, options = self.get_network_data()
 
         # check if physics is enabled
         if isinstance(self.options, dict):
@@ -443,6 +446,7 @@ class Network(object):
                                     width=width,
                                     nodes=nodes,
                                     edges=edges,
+                                    heading=heading,
                                     options=options,
                                     physics_enabled=physics_enabled,
                                     use_DOT=self.use_DOT,
