@@ -26,6 +26,8 @@ python setup.py install
 
 [ipython](https://ipython.org/ipython-doc/2/install/install.html)
 
+[jsonpickle](https://jsonpickle.github.io/)
+
 ## Quick Start
 The most basic use case of a pyvis instance is to create a Network object and invoke methods:
 
