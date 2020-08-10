@@ -187,26 +187,7 @@
         {% endif %}
 
         network = new vis.Network(container, data, options);
-	
-	// creates a blinking effect for a node
-	function nodeFlash(node) {
-            updateNode(node, !nodes.get(node).hidden);
-            setTimeout(function() {
-                nodeFlash(node);
-            }, 1500);
-        }
-
-        function updateNode(node, hidden) {
-            try {
-                nodes.update({id : node, hidden : hidden});
-            } 
-            catch (err) {
-                alert(err);
-            }
-        }
 	 
-	nodeFlash(node)
-
         {% if tooltip_link %}
         // make a custom popup
         var popup = document.createElement("div");
