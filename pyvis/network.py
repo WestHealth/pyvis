@@ -31,7 +31,7 @@ class Network(object):
                  bgcolor="#ffffff",
                  font_color=False,
                  layout=None,
-                 heading=None):
+                 heading=""):
         """
         :param height: The height of the canvas
         :param width: The width of the canvas
