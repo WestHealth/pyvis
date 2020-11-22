@@ -41,7 +41,7 @@ Node properties
 A call to :meth:`add_node` supports various node properties that can be set individually. All of these properties can be found here_, courtesy of VisJS_. For the direct Python
 translation of these attributes, reference the :meth:`network.Network.add_node` docs. 
 
-.. _here: http://visjs.org/docs/network/nodes.html
+.. _here: https://visjs.github.io/vis-network/docs/network/nodes.html
 .. _VisJS: http://visjs.org/docs/network/
 
 
