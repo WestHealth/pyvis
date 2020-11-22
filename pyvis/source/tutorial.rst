@@ -81,7 +81,7 @@ Edges can contain a weight property as well
 
 Edges can be customized and documentation on options can be found at :meth:`network.Network.add_edge` method documentation, or by referencing the original VisJS edge_ module docs.
 
-.. _edge: http://visjs.org/docs/network/edges.html
+.. _edge: https://visjs.github.io/vis-network/docs/network/edges.html
 
 `Networkx <https://networkx.github.io/>`_ integration
 ------------------------------------------------------
