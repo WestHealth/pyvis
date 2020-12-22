@@ -647,7 +647,7 @@ class Network(object):
     ):
         """
         BarnesHut is a quadtree based gravity model. It is the fastest. default
-        and recommended solver for non-heirarchical layouts.
+        and recommended solver for non-hierarchical layouts.
 
         :param gravity: The more negative the gravity value is, the stronger the
                         repulsion is.
