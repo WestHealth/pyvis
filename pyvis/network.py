@@ -65,6 +65,7 @@ class Network(object):
         self.options = Options(layout)
         self.widget = False
         self.node_ids = []
+        self.node_map = {}
         self.template = None
         self.conf = False
         self.path = os.path.dirname(__file__) + "/templates/template.html"
@@ -212,6 +213,7 @@ class Network(object):
             n = Node(n_id, shape, label=node_label, font_color=self.font_color, **options)
             self.nodes.append(n.options)
             self.node_ids.append(n_id)
+            self.node_map[n_id] = n.options
 
     def add_nodes(self, nodes, **kwargs):
         """
@@ -627,6 +629,15 @@ class Network(object):
         :returns: list
         """
         return self.node_ids
+
+    def get_node(self, n_id):
+        """
+        
+        :param n_id: The ID given to the node.
+        
+        Lookup node by ID and return it.
+        """
+        return self.node_map[n_id]
 
     def get_edges(self):
         """
