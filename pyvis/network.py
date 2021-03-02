@@ -632,10 +632,11 @@ class Network(object):
 
     def get_node(self, n_id):
         """
+        Lookup node by ID and return it.
         
         :param n_id: The ID given to the node.
         
-        Lookup node by ID and return it.
+        :returns: dict containing node properties
         """
         return self.node_map[n_id]
 
