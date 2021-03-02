@@ -45,6 +45,15 @@ translation of these attributes, reference the :meth:`network.Network.add_node` 
 .. _VisJS: http://visjs.org/docs/network/
 
 
+Indexing a Node
+---------------
+Use the :meth:`get_node` method to index a node by its ID:
+
+>>> net.add_nodes(["a", "b", "c"])
+>>> net.get_node("c")
+>>> {'id': 'c', 'label': 'c', 'shape': 'dot'}
+
+
 Adding list of nodes with properties
 ------------------------------------
 When using the :meth:`network.Network.add_nodes` method optional keyword arguments can be
@@ -64,7 +73,7 @@ Example:
 
 .. note:: If you mouse over each node you will see that the "title" of a node attribute is responsible for rendering data on mouse hover.
 
-Detailed optioal argument documentation for nodes are in the :meth:`network.Network.add_node` method documentation.
+Detailed optional argument documentation for nodes are in the :meth:`network.Network.add_node` method documentation.
 
 Edges
 -----
