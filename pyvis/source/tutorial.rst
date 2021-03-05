@@ -50,6 +50,15 @@ For the direct Python translation of these attributes, reference the
    work as expected, or at all. Pyvis can translate into the JavaScript
    elements for VisJS_ but after that it's up to VisJS_!
 
+Indexing a Node
+---------------
+Use the :meth:`get_node` method to index a node by its ID:
+
+>>> net.add_nodes(["a", "b", "c"])
+>>> net.get_node("c")
+>>> {'id': 'c', 'label': 'c', 'shape': 'dot'}
+
+
 Adding list of nodes with properties
 ------------------------------------
 When using the :meth:`network.Network.add_nodes` method optional keyword arguments can be
