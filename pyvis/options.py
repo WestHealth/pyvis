@@ -120,7 +120,7 @@ class Layout(object):
         if not randomSeed:
             self.randomSeed = 0
         else:
-            self.radnomSeed = randomSeed
+            self.randomSeed = randomSeed
         self.improvedLayout = improvedLayout
         self.hierarchical = self.Hierarchical(enabled=True)
     
