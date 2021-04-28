@@ -28,10 +28,11 @@ class Network(object):
 
     def __init__(self,
                  height="500px",
-                 width="500px",
+                 width="100%",
                  directed=False,
                  notebook=False,
                  neighborhood_highlight=False,
+                 select_menu=False,
                  bgcolor="#ffffff",
                  font_color=False,
                  layout=None,
@@ -73,6 +74,7 @@ class Network(object):
         self.conf = False
         self.path = os.path.dirname(__file__) + "/templates/template.html"
         self.neighborhood_highlight = neighborhood_highlight
+        self.select_menu = select_menu
         
         if notebook:
             self.prep_notebook()
@@ -464,6 +466,7 @@ class Network(object):
                                     conf=self.conf,
                                     tooltip_link=use_link_template,
                                     neighborhood_highlight=self.neighborhood_highlight,
+                                    select_menu=self.select_menu
                                     )
 
 
@@ -473,7 +476,7 @@ class Network(object):
                 shutil.copytree(f"{os.path.dirname(__file__)}/lib", "lib")
             with open(name, "w+") as out:
                 out.write(self.html)
-            return IFrame(name, width=self.width, height=self.height)
+            return IFrame(name, width=self.width, height="600px")
         else:
             if local:
                 tempdir = "."
