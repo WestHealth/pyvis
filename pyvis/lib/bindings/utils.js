@@ -95,3 +95,9 @@ function neighbourhoodHighlight(params) {
     nodes.update(updateArray);
   }
 }
+
+function selectNode(node) {
+  network.selectNodes([node]);
+  network.focus(node, { scale: 2 });
+  return node;
+}
