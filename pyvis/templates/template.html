@@ -1,285 +1,311 @@
 <html>
-<head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
-<center>
-<h1>{{heading}}</h1>
-</center>
+  <head>
+    <link
+      href="lib/vis-9.0.4/vis-network.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="lib/vis-9.0.4/vis-network.min.js"></script>
+    <script src="lib/bindings/utils.js"></script>
+    <script src="lib/bindings/htmlwidgets.js"></script>
+    {#
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css"
+      type="text/css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"
+    ></script>
+    #}
+    <center>
+      <h1>{{heading}}</h1>
+    </center>
 
-<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+    <!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
 <script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
 
-<style type="text/css">
+    <style type="text/css">
 
-        #mynetwork {
-            width: {{width}};
-            height: {{height}};
-            background-color: {{bgcolor}};
-            border: 1px solid lightgray;
-            position: relative;
-            float: left;
-        }
+         #mynetwork {
+             width: {{width}};
+             height: {{height}};
+             background-color: {{bgcolor}};
+             border: 1px solid lightgray;
+             position: relative;
+             float: left;
+         }
 
-        {% if nodes|length > 100 and physics_enabled %}
-        #loadingBar {
-            position:absolute;
-            top:0px;
-            left:0px;
-            width: {{width}};
-            height: {{height}};
-            background-color:rgba(200,200,200,0.8);
-            -webkit-transition: all 0.5s ease;
-            -moz-transition: all 0.5s ease;
-            -ms-transition: all 0.5s ease;
-            -o-transition: all 0.5s ease;
-            transition: all 0.5s ease;
-            opacity:1;
-        }
+         {% if nodes|length > 100 and physics_enabled %}
+         #loadingBar {
+             position:absolute;
+             top:0px;
+             left:0px;
+             width: {{width}};
+             height: {{height}};
+             background-color:rgba(200,200,200,0.8);
+             -webkit-transition: all 0.5s ease;
+             -moz-transition: all 0.5s ease;
+             -ms-transition: all 0.5s ease;
+             -o-transition: all 0.5s ease;
+             transition: all 0.5s ease;
+             opacity:1;
+         }
 
-        #bar {
-            position:absolute;
-            top:0px;
-            left:0px;
-            width:20px;
-            height:20px;
-            margin:auto auto auto auto;
-            border-radius:11px;
-            border:2px solid rgba(30,30,30,0.05);
-            background: rgb(0, 173, 246); /* Old browsers */
-            box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
-        }
+         #bar {
+             position:absolute;
+             top:0px;
+             left:0px;
+             width:20px;
+             height:20px;
+             margin:auto auto auto auto;
+             border-radius:11px;
+             border:2px solid rgba(30,30,30,0.05);
+             background: rgb(0, 173, 246); /* Old browsers */
+             box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+         }
 
-        #border {
-            position:absolute;
-            top:10px;
-            left:10px;
-            width:500px;
-            height:23px;
-            margin:auto auto auto auto;
-            box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
-            border-radius:10px;
-        }
+         #border {
+             position:absolute;
+             top:10px;
+             left:10px;
+             width:500px;
+             height:23px;
+             margin:auto auto auto auto;
+             box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+             border-radius:10px;
+         }
 
-        #text {
-            position:absolute;
-            top:8px;
-            left:530px;
-            width:30px;
-            height:50px;
-            margin:auto auto auto auto;
-            font-size:22px;
-            color: #000000;
-        }
+         #text {
+             position:absolute;
+             top:8px;
+             left:530px;
+             width:30px;
+             height:50px;
+             margin:auto auto auto auto;
+             font-size:22px;
+             color: #000000;
+         }
 
-        div.outerBorder {
-            position:relative;
-            top:400px;
-            width:600px;
-            height:44px;
-            margin:auto auto auto auto;
-            border:8px solid rgba(0,0,0,0.1);
-            background: rgb(252,252,252); /* Old browsers */
-            background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
-            background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
-            background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
-            background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
-            background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
-            border-radius:72px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-        }
-        {% endif %}
+         div.outerBorder {
+             position:relative;
+             top:400px;
+             width:600px;
+             height:44px;
+             margin:auto auto auto auto;
+             border:8px solid rgba(0,0,0,0.1);
+             background: rgb(252,252,252); /* Old browsers */
+             background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+             background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+             background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+             background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+             background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+             background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+             border-radius:72px;
+             box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+         }
+         {% endif %}
 
-        {% if conf %}
-        #config {
-            float: left;
-            width: 400px;
-            height: 600px;
-        }
-        {% endif %}
+         {% if conf %}
+         #config {
+             float: left;
+             width: 400px;
+             height: 600px;
+         }
+         {% endif %}
 
-        {% if tooltip_link %}
-        /* position absolute is important and the container has to be relative or absolute as well. */
-	    div.popup {
-            position:absolute;
-            top:0px;
-            left:0px;
-            display:none;
-            background-color:#f5f4ed;
-            -moz-border-radius: 3px;
-            -webkit-border-radius: 3px;
-            border-radius: 3px;
-            border: 1px solid #808074;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-	    }
+         {% if tooltip_link %}
+         /* position absolute is important and the container has to be relative or absolute as well. */
+      div.popup {
+             position:absolute;
+             top:0px;
+             left:0px;
+             display:none;
+             background-color:#f5f4ed;
+             -moz-border-radius: 3px;
+             -webkit-border-radius: 3px;
+             border-radius: 3px;
+             border: 1px solid #808074;
+             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+      }
 
-	    /* hide the original tooltip */
-	    .vis-network-tooltip {
-	      display:none;
-	    }
-        {% endif %}
-</style>
+      /* hide the original tooltip */
+      .vis-network-tooltip {
+        display:none;
+      }
+         {% endif %}
+    </style>
+  </head>
 
-</head>
-
-<body>
-<div id = "mynetwork"></div>
-{% if nodes|length > 100 and physics_enabled %}
-<div id="loadingBar">
-    <div class="outerBorder">
+  <body>
+    <div id="mynetwork"></div>
+    {% if nodes|length > 100 and physics_enabled %}
+    <div id="loadingBar">
+      <div class="outerBorder">
         <div id="text">0%</div>
         <div id="border">
-            <div id="bar"></div>
+          <div id="bar"></div>
         </div>
+      </div>
     </div>
-</div>
-{% endif %}
-{% if conf %}
-<div id = "config"></div>
-{% endif %}
-<script type="text/javascript">
+    {% endif %} {% if conf %}
+    <div id="config"></div>
+    {% endif %}
+    <script type="text/javascript">
 
-    // initialize global variables.
-    var edges;
-    var nodes;
-    var network; 
-    var container;
-    var options, data;
-
-    
-    // This method is responsible for drawing the graph, returns the drawn network
-    function drawGraph() {
-        var container = document.getElementById('mynetwork');
-        
-        {% if use_DOT %}
-
-        var DOTstring = "{{dot_lang|safe}}";
-        var parsedData = vis.network.convertDot(DOTstring);
-        
-        data = {
-          nodes: parsedData.nodes,
-          edges: parsedData.edges
-        }
-        
-        var options = parsedData.options;
-        options.nodes = {
-            shape: "dot"
-        }
-        
-        {% else %}
-
-        // parsing and collecting nodes and edges from the python
-        nodes = new vis.DataSet({{nodes|tojson}});
-        edges = new vis.DataSet({{edges|tojson}});
-
-        // adding nodes and edges to the graph
-        data = {nodes: nodes, edges: edges};
-
-        var options = {{options|safe}};
-        
-        {% endif %}
-
-        {% if conf %}
-        // if this network requires displaying the configure window,
-        // put it in its div
-        options.configure["container"] = document.getElementById("config");
-        {% endif %}
-
-        network = new vis.Network(container, data, options);
-	 
-        {% if tooltip_link %}
-        // make a custom popup
-        var popup = document.createElement("div");
-        popup.className = 'popup';
-        popupTimeout = null;
-        popup.addEventListener('mouseover', function () {
-            console.log(popup)
-            if (popupTimeout !== null) {
-                clearTimeout(popupTimeout);
-                popupTimeout = null;
-            }
-        });
-        popup.addEventListener('mouseout', function () {
-            if (popupTimeout === null) {
-                hidePopup();
-            }
-        });
-        container.appendChild(popup);
+      // initialize global variables.
+      var edges;
+      var nodes;
+      var allNodes;
+      var nodeColors;
+      var originalNodes;
+      var network;
+      var container;
+      var options, data;
 
 
-        // use the popup event to show
-        network.on("showPopup", function (params) {
-            showPopup(params);
-        });
+      // This method is responsible for drawing the graph, returns the drawn network
+      function drawGraph() {
+          var container = document.getElementById('mynetwork');
 
-        // use the hide event to hide it
-        network.on("hidePopup", function (params) {
-            hidePopup();
-        });
+          {% if use_DOT %}
 
+          var DOTstring = "{{dot_lang|safe}}";
+          var parsedData = vis.network.convertDot(DOTstring);
 
-        // hiding the popup through css
-        function hidePopup() {
-            popupTimeout = setTimeout(function () { popup.style.display = 'none'; }, 500);
-        }
+          data = {
+            nodes: parsedData.nodes,
+            edges: parsedData.edges
+          }
 
-        // showing the popup
-        function showPopup(nodeId) {
-            // get the data from the vis.DataSet
-            var nodeData = nodes.get([nodeId]);
-            popup.innerHTML = nodeData[0].title;
+          var options = parsedData.options;
+          options.nodes = {
+              shape: "dot"
+          }
 
-            // get the position of the node
-            var posCanvas = network.getPositions([nodeId])[nodeId];
+          {% else %}
 
-            // get the bounding box of the node
-            var boundingBox = network.getBoundingBox(nodeId);
+          // parsing and collecting nodes and edges from the python
+          nodes = new vis.DataSet({{nodes|tojson}});
+          edges = new vis.DataSet({{edges|tojson}});
+          nodeColors = {};
+          allNodes = nodes.get({ returnType: "Object" });
+          for (var nodeId in allNodes) {
+            nodeColors[nodeId] = allNodes[nodeId].color;
+          }
+          // adding nodes and edges to the graph
+          data = {nodes: nodes, edges: edges};
 
-            //position tooltip:
-            posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+          var options = {{options|safe}};
 
-            // convert coordinates to the DOM space
-            var posDOM = network.canvasToDOM(posCanvas);
-
-            // Give it an offset
-            posDOM.x += 10;
-            posDOM.y -= 20;
-
-            // show and place the tooltip.
-            popup.style.display = 'block';
-            popup.style.top = posDOM.y + 'px';
-            popup.style.left = posDOM.x + 'px';
-        }
-        {% endif %}
+          {% endif %}
 
 
-        {% if nodes|length > 100 and physics_enabled %}
-        network.on("stabilizationProgress", function(params) {
-      		document.getElementById('loadingBar').removeAttribute("style");
-	        var maxWidth = 496;
-	        var minWidth = 20;
-	        var widthFactor = params.iterations/params.total;
-	        var width = Math.max(minWidth,maxWidth * widthFactor);
+          {% if conf %}
+          // if this network requires displaying the configure window,
+          // put it in its div
+          options.configure["container"] = document.getElementById("config");
+          {% endif %}
 
-	        document.getElementById('bar').style.width = width + 'px';
-	        document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
-	    });
-	    network.once("stabilizationIterationsDone", function() {
-	        document.getElementById('text').innerHTML = '100%';
-	        document.getElementById('bar').style.width = '496px';
-	        document.getElementById('loadingBar').style.opacity = 0;
-	        // really clean the dom element
-	        setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
-	    });
-        {% endif %}
+          network = new vis.Network(container, data, options);
 
-        return network;
+          {% if neighborhood_highlight %}
+            network.on("click", neighbourhoodHighlight);
+          {% endif %}
 
-    }
+          {% if tooltip_link %}
+          // make a custom popup
+          var popup = document.createElement("div");
+          popup.className = 'popup';
+          popupTimeout = null;
+          popup.addEventListener('mouseover', function () {
+              console.log(popup)
+              if (popupTimeout !== null) {
+                  clearTimeout(popupTimeout);
+                  popupTimeout = null;
+              }
+          });
+          popup.addEventListener('mouseout', function () {
+              if (popupTimeout === null) {
+                  hidePopup();
+              }
+          });
+          container.appendChild(popup);
 
-    drawGraph();
 
-</script>
-</body>
+          // use the popup event to show
+          network.on("showPopup", function (params) {
+              showPopup(params);
+          });
+
+          // use the hide event to hide it
+          network.on("hidePopup", function (params) {
+              hidePopup();
+          });
+
+
+          // hiding the popup through css
+          function hidePopup() {
+              popupTimeout = setTimeout(function () { popup.style.display = 'none'; }, 500);
+          }
+
+          // showing the popup
+          function showPopup(nodeId) {
+              // get the data from the vis.DataSet
+              var nodeData = nodes.get([nodeId]);
+              popup.innerHTML = nodeData[0].title;
+
+              // get the position of the node
+              var posCanvas = network.getPositions([nodeId])[nodeId];
+
+              // get the bounding box of the node
+              var boundingBox = network.getBoundingBox(nodeId);
+
+              //position tooltip:
+              posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+
+              // convert coordinates to the DOM space
+              var posDOM = network.canvasToDOM(posCanvas);
+
+              // Give it an offset
+              posDOM.x += 10;
+              posDOM.y -= 20;
+
+              // show and place the tooltip.
+              popup.style.display = 'block';
+              popup.style.top = posDOM.y + 'px';
+              popup.style.left = posDOM.x + 'px';
+          }
+          {% endif %}
+
+
+          {% if nodes|length > 100 and physics_enabled %}
+          network.on("stabilizationProgress", function(params) {
+        		document.getElementById('loadingBar').removeAttribute("style");
+           var maxWidth = 496;
+           var minWidth = 20;
+           var widthFactor = params.iterations/params.total;
+           var width = Math.max(minWidth,maxWidth * widthFactor);
+
+           document.getElementById('bar').style.width = width + 'px';
+           document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+       });
+       network.once("stabilizationIterationsDone", function() {
+           document.getElementById('text').innerHTML = '100%';
+           document.getElementById('bar').style.width = '496px';
+           document.getElementById('loadingBar').style.opacity = 0;
+           // really clean the dom element
+           setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+       });
+          {% endif %}
+
+          return network;
+
+      }
+
+      drawGraph();
+    </script>
+  </body>
 </html>
