@@ -11,7 +11,10 @@ import networkx as nx
 import json
 import jsonpickle
 import os
-
+import shutil
+import tempfile
+import platform
+from platform import uname
 
 class Network(object):
     """
@@ -28,6 +31,7 @@ class Network(object):
                  width="500px",
                  directed=False,
                  notebook=False,
+                 neighborhood_highlight=False,
                  bgcolor="#ffffff",
                  font_color=False,
                  layout=None,
@@ -68,6 +72,7 @@ class Network(object):
         self.template = None
         self.conf = False
         self.path = os.path.dirname(__file__) + "/templates/template.html"
+        self.neighborhood_highlight = neighborhood_highlight
         
         if notebook:
             self.prep_notebook()
@@ -95,7 +100,7 @@ class Network(object):
             self.__class__, self.num_nodes(), self.num_edges()
         )
 
-    def add_node(self, n_id, label=None, shape="dot", **options):
+    def add_node(self, n_id, color='#97c2fc', label=None, shape="dot", **options):
         """
         This method adds a node to the network, given a mandatory node ID.
         Node labels default to node ids if no label is specified during the
@@ -209,7 +214,10 @@ class Network(object):
         else:
             node_label = n_id
         if n_id not in self.node_ids:
-            n = Node(n_id, shape, label=node_label, font_color=self.font_color, **options)
+            if "group" in options:
+                n = Node(n_id, shape, label=node_label, font_color=self.font_color, **options)
+            else:
+                n = Node(n_id, shape, label=node_label, color=color, font_color=self.font_color, **options)
             self.nodes.append(n.options)
             self.node_ids.append(n_id)
 
@@ -402,7 +410,7 @@ class Network(object):
         check_html(name)
         self.write_html(name)
 
-    def write_html(self, name, notebook=False):
+    def write_html(self, name="index.html", local=True, notebook=False):
         """
         This method gets the data structures supporting the nodes, edges,
         and options and updates the template to write the HTML holding
@@ -454,15 +462,34 @@ class Network(object):
                                     widget=self.widget,
                                     bgcolor=self.bgcolor,
                                     conf=self.conf,
-                                    tooltip_link=use_link_template)
+                                    tooltip_link=use_link_template,
+                                    neighborhood_highlight=self.neighborhood_highlight,
+                                    )
 
-        with open(name, "w+") as out:
-            out.write(self.html)
 
         if notebook:
+            try:
+                shutil.copytree(f"{os.path.dirname(__file__)}/lib", "lib")
+            except Exception as e:
+                print(e)
+            with open(name, "w+") as out:
+                out.write(self.html)
             return IFrame(name, width=self.width, height=self.height)
+        else:
+            if local:
+                tempdir = "."
+            else:
+                tempdir = tempfile.mkdtemp()
+            # with tempfile.mkdtemp() as tempdir:
+            if os.path.exists(f"{tempdir}/lib"):
+                shutil.rmtree(f"{tempdir}/lib")
+            shutil.copytree(f"{os.path.dirname(__file__)}/lib", f"{tempdir}/lib")
 
-    def show(self, name):
+            with open(f"{tempdir}/{name}", "w+") as out:
+                out.write(self.html)
+                webbrowser.open(f"{tempdir}/{name}")
+
+    def show(self, name, local=True):
         """
         Writes a static HTML file and saves it locally before opening.
 
@@ -471,10 +498,10 @@ class Network(object):
         """
         check_html(name)
         if self.template is not None:
-            return self.write_html(name, notebook=True)
+            return self.write_html(name, local, notebook=True)
         else:
-            self.write_html(name)
-            webbrowser.open(name)
+            self.write_html(name, local)
+            # webbrowser.open(name)
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):
