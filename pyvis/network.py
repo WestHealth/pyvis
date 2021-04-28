@@ -468,10 +468,9 @@ class Network(object):
 
 
         if notebook:
-            try:
+            if os.path.exists("lib"):
+                shutil.rmtree(f"lib")
                 shutil.copytree(f"{os.path.dirname(__file__)}/lib", "lib")
-            except Exception as e:
-                print(e)
             with open(name, "w+") as out:
                 out.write(self.html)
             return IFrame(name, width=self.width, height=self.height)
