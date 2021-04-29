@@ -596,7 +596,7 @@ class Network(object):
         return self.get_adj_list()[node]
 
     def from_nx(self, nx_graph, node_size_transf=(lambda x: x), edge_weight_transf=(lambda x: x),
-                default_node_size=10, default_edge_weight=1):
+                default_node_size=10, default_edge_weight=1, edge_scaling=False):
         """
         This method takes an exisitng Networkx graph and translates
         it to a PyVis graph format that can be accepted by the VisJs
@@ -638,10 +638,18 @@ class Network(object):
                 nodes[e[1]]['size'] = int(node_size_transf(nodes[e[1]]['size']))
                 self.add_node(e[0], **nodes[e[0]])
                 self.add_node(e[1], **nodes[e[1]])
-
-                if 'weight' not in e[2].keys():
-                    e[2]['weight'] = default_edge_weight
-                e[2]['weight'] = edge_weight_transf(e[2]['weight'])
+                
+                # if user does not pass a 'weight' argument
+                if "value" not in e[2] or "width" not in e[2]:
+                    if edge_scaling:
+                        width_type = 'value'
+                    else:
+                        width_type = 'width'
+                    if "weight" not in e[2].keys():
+                        e[2]["weight"] = default_edge_weight
+                    e[2][width_type] = edge_weight_transf(e[2]["weight"])
+                    # replace provided weight value and pass to 'value' or 'width'
+                    e[2][width_type] = e[2].pop("weight")
                 self.add_edge(e[0], e[1], **e[2])
 
         for node in nx.isolates(nx_graph):
