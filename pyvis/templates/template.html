@@ -154,20 +154,27 @@
     <div class="card" style="width: 100%">
       {% if select_menu %}
       <div class="card-header">
-        <select
-          class="form-select"
-          aria-label="Default select example"
-          onchange="selectNode(value);"
-          searchable="Search here"
-        >
-          <option selected>Select a Node by ID</option>
-          {% for node in nodes %}
-          <option value="{{ node.id }}">{{node.id}}</option>
-          {% endfor %} {#
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-          #}
-        </select>
+        <div class="row no-gutters">
+          <div class="col-10 pb-2">
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              onchange="selectNode(value);"
+              searchable="Search here"
+            >
+              <option selected>Select a Node by ID</option>
+              {% for node in nodes %}
+              <option value="{{ node.id }}">{{node.id}}</option>
+              {% endfor %} {#
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+              #}
+            </select>
+          </div>
+          <div class="col-2 pb-2">
+            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+          <div>
+        </div>
       </div>
       {% endif %}
       <div id="mynetwork" class="card-body"></div>
@@ -246,6 +253,10 @@
 
           {% if neighborhood_highlight %}
             network.on("click", neighbourhoodHighlight);
+          {% endif %}
+
+          {% if select_menu %}
+            network.on("selectNode", neighbourhoodHighlight);
           {% endif %}
 
           {% if tooltip_link %}

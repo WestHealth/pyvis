@@ -1,4 +1,6 @@
 function neighbourhoodHighlight(params) {
+  console.log("in nieghborhoodhighlight");
+  console.log(params);
   allNodes = nodes.get({ returnType: "Object" });
   // originalNodes = JSON.parse(JSON.stringify(allNodes));
   // if something is selected:
@@ -98,6 +100,6 @@ function neighbourhoodHighlight(params) {
 
 function selectNode(node) {
   network.selectNodes([node]);
-  network.focus(node, { scale: 2 });
+  neighbourhoodHighlight({ nodes: [node] });
   return node;
 }
