@@ -102,7 +102,7 @@ class Network(object):
             self.__class__, self.num_nodes(), self.num_edges()
         )
 
-    def add_node(self, n_id, color='#97c2fc', label=None, shape="dot", **options):
+    def add_node(self, n_id, label=None, shape="dot", color='#97c2fc', **options):
         """
         This method adds a node to the network, given a mandatory node ID.
         Node labels default to node ids if no label is specified during the
