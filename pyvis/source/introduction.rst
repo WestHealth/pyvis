@@ -10,4 +10,4 @@ algorithm can be tweaked as well to allow experimentation with rendering of larg
 
 Pyvis is built around the amazing VisJS_ library.
 
-.. _VisJS: http://visjs.org/network_examples.html
+.. _VisJS: https://visjs.github.io/vis-network/examples/
