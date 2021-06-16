@@ -23,3 +23,4 @@ pyvis/make.bat
 
 # vscode specific
 .vscode/
+venv
