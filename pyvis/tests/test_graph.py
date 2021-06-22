@@ -114,7 +114,7 @@ class NodeTestCase(unittest.TestCase):
         self.assertEqual(g.num_nodes(), 1)
 
     def test_get_network_data(self):
-        self.assertEqual(len(self.g.get_network_data()), 5)
+        self.assertEqual(len(self.g.get_network_data()), 6)
 
 
 class EdgeTestCase(unittest.TestCase):
