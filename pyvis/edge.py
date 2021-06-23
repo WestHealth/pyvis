@@ -5,4 +5,5 @@ class Edge(object):
         self.options['from'] = source
         self.options['to'] = dest
         if directed:
-            self.options["arrows"] = "to"
+        	if 'arrows' not in self.options:
+        		self.options["arrows"] = "to"
