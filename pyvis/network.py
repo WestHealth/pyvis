@@ -404,15 +404,18 @@ class Network(object):
         check_html(name)
         self.write_html(name)
 
-    def write_html(self, name, notebook=False):
+    def generate_html(self, notebook=False):
         """
-        This method gets the data structures supporting the nodes, edges,
-        and options and updates the template to write the HTML holding
+        This method generates HTML from the data structures supporting the nodes, edges,
+        and options and updates the template to generate the HTML holding
         the visualization.
 
-        :type name_html: str
+        :type notebook: bool
+
+        Returns
+        :type out: str
         """
-        check_html(name)
+
         # here, check if an href is present in the hover data
         use_link_template = False
         for n in self.nodes:
@@ -444,19 +447,32 @@ class Network(object):
         else:
             physics_enabled = self.options.physics.enabled
 
-        self.html = template.render(height=height,
-                                    width=width,
-                                    nodes=nodes,
-                                    edges=edges,
-                                    heading=heading,
-                                    options=options,
-                                    physics_enabled=physics_enabled,
-                                    use_DOT=self.use_DOT,
-                                    dot_lang=self.dot_lang,
-                                    widget=self.widget,
-                                    bgcolor=self.bgcolor,
-                                    conf=self.conf,
-                                    tooltip_link=use_link_template)
+        out = template.render(height=height,
+                              width=width,
+                              nodes=nodes,
+                              edges=edges,
+                              heading=heading,
+                              options=options,
+                              physics_enabled=physics_enabled,
+                              use_DOT=self.use_DOT,
+                              dot_lang=self.dot_lang,
+                              widget=self.widget,
+                              bgcolor=self.bgcolor,
+                              conf=self.conf,
+                              tooltip_link=use_link_template)
+
+        return out
+
+    def write_html(self, name, notebook=False):
+        """
+        This method gets the data structures supporting the nodes, edges,
+        and options and updates the template to write the HTML holding
+        the visualization.
+
+        :type name_html: str
+        """
+        check_html(name)
+        self.html = self.generate_html(notebook=notebook)
 
         with open(name, "w+") as out:
             out.write(self.html)
