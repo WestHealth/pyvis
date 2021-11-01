@@ -12,3 +12,7 @@ Here are some guidelines for pull requests:
 * Don't make 'cleanup' pull requests just to change code style. We don't follow any style guide strictly, and we consider formatting changes unnecessary noise. If you're making functional changes, you can clean up the specific pieces of code you're working on.
 
 Pyvis wraps  vis.js so JavaScript functionality issues should be directed at the main `vis.js` project.
+
+# Other contributions
+
+Outside of Pull Requests (PRs), we welcome additions/corrections/clarification to the existing documentation as contributions at least as valuable as code submissions.  
