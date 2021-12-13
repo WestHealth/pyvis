@@ -146,7 +146,7 @@ The displaying of a graph is achieved by a single method call on
 :meth:`network.Network.show()` after the underlying network is constructed.
 The interactive visualization is presented as a static HTML file.
 
->>> net.enable_physics(True)
+>>> net.toggle_physics(True)
 >>> net.show('mygraph.html')
 
 .. note:: Triggering the :meth:`toggle_physics` method allows for more fluid graph interactions 
