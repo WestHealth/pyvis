@@ -226,18 +226,29 @@
 
         // showing the popup
         function showPopup(nodeId) {
-            // get the data from the vis.DataSet
-            var nodeData = nodes.get([nodeId]);
-            popup.innerHTML = nodeData[0].title;
 
+            // get the data from the vis.DataSet
+            var nodeData = nodes.get(nodeId);
             // get the position of the node
             var posCanvas = network.getPositions([nodeId])[nodeId];
 
-            // get the bounding box of the node
-            var boundingBox = network.getBoundingBox(nodeId);
+            if (!nodeData) {
+                var edgeData = edges.get(nodeId);
+                var poses = network.getPositions([edgeData.from, edgeData.to]);
+                var middle_x = (poses[edgeData.to].x - poses[edgeData.from].x) * 0.5;
+                var middle_y = (poses[edgeData.to].y - poses[edgeData.from].y) * 0.5;
+                posCanvas = poses[edgeData.from];
+                posCanvas.x = posCanvas.x + middle_x;
+                posCanvas.y = posCanvas.y + middle_y;
 
-            //position tooltip:
-            posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+                popup.innerHTML = edgeData.title;
+            } else {
+                popup.innerHTML = nodeData.title;
+                // get the bounding box of the node
+                var boundingBox = network.getBoundingBox(nodeId);
+                posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+                posCanvas.y = posCanvas.y + 0.5 * (boundingBox.top - boundingBox.bottom);
+            };
 
             // convert coordinates to the DOM space
             var posDOM = network.canvasToDOM(posCanvas);
