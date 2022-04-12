@@ -1,9 +1,3 @@
-import sys
-sys.path.append('/home/unpingco/.wingpro8/remote-8.1.2.1')
-import wingdbstub
-wingdbstub.Ensure()
-
-
 from .node import Node
 from .edge import Edge
 from .options import Options, Configure
