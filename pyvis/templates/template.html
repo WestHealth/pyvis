@@ -155,17 +155,17 @@
         {% if use_DOT %}
 
         var DOTstring = "{{dot_lang|safe}}";
-        var parsedData = vis.network.convertDot(DOTstring);
-        
-        data = {
-          nodes: parsedData.nodes,
-          edges: parsedData.edges
-        }
-        
-        var options = parsedData.options;
-        options.nodes = {
-            shape: "dot"
-        }
+        data = vis.network.dotparser.DOTToGraph(DOTstring);
+
+        var options = data.options;
+        options = Object.assign(options, {
+            nodes: {
+                shape: "dot"
+            },
+        });
+        {% if options %}
+        options = Object.assign(options, {{options|safe}})
+        {% endif %}
         
         {% else %}
 
