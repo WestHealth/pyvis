@@ -55,8 +55,8 @@ class EdgeOptions(object):
             return str(self.__dict__)
 
         def __init__(self):
-            self.enabled = False
-            self.type = "continuous"
+            self.enabled = True
+            self.type = "dynamic"
 
     class Color(object):
         """
