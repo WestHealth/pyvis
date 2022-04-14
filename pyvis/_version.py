@@ -1,1 +1,1 @@
-__version__ = '2022-04-14' # bump version
+__version__ = '0.2.0' # bump version
