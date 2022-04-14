@@ -49,42 +49,18 @@
         
         
 
-        // parsing and collecting nodes and edges from the python
-        nodes = new vis.DataSet([{"id": 0, "label": 0, "shape": "dot"}, {"id": 1, "label": 1, "shape": "dot"}, {"id": 2, "label": 2, "shape": "dot"}, {"id": 3, "label": 3, "shape": "dot"}, {"id": 4, "label": 4, "shape": "dot"}]);
-        edges = new vis.DataSet([{"from": 0, "to": 2}, {"from": 0, "to": 3}, {"from": 0, "to": 4}, {"from": 1, "to": 1}, {"from": 1, "to": 3}, {"from": 1, "to": 2}]);
+        var DOTstring = "digraph {     a [label=12, entity_id=12, entity_class=\"truck\"];     b [label=7, entity_id=7,entity_class=\"bike\"];     c [label=3, entity_id=3, entity_class=\"car\"];     a -> b[label=\"solid edge\"];                          a -> b [label=\"dashed edge\", style=dashed];      a -> c [label=\"dashed edge\", style=dashed];      a -> c [label=\"dotted edge\", style=dotted];       }";
+        data = vis.network.dotparser.DOTToGraph(DOTstring);
 
-        // adding nodes and edges to the graph
-        data = {nodes: nodes, edges: edges};
-
-        var options = {
-    "configure": {
-        "enabled": false
-    },
-    "edges": {
-        "color": {
-            "inherit": true
-        },
-        "smooth": {
-            "enabled": true,
-            "type": "dynamic"
-        }
-    },
-    "interaction": {
-        "dragNodes": true,
-        "hideEdgesOnDrag": false,
-        "hideNodesOnDrag": false
-    },
-    "physics": {
-        "enabled": true,
-        "stabilization": {
-            "enabled": true,
-            "fit": true,
-            "iterations": 1000,
-            "onlyDynamicEdges": false,
-            "updateInterval": 50
-        }
-    }
-};
+        var options = data.options;
+        options = Object.assign(options, {
+            nodes: {
+                shape: "dot"
+            },
+        });
+        
+        options = Object.assign(options, {"physics": {"enabled": true, "barnesHut": {"theta": 0.5, "gravitationalConstant": -2000, "centralGravity": 0.3, "springLength": 200, "springConstant": 0.04, "damping": 0.09, "avoidOverlap": 0}, "maxVelocity": 50, "minVelocity": 0.1, "solver": "barnesHut", "stabilization": {"enabled": true, "iterations": 1000, "updateInterval": 100, "onlyDynamicEdges": false, "fit": true}}})
+        
         
         
 

@@ -1,7 +1,7 @@
 <html>
 <head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@latest/styles/vis-network.css" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@latest/dist/vis-network.min.js"> </script>
 <center>
 <h1>{{heading}}</h1>
 </center>
@@ -155,17 +155,17 @@
         {% if use_DOT %}
 
         var DOTstring = "{{dot_lang|safe}}";
-        var parsedData = vis.network.convertDot(DOTstring);
-        
-        data = {
-          nodes: parsedData.nodes,
-          edges: parsedData.edges
-        }
-        
-        var options = parsedData.options;
-        options.nodes = {
-            shape: "dot"
-        }
+        data = vis.network.dotparser.DOTToGraph(DOTstring);
+
+        var options = data.options;
+        options = Object.assign(options, {
+            nodes: {
+                shape: "dot"
+            },
+        });
+        {% if options %}
+        options = Object.assign(options, {{options|safe}})
+        {% endif %}
         
         {% else %}
 
