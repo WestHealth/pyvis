@@ -8,7 +8,7 @@ setup(
     long_description='Pyvis is a wrapper around visjs, a JavaScript network graph visualization library.',
     url="https://github.com/WestHealth/pyvis",
     author="Jose Unpingco",
-    author_email="jhunpingco@westhealth.org",
+    author_email="datascience@westhealth.org",
     license="BSD",
     packages=find_packages(),
     include_package_data=True,
