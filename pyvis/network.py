@@ -11,7 +11,10 @@ import networkx as nx
 import json
 import jsonpickle
 import os
-
+import shutil
+import tempfile
+import platform
+from platform import uname
 
 class Network(object):
     """
@@ -25,9 +28,11 @@ class Network(object):
 
     def __init__(self,
                  height="500px",
-                 width="500px",
+                 width="100%",
                  directed=False,
                  notebook=False,
+                 neighborhood_highlight=False,
+                 select_menu=False,
                  bgcolor="#ffffff",
                  font_color=False,
                  layout=None,
@@ -69,7 +74,9 @@ class Network(object):
         self.template = None
         self.conf = False
         self.path = os.path.dirname(__file__) + "/templates/template.html"
-
+        self.neighborhood_highlight = neighborhood_highlight
+        self.select_menu = select_menu
+        
         if notebook:
             self.prep_notebook()
 
@@ -209,8 +216,14 @@ class Network(object):
         else:
             node_label = n_id
         if n_id not in self.node_ids:
-            n = Node(n_id, shape, label=node_label,
-                     font_color=self.font_color, **options)
+
+            n = Node(n_id, shape, label=node_label, font_color=self.font_color, **options)
+
+            #if "group" in options:
+            #    n = Node(n_id, shape, label=node_label, font_color=self.font_color, **options)
+            #else:
+            #    n = Node(n_id, shape, label=node_label, color=color, font_color=self.font_color, **options)
+
             self.nodes.append(n.options)
             self.node_ids.append(n_id)
             self.node_map[n_id] = n.options
@@ -448,6 +461,7 @@ class Network(object):
         else:
             physics_enabled = self.options.physics.enabled
 
+
         out = template.render(height=height,
                               width=width,
                               nodes=nodes,
@@ -460,28 +474,45 @@ class Network(object):
                               widget=self.widget,
                               bgcolor=self.bgcolor,
                               conf=self.conf,
-                              tooltip_link=use_link_template)
+                              tooltip_link=use_link_template,
+                              neighborhood_highlight=self.neighborhood_highlight,
+                              select_menu=self.select_menu)
+
 
         return out
 
-    def write_html(self, name, notebook=False):
+    def write_html(self, name="index.html", local=True, notebook=False):
         """
         This method gets the data structures supporting the nodes, edges,
         and options and updates the template to write the HTML holding
         the visualization.
-
         :type name_html: str
         """
         check_html(name)
         self.html = self.generate_html(notebook=notebook)
 
-        with open(name, "w+") as out:
-            out.write(self.html)
-
         if notebook:
-            return IFrame(name, width=self.width, height=self.height)
+            if os.path.exists("lib"):
+                shutil.rmtree(f"lib")
+            shutil.copytree(f"{os.path.dirname(__file__)}/lib", "lib")
+            with open(name, "w+") as out:
+                out.write(self.html)
+            return IFrame(name, width=self.width, height="600px")
+        else:
+            if local:
+                tempdir = "."
+            else:
+                tempdir = tempfile.mkdtemp()
+            # with tempfile.mkdtemp() as tempdir:
+            if os.path.exists(f"{tempdir}/lib"):
+                shutil.rmtree(f"{tempdir}/lib")
+            shutil.copytree(f"{os.path.dirname(__file__)}/lib", f"{tempdir}/lib")
 
-    def show(self, name):
+            with open(f"{tempdir}/{name}", "w+") as out:
+                out.write(self.html)
+                webbrowser.open(f"{tempdir}/{name}")
+
+    def show(self, name, local=True):
         """
         Writes a static HTML file and saves it locally before opening.
 
@@ -490,10 +521,10 @@ class Network(object):
         """
         check_html(name)
         if self.template is not None:
-            return self.write_html(name, notebook=True)
+            return self.write_html(name, local, notebook=True)
         else:
-            self.write_html(name)
-            webbrowser.open(name)
+            self.write_html(name, local)
+            # webbrowser.open(name)
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):
@@ -586,7 +617,7 @@ class Network(object):
         return self.get_adj_list()[node]
 
     def from_nx(self, nx_graph, node_size_transf=(lambda x: x), edge_weight_transf=(lambda x: x),
-                default_node_size =10, default_edge_weight=1, show_edge_weights=True):
+                default_node_size =10, default_edge_weight=1, show_edge_weights=True, edge_scaling=False):
         """
         This method takes an exisitng Networkx graph and translates
         it to a PyVis graph format that can be accepted by the VisJs
@@ -629,11 +660,19 @@ class Network(object):
                 self.add_node(e[0], **nodes[e[0]])
                 self.add_node(e[1], **nodes[e[1]])
 
-                if 'weight' not in e[2].keys():
-                    e[2]['weight']=default_edge_weight
-                e[2]['weight']=edge_weight_transf(e[2]['weight'])
-                if show_edge_weights:
-                    e[2]["label"] = e[2]["weight"]
+                
+                # if user does not pass a 'weight' argument
+                if "value" not in e[2] or "width" not in e[2]:
+                    if edge_scaling:
+                        width_type = 'value'
+                    else:
+                        width_type = 'width'
+                    if "weight" not in e[2].keys():
+                        e[2]["weight"] = default_edge_weight
+                    e[2][width_type] = edge_weight_transf(e[2]["weight"])
+                    # replace provided weight value and pass to 'value' or 'width'
+                    e[2][width_type] = e[2].pop("weight")
+
                 self.add_edge(e[0], e[1], **e[2])
 
         for node in nx.isolates(nx_graph):
