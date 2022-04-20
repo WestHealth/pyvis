@@ -474,7 +474,9 @@ class Network(object):
                               widget=self.widget,
                               bgcolor=self.bgcolor,
                               conf=self.conf,
-                              tooltip_link=use_link_template)
+                              tooltip_link=use_link_template,
+                              neighborhood_highlight=self.neighborhood_highlight,
+                              select_menu=self.select_menu)
 
 
         return out
@@ -490,12 +492,9 @@ class Network(object):
         self.html = self.generate_html(notebook=notebook)
 
         if notebook:
-            print("Is notebook")
             if os.path.exists("lib"):
                 shutil.rmtree(f"lib")
-            print("copying",f"{os.path.dirname(__file__)}/lib")                
             shutil.copytree(f"{os.path.dirname(__file__)}/lib", "lib")
-            print("Saving",name)
             with open(name, "w+") as out:
                 out.write(self.html)
             return IFrame(name, width=self.width, height="600px")
