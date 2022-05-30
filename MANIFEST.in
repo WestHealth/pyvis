@@ -1,1 +1,2 @@
 recursive-include pyvis/templates *.html
+recursive-include pyvis/lib *
