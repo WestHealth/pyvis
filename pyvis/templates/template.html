@@ -18,6 +18,8 @@
       integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
       crossorigin="anonymous"
     ></script>
+    <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+    <script src="lib/tom-select/tom-select.complete.min.js"></script>
 
     {#
     <link
@@ -160,7 +162,8 @@
               class="form-select"
               aria-label="Default select example"
               onchange="selectNode(value);"
-              searchable="Search here"
+	      id="select-node"
+	      placeholder="Select node..."
             >
               <option selected>Select a Node by ID</option>
               {% for node in nodes %}
@@ -204,6 +207,14 @@
       var network;
       var container;
       var options, data;
+
+      new TomSelect("#select-node",{
+                    create: false,
+                    sortField: {
+                        field: "text",
+                        direction: "asc"
+                    }
+      });
 
 
       // This method is responsible for drawing the graph, returns the drawn network
