@@ -1,5 +1,6 @@
 <html>
   <head>
+      <meta charset="utf-8">
     <link
       href="lib/vis-9.0.4/vis-network.css"
       rel="stylesheet"
@@ -20,7 +21,6 @@
     ></script>
     <link href="lib/tom-select/tom-select.css" rel="stylesheet">
     <script src="lib/tom-select/tom-select.complete.min.js"></script>
-
     
     <center>
       <h1></h1>
@@ -65,14 +65,10 @@
       var network;
       var container;
       var options, data;
+      var settings ={
 
-      new TomSelect("#select-node",{
-                    create: false,
-                    sortField: {
-                        field: "text",
-                        direction: "asc"
-                    }
-      });
+      };
+
 
 
       // This method is responsible for drawing the graph, returns the drawn network
@@ -128,7 +124,7 @@
           
 
           network = new vis.Network(container, data, options);
-
+            new TomSelect("#select-node",settings);
           
 
           
