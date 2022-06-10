@@ -15,6 +15,8 @@ import shutil
 import tempfile
 import platform
 from platform import uname
+from jinja2 import Environment, FileSystemLoader
+
 
 class Network(object):
     """
@@ -36,7 +38,8 @@ class Network(object):
                  bgcolor="#ffffff",
                  font_color=False,
                  layout=None,
-                 heading=""):
+                 heading="",
+                 cdn_resources="local"):
         """
         :param height: The height of the canvas
         :param width: The width of the canvas
@@ -44,6 +47,11 @@ class Network(object):
                          by default.
         :param notebook: True if using jupyter notebook.
         :param bgcolor: The background color of the canvas.
+        :param cdn_resources: Where to pull resources for css and js files. Defaults to local.
+            Options ['local','in_line','remote'].
+            local: pull resources from local lib folder.
+            in_line: insert lib resources as inline script tags.
+            remote: pull resources from hash checked cdns.
         :font_color: The color of the node labels text
         :layout: Use hierarchical layout if this is set
 
@@ -54,6 +62,7 @@ class Network(object):
         :type bgcolor: str
         :type font_color: str
         :type layout: bool
+        :type cdn_resources: str
         """
         self.nodes = []
         self.edges = []
@@ -72,10 +81,16 @@ class Network(object):
         self.node_ids = []
         self.template = None
         self.conf = False
-        self.path = os.path.dirname(__file__) + "/templates/template.html"
+        self.path = "template.html" #os.path.dirname(__file__) + "/templates/
         self.neighborhood_highlight = neighborhood_highlight
         self.select_menu = select_menu
-        
+        assert cdn_resources in ["local","in_line","remote"],  "cdn_resources not in [local, in_line, remote]."
+        self.template_dir = os.path.dirname(__file__) + "/templates/"
+        self.templateEnv = Environment(loader=FileSystemLoader(self.template_dir))
+
+        if cdn_resources =="local" and notebook==True:
+            print("Local cdn resources have problems on chrome/safari when used in jupyter-notebook. ")
+        self.cdn_resources = cdn_resources
         if notebook:
             self.prep_notebook()
         
@@ -435,9 +450,9 @@ class Network(object):
                     use_link_template = True
                     break
         if not notebook:
-            with open(self.path) as html:
-                content = html.read()
-            template = Template(content)
+            # with open(self.path) as html:
+            #     content = html.read()
+            template = self.templateEnv.get_template(self.path)# Template(content)
         else:
             template = self.template
 
@@ -466,14 +481,16 @@ class Network(object):
                                     conf=self.conf,
                                     tooltip_link=use_link_template,
                                     neighborhood_highlight=self.neighborhood_highlight,
-                                    select_menu=self.select_menu
+                                    select_menu=self.select_menu,
+                                    notebook=notebook,
+                                    cdn_resources=self.cdn_resources
                                     )
 
 
         if notebook:
             if os.path.exists("lib"):
                 shutil.rmtree(f"lib")
-                shutil.copytree(f"{os.path.dirname(__file__)}/lib", "lib")
+                shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib", "lib")
             with open(name, "w+") as out:
                 out.write(self.html)
             return IFrame(name, width=self.width, height="600px")
@@ -485,7 +502,7 @@ class Network(object):
             # with tempfile.mkdtemp() as tempdir:
             if os.path.exists(f"{tempdir}/lib"):
                 shutil.rmtree(f"{tempdir}/lib")
-            shutil.copytree(f"{os.path.dirname(__file__)}/lib", f"{tempdir}/lib")
+            shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib", f"{tempdir}/lib")
 
             with open(f"{tempdir}/{name}", "w+") as out:
                 out.write(self.html)
@@ -522,12 +539,32 @@ class Network(object):
         """
         if custom_template and custom_template_path:
             self.set_template(custom_template_path)
-        with open(self.path) as html:
-            content = html.read()
-        self.template = Template(content)
+        # with open(self.path) as html:
+        #     content = html.read()
+        self.template = self.templateEnv.get_template(self.path) # Template(content)
 
-    def set_template(self, path_to_template):
-        self.path = path_to_template
+
+    def set_template(self, path_to_template:str):
+        """
+            Path to full template assumes that it exists inside of a template directory.
+            Use `set_template_dir` to set the relative template path to the template directory along with the directory location itself
+            to change both values otherwise this function will infer the results.
+            :path_to_template path: full os path string value of the template directory
+        """
+        str_parts = path_to_template.split('/')
+        self.set_template_dir("/".join(str_parts[:-1])+"/",str_parts[-1])
+
+
+    def set_template_dir(self, template_directory, template_file='template.html'):
+        """
+            Path to template directory along with the location of the template file.
+            :template_directory path: template directory
+            :template_file path: name of the template file that is going to be used to generate the html doc.
+
+        """
+        self.path = template_file
+        self.template_dir = template_directory
+        self.templateEnv = Environment(loader=FileSystemLoader(self.template_dir))
 
     def from_DOT(self, dot):
         """
