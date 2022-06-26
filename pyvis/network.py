@@ -203,7 +203,16 @@ class Network(object):
         :type x: num (optional)
         :type y: num (optional)
         """
+
+        try:
+            n_id = int(n_id)
+        except ValueError:
+            try:
+                n_id = str(n_id)
+            except ValueError:
+                pass
         assert isinstance(n_id, str) or isinstance(n_id, int)
+        
         if label:
             node_label = label
         else:
@@ -332,6 +341,18 @@ class Network(object):
         :type width: num
         """
         edge_exists = False
+
+        try:
+            source = int(source)
+            to = int(to)
+        except ValueError:
+            try:
+                source = str(source)
+                to = str(to)
+            except ValueError:
+                pass
+        assert isinstance(source, str) or isinstance(source, int)
+        assert isinstance(to, str) or isinstance(to, int)
 
         # verify nodes exists
         assert source in self.get_nodes(), \
