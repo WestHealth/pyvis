@@ -239,8 +239,9 @@ class Network(object):
 
         :type nodes: list
         """
-        valid_args = ["size", "value", "title",
-            "x", "y", "label", "color", "shape"]
+        valid_args = ["label", "borderWidth", "borderWidthSelected", 
+        "brokenImage", "group", "hidden", "image", "labelHighlightBold", 
+        "level", "mass", "physics", "shape", "size", "title", "value", "x", "y"]
         for k in kwargs:
             assert k in valid_args, "invalid arg '" + k + "'"
 
