@@ -1,6 +1,7 @@
 import unittest
-from ..network import Network
+from pyvis.network import Network
 import os
+from pyvis.utils import HREFParser
 
 
 class NodeTestCase(unittest.TestCase):
@@ -114,7 +115,7 @@ class NodeTestCase(unittest.TestCase):
         self.assertEqual(g.num_nodes(), 1)
 
     def test_get_network_data(self):
-        self.assertEqual(len(self.g.get_network_data()), 5)
+        self.assertEqual(len(self.g.get_network_data()), 6)
 
 
 class EdgeTestCase(unittest.TestCase):
@@ -200,7 +201,7 @@ class EdgeTestCase(unittest.TestCase):
         self.g.add_edge(0, 1)
         self.assertTrue(self.g.edges)
         for e in self.g.edges:
-            self.assertTrue(e["arrows"] == "from")
+            self.assertTrue(e["arrows"] == "to")
 
 
 class UtilsTestCase(unittest.TestCase):
@@ -294,11 +295,56 @@ class EdgeOptionsTestCase(unittest.TestCase):
         self.g.add_nodes([0, 1, 2, 3])
 
     def test_set_edge_smooth(self):
-        self.assertEqual(self.g.options.edges.smooth.type, 'continuous')
-        self.g.set_edge_smooth('dynamic')
         self.assertEqual(self.g.options.edges.smooth.type, 'dynamic')
+        self.g.set_edge_smooth('continuous')
+        self.assertEqual(self.g.options.edges.smooth.type, 'continuous')
 
     def test_inherit_colors(self):
         self.assertTrue(self.g.options.edges.color.inherit)
-        self.g.inherit_edge_colors_from(False)
+        self.g.inherit_edge_colors(False)
         self.assertFalse(self.g.options.edges.color.inherit)
+
+
+class LayoutTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.g = Network(layout=True)
+
+    def test_can_enable_init(self):
+        self.assertTrue(self.g.options['layout'])
+    
+    def test_layout_disabled(self):
+        self.g = Network()
+        self.assertRaises(KeyError, lambda: self.g.options['layout'])
+    
+    def test_levelSeparation(self):
+        self.assertTrue(self.g.options.layout.hierarchical.levelSeparation)
+    
+    def test_treeSpacing(self):
+        self.assertTrue(self.g.options.layout.hierarchical.treeSpacing)
+    
+    def test_blockShifting(self):
+        self.assertTrue(self.g.options.layout.hierarchical.blockShifting)
+    
+    def test_edgeMinimization(self):
+        self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization)
+    
+    def test_parentCentralization(self):
+        self.assertTrue(self.g.options.layout.hierarchical.parentCentralization)
+
+    def test_sortMethod(self):
+        self.assertTrue(self.g.options.layout.hierarchical.sortMethod)
+
+    def test_set_edge_minimization(self):
+        self.g.options.layout.set_separation(10)
+        self.assertTrue(self.g.options.layout.hierarchical.levelSeparation == 10)
+    
+    def test_set_tree_spacing(self):
+        self.g.options.layout.set_tree_spacing(10)
+        self.assertTrue(self.g.options.layout.hierarchical.treeSpacing == 10)
+
+    def test_set_edge_minimization(self):
+        self.g.options.layout.set_edge_minimization(True)
+        self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization == True)
+        self.g.options.layout.set_edge_minimization(False)
+        self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization == False)

@@ -1,0 +1,84 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@latest/styles/vis-network.css" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@latest/dist/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 500px;
+            height: 500px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        var DOTstring = "digraph {     a [label=12, entity_id=12, entity_class=\"truck\"];     b [label=7, entity_id=7,entity_class=\"bike\"];     c [label=3, entity_id=3, entity_class=\"car\"];     a -> b[label=\"solid edge\"];                          a -> b [label=\"dashed edge\", style=dashed];      a -> c [label=\"dashed edge\", style=dashed];      a -> c [label=\"dotted edge\", style=dotted];       }";
+        data = vis.network.dotparser.DOTToGraph(DOTstring);
+
+        var options = data.options;
+        options = Object.assign(options, {
+            nodes: {
+                shape: "dot"
+            },
+        });
+        
+        options = Object.assign(options, {"physics": {"enabled": true, "barnesHut": {"theta": 0.5, "gravitationalConstant": -2000, "centralGravity": 0.3, "springLength": 200, "springConstant": 0.04, "damping": 0.09, "avoidOverlap": 0}, "maxVelocity": 50, "minVelocity": 0.1, "solver": "barnesHut", "stabilization": {"enabled": true, "iterations": 1000, "updateInterval": 100, "onlyDynamicEdges": false, "fit": true}}})
+        
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

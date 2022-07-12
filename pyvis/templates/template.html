@@ -1,7 +1,10 @@
 <html>
 <head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@latest/styles/vis-network.css" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@latest/dist/vis-network.min.js"> </script>
+<center>
+<h1>{{heading}}</h1>
+</center>
 
 <!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
 <script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
@@ -17,7 +20,7 @@
             float: left;
         }
 
-        {% if nodes|length > 100 %}
+        {% if nodes|length > 100 and physics_enabled %}
         #loadingBar {
             position:absolute;
             top:0px;
@@ -122,7 +125,7 @@
 
 <body>
 <div id = "mynetwork"></div>
-{% if nodes|length > 100 %}
+{% if nodes|length > 100 and physics_enabled %}
 <div id="loadingBar">
     <div class="outerBorder">
         <div id="text">0%</div>
@@ -152,23 +155,23 @@
         {% if use_DOT %}
 
         var DOTstring = "{{dot_lang|safe}}";
-        var parsedData = vis.network.convertDot(DOTstring);
-        
-        data = {
-          nodes: parsedData.nodes,
-          edges: parsedData.edges
-        }
-        
-        var options = parsedData.options;
-        options.nodes = {
-            shape: "dot"
-        }
+        data = vis.network.dotparser.DOTToGraph(DOTstring);
+
+        var options = data.options;
+        options = Object.assign(options, {
+            nodes: {
+                shape: "dot"
+            },
+        });
+        {% if options %}
+        options = Object.assign(options, {{options|safe}})
+        {% endif %}
         
         {% else %}
 
         // parsing and collecting nodes and edges from the python
-        nodes = new vis.DataSet({{nodes|safe}});
-        edges = new vis.DataSet({{edges|safe}});
+        nodes = new vis.DataSet({{nodes|tojson}});
+        edges = new vis.DataSet({{edges|tojson}});
 
         // adding nodes and edges to the graph
         data = {nodes: nodes, edges: edges};
@@ -177,10 +180,6 @@
         
         {% endif %}
 
-        // default to using dot shape for nodes
-        options.nodes = {
-            shape: "dot"
-        }
         {% if conf %}
         // if this network requires displaying the configure window,
         // put it in its div
@@ -188,7 +187,7 @@
         {% endif %}
 
         network = new vis.Network(container, data, options);
-
+	 
         {% if tooltip_link %}
         // make a custom popup
         var popup = document.createElement("div");
@@ -227,18 +226,29 @@
 
         // showing the popup
         function showPopup(nodeId) {
-            // get the data from the vis.DataSet
-            var nodeData = nodes.get([nodeId]);
-            popup.innerHTML = nodeData[0].title;
 
+            // get the data from the vis.DataSet
+            var nodeData = nodes.get(nodeId);
             // get the position of the node
             var posCanvas = network.getPositions([nodeId])[nodeId];
 
-            // get the bounding box of the node
-            var boundingBox = network.getBoundingBox(nodeId);
+            if (!nodeData) {
+                var edgeData = edges.get(nodeId);
+                var poses = network.getPositions([edgeData.from, edgeData.to]);
+                var middle_x = (poses[edgeData.to].x - poses[edgeData.from].x) * 0.5;
+                var middle_y = (poses[edgeData.to].y - poses[edgeData.from].y) * 0.5;
+                posCanvas = poses[edgeData.from];
+                posCanvas.x = posCanvas.x + middle_x;
+                posCanvas.y = posCanvas.y + middle_y;
 
-            //position tooltip:
-            posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+                popup.innerHTML = edgeData.title;
+            } else {
+                popup.innerHTML = nodeData.title;
+                // get the bounding box of the node
+                var boundingBox = network.getBoundingBox(nodeId);
+                posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+                posCanvas.y = posCanvas.y + 0.5 * (boundingBox.top - boundingBox.bottom);
+            };
 
             // convert coordinates to the DOM space
             var posDOM = network.canvasToDOM(posCanvas);
@@ -255,7 +265,7 @@
         {% endif %}
 
 
-        {% if nodes|length > 100 %}
+        {% if nodes|length > 100 and physics_enabled %}
         network.on("stabilizationProgress", function(params) {
       		document.getElementById('loadingBar').removeAttribute("style");
 	        var maxWidth = 496;

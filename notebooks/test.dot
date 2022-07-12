@@ -1,0 +1,9 @@
+digraph {
+    a [label=12, entity_id=12, entity_class="truck"];
+    b [label=7, entity_id=7,entity_class="bike"];
+    c [label=3, entity_id=3, entity_class="car"];
+    a -> b[label="solid edge"];                     
+    a -> b [label="dashed edge", style=dashed]; 
+    a -> c [label="dashed edge", style=dashed]; 
+    a -> c [label="dotted edge", style=dotted];      
+}
