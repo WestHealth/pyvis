@@ -1,7 +1,7 @@
 from .node import Node
 from .edge import Edge
 from .options import Options, Configure
-from .utils import check_html
+from .utils import check_html, HREFParser
 from jinja2 import Template
 import webbrowser
 from IPython.display import IFrame
@@ -417,17 +417,14 @@ class Network(object):
         :type out: str
         """
 
-        # here, check if an href is present in the hover data
+        # here, check if a href is present in the hover data
         use_link_template = False
         for n in self.nodes:
             title = n.get("title", None)
             if title:
-                if "href" in title:
-                    """
-                    this tells the template to override default hover
-                    mechanic, as the tooltip would move with the mouse
-                    cursor which made interacting with hover data useless.
-                    """
+                href_parser = HREFParser()
+                href_parser.feed(str(title))
+                if href_parser.is_valid():
                     use_link_template = True
                     break
         if not notebook:

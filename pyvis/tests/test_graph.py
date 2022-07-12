@@ -1,6 +1,7 @@
 import unittest
-from ..network import Network
+from pyvis.network import Network
 import os
+from pyvis.utils import HREFParser
 
 
 class NodeTestCase(unittest.TestCase):
@@ -347,7 +348,3 @@ class LayoutTestCase(unittest.TestCase):
         self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization == True)
         self.g.options.layout.set_edge_minimization(False)
         self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization == False)
-
-        
-
-    
