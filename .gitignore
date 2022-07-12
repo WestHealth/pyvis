@@ -24,3 +24,6 @@ pyvis/make.bat
 # vscode specific
 .vscode/
 venv
+
+# jetbrains specific files
+.idea
