@@ -35,6 +35,7 @@ class Network(object):
                  notebook=False,
                  neighborhood_highlight=False,
                  select_menu=False,
+                 filter_menu=False,
                  bgcolor="#ffffff",
                  font_color=False,
                  layout=None,
@@ -46,6 +47,8 @@ class Network(object):
         :param directed: Whether or not to use a directed graph. This is false
                          by default.
         :param notebook: True if using jupyter notebook.
+        :param select_menu: sets the option to highlight nodes and the neighborhood
+        :param filter_menu: sets the option to filter nodes and edges based on attributes
         :param bgcolor: The background color of the canvas.
         :param cdn_resources: Where to pull resources for css and js files. Defaults to local.
             Options ['local','in_line','remote'].
@@ -59,6 +62,8 @@ class Network(object):
         :type width: num or str
         :type directed: bool
         :type notebook: bool
+        :type select_menu: bool
+        :type filter_menu: bool
         :type bgcolor: str
         :type font_color: str
         :type layout: bool
@@ -81,20 +86,20 @@ class Network(object):
         self.node_ids = []
         self.template = None
         self.conf = False
-        self.path = "template.html" #os.path.dirname(__file__) + "/templates/
+        self.path = "template.html"  # os.path.dirname(__file__) + "/templates/
         self.neighborhood_highlight = neighborhood_highlight
         self.select_menu = select_menu
-        assert cdn_resources in ["local","in_line","remote"],  "cdn_resources not in [local, in_line, remote]."
+        self.filter_menu = filter_menu
+        assert cdn_resources in ["local", "in_line", "remote"], "cdn_resources not in [local, in_line, remote]."
         self.template_dir = os.path.dirname(__file__) + "/templates/"
         self.templateEnv = Environment(loader=FileSystemLoader(self.template_dir))
 
-        if cdn_resources =="local" and notebook==True:
+        if cdn_resources == "local" and notebook == True:
             print("Local cdn resources have problems on chrome/safari when used in jupyter-notebook. ")
         self.cdn_resources = cdn_resources
         if notebook:
             self.prep_notebook()
-        
-            
+
     def __str__(self):
         """
         override print to show readable graph data
@@ -269,13 +274,13 @@ class Network(object):
         nd = defaultdict(dict)
         for i in range(len(nodes)):
             for k, v in kwargs.items():
-                assert(
-                    len(v) == len(nodes)
+                assert (
+                        len(v) == len(nodes)
                 ), "keyword arg %s [length %s] does not match" \
                    "[length %s] of nodes" % \
                    (
-                    k, len(v), len(nodes)
-                )
+                       k, len(v), len(nodes)
+                   )
                 nd[nodes[i]].update({k: v[i]})
 
         for node in nodes:
@@ -287,7 +292,7 @@ class Network(object):
                 # or node could be string
                 assert isinstance(node, str)
                 self.add_node(node, **nd[node])
-            
+
     def num_nodes(self):
         """
         Return number of nodes
@@ -368,8 +373,8 @@ class Network(object):
                 frm = e['from']
                 dest = e['to']
                 if (
-                    (source == dest and to == frm) or
-                    (source == frm and to == dest)
+                        (source == dest and to == frm) or
+                        (source == frm and to == dest)
                 ):
                     # edge already exists
                     edge_exists = True
@@ -377,7 +382,7 @@ class Network(object):
         if not edge_exists:
             e = Edge(source, to, self.directed, **options)
             self.edges.append(e.options)
-            
+
     def add_edges(self, edges):
         """
         This method serves to add multiple edges between existing nodes
@@ -412,10 +417,10 @@ class Network(object):
         """
         if isinstance(self.options, dict):
             return (self.nodes, self.edges, self.heading, self.height,
-                self.width, json.dumps(self.options))
+                    self.width, json.dumps(self.options))
         else:
             return (self.nodes, self.edges, self.heading, self.height,
-                self.width, self.options.to_json())
+                    self.width, self.options.to_json())
 
     def save_graph(self, name):
         """
@@ -452,7 +457,7 @@ class Network(object):
         if not notebook:
             # with open(self.path) as html:
             #     content = html.read()
-            template = self.templateEnv.get_template(self.path)# Template(content)
+            template = self.templateEnv.get_template(self.path)  # Template(content)
         else:
             template = self.template
 
@@ -482,10 +487,10 @@ class Network(object):
                                     tooltip_link=use_link_template,
                                     neighborhood_highlight=self.neighborhood_highlight,
                                     select_menu=self.select_menu,
+                                    filter_menu=self.filter_menu,
                                     notebook=notebook,
                                     cdn_resources=self.cdn_resources
                                     )
-
 
         if notebook:
             if os.path.exists("lib"):
@@ -541,10 +546,9 @@ class Network(object):
             self.set_template(custom_template_path)
         # with open(self.path) as html:
         #     content = html.read()
-        self.template = self.templateEnv.get_template(self.path) # Template(content)
+        self.template = self.templateEnv.get_template(self.path)  # Template(content)
 
-
-    def set_template(self, path_to_template:str):
+    def set_template(self, path_to_template: str):
         """
             Path to full template assumes that it exists inside of a template directory.
             Use `set_template_dir` to set the relative template path to the template directory along with the directory location itself
@@ -552,8 +556,7 @@ class Network(object):
             :path_to_template path: full os path string value of the template directory
         """
         str_parts = path_to_template.split('/')
-        self.set_template_dir("/".join(str_parts[:-1])+"/",str_parts[-1])
-
+        self.set_template_dir("/".join(str_parts[:-1]) + "/", str_parts[-1])
 
     def set_template_dir(self, template_directory, template_file='template.html'):
         """
@@ -627,9 +630,9 @@ class Network(object):
 
         :returns: set
         """
-        assert(isinstance(node, str) or isinstance(node, int)
-               ), "error: expected int or str for node but got %s" % type(node)
-        assert(node in self.node_ids), "error: %s node not in network" % node
+        assert (isinstance(node, str) or isinstance(node, int)
+                ), "error: expected int or str for node but got %s" % type(node)
+        assert (node in self.node_ids), "error: %s node not in network" % node
         return self.get_adj_list()[node]
 
     def from_nx(self, nx_graph, node_size_transf=(lambda x: x), edge_weight_transf=(lambda x: x),
@@ -661,7 +664,7 @@ class Network(object):
         >>> nt.from_nx(nx_graph)
         >>> nt.show("nx.html")
         """
-        assert(isinstance(nx_graph, nx.Graph))
+        assert (isinstance(nx_graph, nx.Graph))
         edges = nx_graph.edges(data=True)
         nodes = nx_graph.nodes(data=True)
 
@@ -675,7 +678,7 @@ class Network(object):
                 nodes[e[1]]['size'] = int(node_size_transf(nodes[e[1]]['size']))
                 self.add_node(e[0], **nodes[e[0]])
                 self.add_node(e[1], **nodes[e[1]])
-                
+
                 # if user does not pass a 'weight' argument
                 if "value" not in e[2] or "width" not in e[2]:
                     if edge_scaling:
@@ -691,7 +694,7 @@ class Network(object):
 
         for node in nx.isolates(nx_graph):
             if 'size' not in nodes[node].keys():
-                nodes[node]['size']=default_node_size
+                nodes[node]['size'] = default_node_size
             self.add_node(node, **nodes[node])
 
     def get_nodes(self):
@@ -711,13 +714,13 @@ class Network(object):
         return self.edges
 
     def barnes_hut(
-        self,
-        gravity=-80000,
-        central_gravity=0.3,
-        spring_length=250,
-        spring_strength=0.001,
-        damping=0.09,
-        overlap=0
+            self,
+            gravity=-80000,
+            central_gravity=0.3,
+            spring_length=250,
+            spring_strength=0.001,
+            damping=0.09,
+            overlap=0
     ):
         """
         BarnesHut is a quadtree based gravity model. It is the fastest. default
@@ -747,12 +750,12 @@ class Network(object):
         self.options.physics.use_barnes_hut(locals())
 
     def repulsion(
-        self,
-        node_distance=100,
-        central_gravity=0.2,
-        spring_length=200,
-        spring_strength=0.05,
-        damping=0.09
+            self,
+            node_distance=100,
+            central_gravity=0.2,
+            spring_length=200,
+            spring_strength=0.05,
+            damping=0.09
     ):
         """
         Set the physics attribute of the entire network to repulsion.
@@ -776,12 +779,12 @@ class Network(object):
         self.options.physics.use_repulsion(locals())
 
     def hrepulsion(
-        self,
-        node_distance=120,
-        central_gravity=0.0,
-        spring_length=100,
-        spring_strength=0.01,
-        damping=0.09
+            self,
+            node_distance=120,
+            central_gravity=0.0,
+            spring_length=100,
+            spring_strength=0.01,
+            damping=0.09
     ):
         """
         This model is based on the repulsion solver but the levels are
@@ -805,13 +808,13 @@ class Network(object):
         self.options.physics.use_hrepulsion(locals())
 
     def force_atlas_2based(
-        self,
-        gravity=-50,
-        central_gravity=0.01,
-        spring_length=100,
-        spring_strength=0.08,
-        damping=0.4,
-        overlap=0
+            self,
+            gravity=-50,
+            central_gravity=0.01,
+            spring_length=100,
+            spring_strength=0.08,
+            damping=0.4,
+            overlap=0
     ):
         """
         The forceAtlas2Based solver makes use of some of the equations provided
@@ -921,7 +924,7 @@ class Network(object):
         :type filter_: bool or list:
         """
         self.conf = True
-        self.options.configure = Configure(enabled=True, filter_=filter_)        
+        self.options.configure = Configure(enabled=True, filter_=filter_)
         self.widget = True
 
     def toggle_physics(self, status):

@@ -1,5 +1,5 @@
 function neighbourhoodHighlight(params) {
-  console.log("in nieghborhoodhighlight");
+  console.log("in nieghbourhoodhighlight");
   console.log(params);
   allNodes = nodes.get({ returnType: "Object" });
   // originalNodes = JSON.parse(JSON.stringify(allNodes));
@@ -11,7 +11,7 @@ function neighbourhoodHighlight(params) {
     var degrees = 2;
 
     // mark all nodes as hard to read.
-    for (var nodeId in allNodes) {
+    for (let nodeId in allNodes) {
       // nodeColors[nodeId] = allNodes[nodeId].color;
       allNodes[nodeId].color = "rgba(200,200,200,0.5)";
       if (allNodes[nodeId].hiddenLabel === undefined) {
@@ -63,7 +63,7 @@ function neighbourhoodHighlight(params) {
   } else if (highlightActive === true) {
     console.log("highlightActive was true");
     // reset all nodes
-    for (var nodeId in allNodes) {
+    for (let nodeId in allNodes) {
       // allNodes[nodeId].color = "purple";
       allNodes[nodeId].color = nodeColors[nodeId];
       // delete allNodes[nodeId].color;
@@ -78,7 +78,7 @@ function neighbourhoodHighlight(params) {
   // transform the object into an array
   var updateArray = [];
   if (params.nodes.length > 0) {
-    for (nodeId in allNodes) {
+    for (let nodeId in allNodes) {
       if (allNodes.hasOwnProperty(nodeId)) {
         // console.log(allNodes[nodeId]);
         updateArray.push(allNodes[nodeId]);
@@ -87,7 +87,7 @@ function neighbourhoodHighlight(params) {
     nodes.update(updateArray);
   } else {
     console.log("Nothing was selected");
-    for (nodeId in allNodes) {
+    for (let nodeId in allNodes) {
       if (allNodes.hasOwnProperty(nodeId)) {
         // console.log(allNodes[nodeId]);
         // allNodes[nodeId].color = {};
@@ -98,8 +98,99 @@ function neighbourhoodHighlight(params) {
   }
 }
 
-function selectNode(node) {
-  network.selectNodes([node]);
-  neighbourhoodHighlight({ nodes: [node] });
-  return node;
+function filterHighlight(params) {
+  console.log("in filghterHighlight");
+  console.log(params);
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    console.log("filterActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  console.log(filter)
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
 }
