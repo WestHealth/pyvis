@@ -351,7 +351,7 @@ function highlightFilter(filter) {
                                   valueControl.addOption({
                                       id:allNodes[each][selectedProperty],
                                       title:allNodes[each][selectedProperty]
-                                  })
+                                  });
                               }
                           }
                           else if (filter['item'] === 'edge') {
@@ -383,25 +383,17 @@ function highlightFilter(filter) {
                           // tom-select handles duplicates
                           clearFilter(false)
                           if (arguments[0] === 'edge') {
-                              for (let each in allEdges) {
-                                  if (allEdges.hasOwnProperty(each)) {
-                                      for (let eachProp in allEdges[each]) {
-                                          if (allEdges[each].hasOwnProperty(eachProp)) {
-                                              propControl.addOption({id: eachProp, title: eachProp})
-                                          }
-                                      }
+                              for (let each of allEdges) {
+                                  for (let eachProp in each) {
+                                      propControl.addOption({id: eachProp, title: eachProp})
                                   }
                               }
                           }
                           else if (arguments[0] === 'node') {
-                              for (let each in allNodes) {
-                                  if (allNodes.hasOwnProperty(each)) {
-                                      for (let eachProp in allNodes[each]) {
-                                          if (allNodes[each].hasOwnProperty(eachProp)
-                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel')) {
-                                              propControl.addOption({id: eachProp, title: eachProp})
-
-                                          }
+                              for (let each of allNodes) {
+                                  for (let eachProp in each) {
+                                      if (eachProp !== 'hidden' && eachProp !== 'savedLabel') {
+                                          propControl.addOption({id: eachProp, title: eachProp})
                                       }
                                   }
                               }
