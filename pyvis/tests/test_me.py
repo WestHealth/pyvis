@@ -1,5 +1,7 @@
-from ..network import Network
 import numpy as np
+
+from ..network import Network
+
 
 def test_canvas_size():
     """

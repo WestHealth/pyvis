@@ -1,21 +1,19 @@
-from .node import Node
-from .edge import Edge
-from .options import Options, Configure
-from .utils import check_html
-from jinja2 import Template
-import webbrowser
-from IPython.display import IFrame
-from IPython.core.display import HTML
-from collections import defaultdict
-import networkx as nx
 import json
-import jsonpickle
 import os
 import shutil
 import tempfile
-import platform
-from platform import uname
+import webbrowser
+from collections import defaultdict
+
+import jsonpickle
+import networkx as nx
+from IPython.display import IFrame
 from jinja2 import Environment, FileSystemLoader
+
+from .edge import Edge
+from .node import Node
+from .options import Options, Configure
+from .utils import check_html
 
 
 class Network(object):

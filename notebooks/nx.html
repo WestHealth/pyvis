@@ -3,8 +3,7 @@
         <meta charset="utf-8">
         
             <script>function neighbourhoodHighlight(params) {
-  console.log("in nieghbourhoodhighlight");
-  console.log(params);
+  // console.log("in nieghbourhoodhighlight");
   allNodes = nodes.get({ returnType: "Object" });
   // originalNodes = JSON.parse(JSON.stringify(allNodes));
   // if something is selected:
@@ -65,7 +64,7 @@
       allNodes[selectedNode].hiddenLabel = undefined;
     }
   } else if (highlightActive === true) {
-    console.log("highlightActive was true");
+    // console.log("highlightActive was true");
     // reset all nodes
     for (let nodeId in allNodes) {
       // allNodes[nodeId].color = "purple";
@@ -90,7 +89,7 @@
     }
     nodes.update(updateArray);
   } else {
-    console.log("Nothing was selected");
+    // console.log("Nothing was selected");
     for (let nodeId in allNodes) {
       if (allNodes.hasOwnProperty(nodeId)) {
         // console.log(allNodes[nodeId]);
@@ -103,8 +102,6 @@
 }
 
 function filterHighlight(params) {
-  console.log("in filghterHighlight");
-  console.log(params);
   allNodes = nodes.get({ returnType: "Object" });
   // if something is selected:
   if (params.nodes.length > 0) {
@@ -129,7 +126,6 @@ function filterHighlight(params) {
     }
 
   } else if (filterActive === true) {
-    console.log("filterActive was true");
     // reset all nodes
     for (let nodeId in allNodes) {
       allNodes[nodeId].hidden = false;
@@ -151,10 +147,8 @@ function filterHighlight(params) {
     }
     nodes.update(updateArray);
   } else {
-    console.log("Nothing was selected");
     for (let nodeId in allNodes) {
       if (allNodes.hasOwnProperty(nodeId)) {
-        // console.log(allNodes[nodeId]);
         updateArray.push(allNodes[nodeId]);
       }
     }
@@ -175,7 +169,6 @@ function selectNodes(nodes) {
 }
 
 function highlightFilter(filter) {
-  console.log(filter)
   let selectedNodes = []
   let selectedProp = filter['property']
   if (filter['item'] === 'node') {
@@ -248,7 +241,7 @@ function highlightFilter(filter) {
         <div class="card" style="width: 100%">
             
             
-              <div class="card-header">
+              <div id="filter-menu" class="card-header">
                 <div class="row no-gutters">
                   <div class="col-3 pb-2">
                     <select
@@ -351,7 +344,7 @@ function highlightFilter(filter) {
                                   valueControl.addOption({
                                       id:allNodes[each][selectedProperty],
                                       title:allNodes[each][selectedProperty]
-                                  });
+                                  })
                               }
                           }
                           else if (filter['item'] === 'edge') {
@@ -383,17 +376,25 @@ function highlightFilter(filter) {
                           // tom-select handles duplicates
                           clearFilter(false)
                           if (arguments[0] === 'edge') {
-                              for (let each of allEdges) {
-                                  for (let eachProp in each) {
-                                      propControl.addOption({id: eachProp, title: eachProp})
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
                                   }
                               }
                           }
                           else if (arguments[0] === 'node') {
-                              for (let each of allNodes) {
-                                  for (let eachProp in each) {
-                                      if (eachProp !== 'hidden' && eachProp !== 'savedLabel') {
-                                          propControl.addOption({id: eachProp, title: eachProp})
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
                                       }
                                   }
                               }

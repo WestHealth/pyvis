@@ -1,6 +1,5 @@
 function neighbourhoodHighlight(params) {
-  console.log("in nieghbourhoodhighlight");
-  console.log(params);
+  // console.log("in nieghbourhoodhighlight");
   allNodes = nodes.get({ returnType: "Object" });
   // originalNodes = JSON.parse(JSON.stringify(allNodes));
   // if something is selected:
@@ -61,7 +60,7 @@ function neighbourhoodHighlight(params) {
       allNodes[selectedNode].hiddenLabel = undefined;
     }
   } else if (highlightActive === true) {
-    console.log("highlightActive was true");
+    // console.log("highlightActive was true");
     // reset all nodes
     for (let nodeId in allNodes) {
       // allNodes[nodeId].color = "purple";
@@ -86,7 +85,7 @@ function neighbourhoodHighlight(params) {
     }
     nodes.update(updateArray);
   } else {
-    console.log("Nothing was selected");
+    // console.log("Nothing was selected");
     for (let nodeId in allNodes) {
       if (allNodes.hasOwnProperty(nodeId)) {
         // console.log(allNodes[nodeId]);
@@ -99,8 +98,6 @@ function neighbourhoodHighlight(params) {
 }
 
 function filterHighlight(params) {
-  console.log("in filghterHighlight");
-  console.log(params);
   allNodes = nodes.get({ returnType: "Object" });
   // if something is selected:
   if (params.nodes.length > 0) {
@@ -125,7 +122,6 @@ function filterHighlight(params) {
     }
 
   } else if (filterActive === true) {
-    console.log("filterActive was true");
     // reset all nodes
     for (let nodeId in allNodes) {
       allNodes[nodeId].hidden = false;
@@ -147,10 +143,8 @@ function filterHighlight(params) {
     }
     nodes.update(updateArray);
   } else {
-    console.log("Nothing was selected");
     for (let nodeId in allNodes) {
       if (allNodes.hasOwnProperty(nodeId)) {
-        // console.log(allNodes[nodeId]);
         updateArray.push(allNodes[nodeId]);
       }
     }
@@ -171,7 +165,6 @@ function selectNodes(nodes) {
 }
 
 function highlightFilter(filter) {
-  console.log(filter)
   let selectedNodes = []
   let selectedProp = filter['property']
   if (filter['item'] === 'node') {
