@@ -224,4 +224,4 @@ Example:
 
 .. image:: jup.png
 
-..note:: while using notebook in chrome browser, to render the graph pass additional kwarg cdn_resources as remote or inline
+.. note:: while using notebook in chrome browser, to render the graph pass additional kwarg cdn_resources as remote or inline
