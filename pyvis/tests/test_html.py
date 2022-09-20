@@ -154,11 +154,6 @@ class FilterMenuTests(unittest.TestCase):
         self.assertTrue(select_object.options[1].text, "edge")
         self.assertTrue(select_object.options[2].text, "node")
 
-        select_object.select_by_value("node")
-
-        select_property = driver.find_element(By.ID, "select-property")
-        select_property_obj = Select(select_property)
-
         # close the driver and delete the testing file
         driver.quit()
         if os.path.exists("./" + file_name):
