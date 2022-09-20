@@ -285,7 +285,6 @@ function highlightFilter(filter) {
             
             <div id="mynetwork" class="card-body"></div>
         </div>
-            
 
         
         
@@ -391,7 +390,8 @@ function highlightFilter(filter) {
                                   if (allNodes.hasOwnProperty(each)) {
                                       for (let eachProp in allNodes[each]) {
                                           if (allNodes[each].hasOwnProperty(eachProp)
-                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel')) {
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
                                               propControl.addOption({id: eachProp, title: eachProp})
 
                                           }

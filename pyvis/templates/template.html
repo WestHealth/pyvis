@@ -353,7 +353,8 @@
                                   if (allNodes.hasOwnProperty(each)) {
                                       for (let eachProp in allNodes[each]) {
                                           if (allNodes[each].hasOwnProperty(eachProp)
-                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel')) {
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
                                               propControl.addOption({id: eachProp, title: eachProp})
 
                                           }
