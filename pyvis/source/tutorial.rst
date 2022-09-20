@@ -198,13 +198,13 @@ is greyed out.
 .. image:: select_menu.gif
 
 You can also filter on certain objects of the network like nodes and edges.
-You can activate this feature by setting the filter_menu option as True.
+You can activate this feature by passing filter_menu option as True.
 With this option turned on, you can build a query choosing edges or nodes,
 then choosing the attribute to filter on and finally a value or multiple values
 to filter. When you filter on nodes, the selected node will be highlighted
 and rest of the network will be hidden. If the selected nodes are connected
 the edges will also be highlighted. When you filter on edges, the nodes connecting
-the selected criteria edges will be highlighted along with the edges
+them will be highlighted along with the edges.
 
 >>> got_net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white", filter_menu=True)
 
@@ -224,4 +224,4 @@ Example:
 
 .. image:: jup.png
 
-.. note:: while using notebook in chrome browser, to render the graph pass additional kwarg cdn_resources as remote or inline
+.. note:: while using notebook in chrome browser, to render the graph, pass additional kwarg 'cdn_resources' as 'remote' or 'inline'
