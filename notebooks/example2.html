@@ -191,13 +191,22 @@ function highlightFilter(filter) {
   }
   selectNodes(selectedNodes)
 }</script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.0.4/dist/dist/vis-network.min.css" integrity="sha512-+5tJeVsSE2tSnmKB5SWOD0GsYA5dOP0B/FSv7I2GYhdOcyjJq81Q1St3qgJgInwreAdNuw0KGJ0FOaxOJ0E4yw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.0.4/dist/vis-network.js"
-                integrity="sha512-CEbUhbSq35hCqBH8ckfAkH1Tcua5NEywtEzwiJ+BUC4EIZkC7vyta3ivZu/WqJhK1qHTurO3hwHsErU3HHjwIA=="
-                crossorigin="anonymous"
-                referrerpolicy="no-referrer"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             
+            
+            
+            
+            
+            
+
         
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -273,8 +282,8 @@ function highlightFilter(filter) {
                   
 
                   // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 0, "label": 0, "shape": "dot"}, {"color": "#97c2fc", "id": 1, "label": 1, "shape": "dot"}, {"color": "#97c2fc", "id": 2, "label": 2, "shape": "dot"}, {"color": "#97c2fc", "id": 3, "label": 3, "shape": "dot"}, {"color": "#97c2fc", "id": 4, "label": 4, "shape": "dot"}, {"color": "#97c2fc", "id": 6, "label": 6, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 11, "label": 11, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 8, "label": 8, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 9, "label": 9, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 16, "label": 16, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 5, "label": 5, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 13, "label": 13, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 12, "label": 12, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 7, "label": 7, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 19, "label": 19, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 10, "label": 10, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 17, "label": 17, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 18, "label": 18, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 15, "label": 15, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 14, "label": 14, "shape": "dot", "size": 10}]);
-                  edges = new vis.DataSet([{"from": 0, "to": 2}, {"from": 0, "to": 3}, {"from": 0, "to": 4}, {"from": 1, "to": 1}, {"from": 1, "to": 3}, {"from": 1, "to": 2}, {"from": 0, "to": 1, "width": 1}, {"from": 0, "to": 6, "width": 1}, {"from": 0, "to": 11, "width": 1}, {"from": 2, "to": 8, "width": 1}, {"from": 2, "to": 4, "width": 1}, {"from": 2, "to": 11, "width": 1}, {"from": 4, "to": 9, "width": 1}, {"from": 4, "to": 16, "width": 1}, {"from": 5, "to": 13, "width": 1}, {"from": 6, "to": 12, "width": 1}, {"from": 7, "to": 19, "width": 1}, {"from": 10, "to": 17, "width": 1}, {"from": 10, "to": 12, "width": 1}, {"from": 11, "to": 18, "width": 1}, {"from": 11, "to": 19, "width": 1}, {"from": 13, "to": 15, "width": 1}, {"from": 13, "to": 18, "width": 1}, {"from": 14, "to": 19, "width": 1}]);
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 0, "label": 0, "shape": "dot"}, {"color": "#97c2fc", "id": 1, "label": 1, "shape": "dot"}, {"color": "#97c2fc", "id": 2, "label": 2, "shape": "dot"}, {"color": "#97c2fc", "id": 3, "label": 3, "shape": "dot"}, {"color": "#97c2fc", "id": 4, "label": 4, "shape": "dot"}, {"color": "#97c2fc", "id": 14, "label": 14, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 16, "label": 16, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 11, "label": 11, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 17, "label": 17, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 15, "label": 15, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 5, "label": 5, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 6, "label": 6, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 8, "label": 8, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 7, "label": 7, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 10, "label": 10, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 9, "label": 9, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 12, "label": 12, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 13, "label": 13, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 18, "label": 18, "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 19, "label": 19, "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"from": 0, "to": 2}, {"from": 0, "to": 3}, {"from": 0, "to": 4}, {"from": 1, "to": 1}, {"from": 1, "to": 3}, {"from": 1, "to": 2}, {"from": 0, "to": 14, "width": 1}, {"from": 1, "to": 16, "width": 1}, {"from": 2, "to": 11, "width": 1}, {"from": 3, "to": 17, "width": 1}, {"from": 4, "to": 15, "width": 1}, {"from": 5, "to": 11, "width": 1}, {"from": 5, "to": 15, "width": 1}, {"from": 6, "to": 8, "width": 1}, {"from": 7, "to": 8, "width": 1}, {"from": 8, "to": 10, "width": 1}, {"from": 9, "to": 16, "width": 1}, {"from": 9, "to": 17, "width": 1}, {"from": 9, "to": 11, "width": 1}, {"from": 10, "to": 12, "width": 1}, {"from": 10, "to": 14, "width": 1}, {"from": 13, "to": 15, "width": 1}, {"from": 13, "to": 18, "width": 1}, {"from": 18, "to": 19, "width": 1}]);
 
                   nodeColors = {};
                   allNodes = nodes.get({ returnType: "Object" });
@@ -294,8 +303,8 @@ function highlightFilter(filter) {
             "inherit": true
         },
         "smooth": {
-            "enabled": false,
-            "type": "continuous"
+            "enabled": true,
+            "type": "dynamic"
         }
     },
     "interaction": {

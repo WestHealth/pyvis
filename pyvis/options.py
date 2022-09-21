@@ -55,8 +55,8 @@ class EdgeOptions(object):
             return str(self.__dict__)
 
         def __init__(self):
-            self.enabled = False
-            self.type = "continuous"
+            self.enabled = True
+            self.type = "dynamic"
 
     class Color(object):
         """
@@ -120,7 +120,7 @@ class Layout(object):
         if not randomSeed:
             self.randomSeed = 0
         else:
-            self.radnomSeed = randomSeed
+            self.randomSeed = randomSeed
         self.improvedLayout = improvedLayout
         self.hierarchical = self.Hierarchical(enabled=True)
     

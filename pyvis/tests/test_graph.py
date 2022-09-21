@@ -114,7 +114,7 @@ class NodeTestCase(unittest.TestCase):
         self.assertEqual(g.num_nodes(), 1)
 
     def test_get_network_data(self):
-        self.assertEqual(len(self.g.get_network_data()), 5)
+        self.assertEqual(len(self.g.get_network_data()), 6)
 
 
 class EdgeTestCase(unittest.TestCase):
@@ -291,9 +291,9 @@ class EdgeOptionsTestCase(unittest.TestCase):
         self.g.add_nodes([0, 1, 2, 3])
 
     def test_set_edge_smooth(self):
-        self.assertEqual(self.g.options.edges.smooth.type, 'continuous')
-        self.g.set_edge_smooth('dynamic')
         self.assertEqual(self.g.options.edges.smooth.type, 'dynamic')
+        self.g.set_edge_smooth('continuous')
+        self.assertEqual(self.g.options.edges.smooth.type, 'continuous')
 
     def test_inherit_colors(self):
         self.assertTrue(self.g.options.edges.color.inherit)
