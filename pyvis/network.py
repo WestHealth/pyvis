@@ -82,6 +82,7 @@ class Network(object):
         self.options = Options(layout)
         self.widget = False
         self.node_ids = []
+        self.node_map = {}
         self.template = None
         self.conf = False
         self.path = "template.html"  # os.path.dirname(__file__) + "/templates/
@@ -95,6 +96,7 @@ class Network(object):
         if cdn_resources == "local" and notebook == True:
             print("Local cdn resources have problems on chrome/safari when used in jupyter-notebook. ")
         self.cdn_resources = cdn_resources
+
         if notebook:
             self.prep_notebook()
 
@@ -240,6 +242,7 @@ class Network(object):
                 n = Node(n_id, shape, label=node_label, color=color, font_color=self.font_color, **options)
             self.nodes.append(n.options)
             self.node_ids.append(n_id)
+            self.node_map[n_id] = n.options
 
     def add_nodes(self, nodes, **kwargs):
         """
@@ -265,7 +268,8 @@ class Network(object):
 
         :type nodes: list
         """
-        valid_args = ["size", "value", "title", "x", "y", "label", "color"]
+        valid_args = ["size", "value", "title",
+            "x", "y", "label", "color", "shape"]
         for k in kwargs:
             assert k in valid_args, "invalid arg '" + k + "'"
 
@@ -430,12 +434,11 @@ class Network(object):
         check_html(name)
         self.write_html(name)
 
-    def write_html(self, name="index.html", local=True, notebook=False):
+    def generate_html(self, name="index.html", local=True, notebook=False):
         """
         This method gets the data structures supporting the nodes, edges,
         and options and updates the template to write the HTML holding
         the visualization.
-
         :type name_html: str
         """
         check_html(name)
@@ -489,6 +492,20 @@ class Network(object):
                                     notebook=notebook,
                                     cdn_resources=self.cdn_resources
                                     )
+        return self.html
+
+    def write_html(self, name, local=True, notebook=False):
+        """
+        This method gets the data structures supporting the nodes, edges,
+        and options and updates the template to write the HTML holding
+        the visualization.
+        :type name_html: str
+        """
+        check_html(name)
+        self.html = self.generate_html(notebook=notebook)
+
+        with open(name, "w+") as out:
+            out.write(self.html)
 
         if notebook:
             if os.path.exists("lib"):
@@ -634,7 +651,7 @@ class Network(object):
         return self.get_adj_list()[node]
 
     def from_nx(self, nx_graph, node_size_transf=(lambda x: x), edge_weight_transf=(lambda x: x),
-                default_node_size=10, default_edge_weight=1, edge_scaling=False):
+                default_node_size =10, default_edge_weight=1, show_edge_weights=True, edge_scaling=False):
         """
         This method takes an exisitng Networkx graph and translates
         it to a PyVis graph format that can be accepted by the VisJs
@@ -662,18 +679,18 @@ class Network(object):
         >>> nt.from_nx(nx_graph)
         >>> nt.show("nx.html")
         """
-        assert (isinstance(nx_graph, nx.Graph))
-        edges = nx_graph.edges(data=True)
-        nodes = nx_graph.nodes(data=True)
+        assert(isinstance(nx_graph, nx.Graph))
+        edges=nx_graph.edges(data = True)
+        nodes=nx_graph.nodes(data = True)
 
         if len(edges) > 0:
             for e in edges:
                 if 'size' not in nodes[e[0]].keys():
-                    nodes[e[0]]['size'] = default_node_size
-                nodes[e[0]]['size'] = int(node_size_transf(nodes[e[0]]['size']))
+                    nodes[e[0]]['size']=default_node_size
+                nodes[e[0]]['size']=int(node_size_transf(nodes[e[0]]['size']))
                 if 'size' not in nodes[e[1]].keys():
-                    nodes[e[1]]['size'] = default_node_size
-                nodes[e[1]]['size'] = int(node_size_transf(nodes[e[1]]['size']))
+                    nodes[e[1]]['size']=default_node_size
+                nodes[e[1]]['size']=int(node_size_transf(nodes[e[1]]['size']))
                 self.add_node(e[0], **nodes[e[0]])
                 self.add_node(e[1], **nodes[e[1]])
 
@@ -703,6 +720,16 @@ class Network(object):
         """
         return self.node_ids
 
+    def get_node(self, n_id):
+        """
+        Lookup node by ID and return it.
+
+        :param n_id: The ID given to the node.
+
+        :returns: dict containing node properties
+        """
+        return self.node_map[n_id]
+
     def get_edges(self):
         """
         This method returns an iterable list of edge objects
@@ -722,7 +749,7 @@ class Network(object):
     ):
         """
         BarnesHut is a quadtree based gravity model. It is the fastest. default
-        and recommended solver for non-heirarchical layouts.
+        and recommended solver for non-hierarchical layouts.
 
         :param gravity: The more negative the gravity value is, the stronger the
                         repulsion is.
