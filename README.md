@@ -28,6 +28,10 @@ python setup.py install
 
 [jsonpickle](https://jsonpickle.github.io/)
 
+### Test Dependencies
+[selenium](https://www.selenium.dev/documentation/webdriver/)
+
+[numpy](https://numpy.org/install/)
 ## Quick Start
 The most basic use case of a pyvis instance is to create a Network object and invoke methods:
 

@@ -1,4 +1,4 @@
-    
+
 ============
 Tutorial
 ============
@@ -56,15 +56,15 @@ Each of these keyword args must be the same length as the nodes parameter to the
 
 Example:
 
-    >>> g = Network()
-    >>> g.add_nodes([1,2,3], value=[10, 100, 400], title=["I am node 1", "node 2 here", "and im node 3"], x=[21.4, 54.2, 11.2], y=[100.2, 23.54, 32.1], label=["NODE 1", "NODE 2", "NODE 3"], color=["#00ff1e", "#162347", "#dd4b39"])
+		>>> g = Network()
+		>>> g.add_nodes([1,2,3], value=[10, 100, 400], title=["I am node 1", "node 2 here", "and im node 3"], x=[21.4, 54.2, 11.2], y=[100.2, 23.54, 32.1], label=["NODE 1", "NODE 2", "NODE 3"], color=["#00ff1e", "#162347", "#dd4b39"])
 
 .. raw:: html
 	:file: mulnodes.html
 
 .. note:: If you mouse over each node you will see that the "title" of a node attribute is responsible for rendering data on mouse hover.
 
-Detailed optioal argument documentation for nodes are in the :meth:`network.Network.add_node` method documentation.
+Detailed optional argument documentation for nodes are in the :meth:`network.Network.add_node` method documentation.
 
 Edges
 -----
@@ -127,40 +127,40 @@ The following code block is a minimal example of the capabilities of pyvis.
 
 .. code-block:: python
 
-    from pyvis.network import Network
-    import pandas as pd
+		from pyvis.network import Network
+		import pandas as pd
 
-    got_net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white")
+		got_net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white")
 
-    # set the physics layout of the network
-    got_net.barnes_hut()
-    got_data = pd.read_csv("https://www.macalester.edu/~abeverid/data/stormofswords.csv")
+		# set the physics layout of the network
+		got_net.barnes_hut()
+		got_data = pd.read_csv("https://www.macalester.edu/~abeverid/data/stormofswords.csv")
 
-    sources = got_data['Source']
-    targets = got_data['Target']
-    weights = got_data['Weight']
+		sources = got_data['Source']
+		targets = got_data['Target']
+		weights = got_data['Weight']
 
-    edge_data = zip(sources, targets, weights)
+		edge_data = zip(sources, targets, weights)
 
-    for e in edge_data:
-        src = e[0]
-        dst = e[1]
-        w = e[2]
+		for e in edge_data:
+				src = e[0]
+				dst = e[1]
+				w = e[2]
 
-        got_net.add_node(src, src, title=src)
-        got_net.add_node(dst, dst, title=dst)
-        got_net.add_edge(src, dst, value=w)
+				got_net.add_node(src, src, title=src)
+				got_net.add_node(dst, dst, title=dst)
+				got_net.add_edge(src, dst, value=w)
 
-    neighbor_map = got_net.get_adj_list()
+		neighbor_map = got_net.get_adj_list()
 
-    # add neighbor data to node hover data
-    for node in got_net.nodes:
-        node["title"] += " Neighbors:<br>" + "<br>".join(neighbor_map[node["id"]])
-        node["value"] = len(neighbor_map[node["id"]])
+		# add neighbor data to node hover data
+		for node in got_net.nodes:
+				node["title"] += " Neighbors:<br>" + "<br>".join(neighbor_map[node["id"]])
+				node["value"] = len(neighbor_map[node["id"]])
 
-    got_net.show("gameofthrones.html")
+		got_net.show("gameofthrones.html")
 
-    
+
 If you want to try out the above code, the csv data source can be `downloaded <https://www.macalester.edu/~abeverid/data/stormofswords.csv>`_
 
 .. note:: The ``title`` attribute of each node is responsible for rendering data on node hover.
@@ -180,20 +180,48 @@ parameters to your graph's physics and layout function.
 .. image:: buttons.gif
 
 .. note:: You can copy/paste the output from the `generate options` button in the above UI 
-          into :meth:`network.Network.set_options` to finalize your results from experimentation
-          with the settings. 
+					into :meth:`network.Network.set_options` to finalize your results from experimentation
+					with the settings.
 
 .. image:: set_options_ex.gif
+
+Filtering and Highlighting the nodes
+------------------------------------
+You can highlight a node and its neighboring edges and nodes
+by clicking on the node or choosing the drop down above when
+select_menu option is set as True. The selected node and its
+neighbours will be highlighted while the rest of the network
+is greyed out.
+
+>>> got_net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white", select_menu=True)
+
+.. image:: select_menu.gif
+
+You can also filter on certain objects of the network like nodes and edges.
+You can activate this feature by passing filter_menu option as True.
+With this option turned on, you can build a query choosing edges or nodes,
+then choosing the attribute to filter on and finally a value or multiple values
+to filter. When you filter on nodes, the selected node will be highlighted
+and rest of the network will be hidden. If the selected nodes are connected
+the edges will also be highlighted. When you filter on edges, the nodes connecting
+them will be highlighted along with the edges.
+
+>>> got_net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white", filter_menu=True)
+
+.. image:: filter_menu.gif
+
+.. note:: You can use these two features independently and can also combine them
+										to get a customized view of the network
 
 Using pyvis within `Jupyter <https://jupyter.org>`_ notebook
 ------------------------------------------------------------
 
 Pyvis supports `Jupyter <https://jupyter.org>`_ notebook embedding through the
 use of the 
-:meth:`network.Network` contructor.  The network instance must be
+:meth:`network.Network` constructor.  The network instance must be
 "prepped" during instantiation by supplying the `notebook=True` kwarg.
 Example:
 
 .. image:: jup.png
 
-
+.. note:: while using notebook in chrome browser, to render the graph, pass additional kwarg 'cdn_resources' as 'remote' or 'inline'
