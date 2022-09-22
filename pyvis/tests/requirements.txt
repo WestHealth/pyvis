@@ -1,0 +1,7 @@
+numpy>=1.23.1
+selenium>=4.4.3
+jsonpickle>=2.2.0
+networkx>=2.8.4
+ipython>=8.4.0
+Jinja2>=3.1.2
+setuptools>=60.2.0

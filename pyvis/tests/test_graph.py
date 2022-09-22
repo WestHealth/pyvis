@@ -1,6 +1,7 @@
-import unittest
-from ..network import Network
 import os
+import unittest
+
+from ..network import Network
 
 
 class NodeTestCase(unittest.TestCase):
@@ -19,8 +20,7 @@ class NodeTestCase(unittest.TestCase):
         self.assertTrue(1 in self.g.get_nodes())
         self.assertTrue(0 in self.g.get_nodes())
         self.g.add_edge(0, 1)
-        self.assertTrue(self.g.get_edges()[
-                        0]["from"] == 0 and self.g.get_edges()[0]["to"] == 1)
+        self.assertTrue(self.g.get_edges()[0]["from"] == 0 and self.g.get_edges()[0]["to"] == 1)
 
     def test_no_dup_edges(self):
         self.g.add_nodes([0, 1])
@@ -125,8 +125,7 @@ class EdgeTestCase(unittest.TestCase):
 
     def test_non_existent_edge(self):
         self.assertRaises(AssertionError, self.g.add_edge, 5, 1)
-        self.assertRaises(AssertionError, self.g.add_edge,
-                          "node1", "node2")
+        self.assertRaises(AssertionError, self.g.add_edge, "node1", "node2")
 
     def test_no_edge_length(self):
         self.assertTrue(self.g.num_nodes() == 4)
@@ -158,8 +157,7 @@ class EdgeTestCase(unittest.TestCase):
         self.assertEqual(self.g.neighbors(1), set([0, 2, 3]))
         self.assertEqual(self.g.neighbors(2), set([0, 1, 3]))
         self.assertEqual(self.g.neighbors(3), set([0, 1, 2]))
-        self.assertTrue("weight" not in
-                        [es for es in self.g.edges])
+        self.assertTrue("weight" not in [es for es in self.g.edges])
 
     def test_add_edges_weights(self):
         self.g.add_edges(
@@ -234,8 +232,7 @@ class PhysicsTestCase(unittest.TestCase):
 
     def test_hrepulsion(self):
         self.g.hrepulsion()
-        self.assertTrue("hierarchicalRepulsion" in
-                        vars(self.g.options.physics))
+        self.assertTrue("hierarchicalRepulsion" in vars(self.g.options.physics))
 
     def test_force_atlas_2based(self):
         self.g.force_atlas_2based()
