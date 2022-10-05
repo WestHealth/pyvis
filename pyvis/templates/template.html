@@ -543,6 +543,9 @@
                           document.getElementById('text').innerHTML = '100%';
                           document.getElementById('bar').style.width = '496px';
                           document.getElementById('loadingBar').style.opacity = 0;
+                          {% if physics_disabled_onload %}
+                          network.setOptions({physics : false});
+                          {% endif %}
                           // really clean the dom element
                           setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
                       });

@@ -472,6 +472,7 @@ class Network(object):
                 physics_enabled = True
         else:
             physics_enabled = self.options.physics.enabled
+            physics_disabled_onload = self.options.physics.disabled_onload
 
         self.html = template.render(height=height,
                                     width=width,
@@ -480,6 +481,7 @@ class Network(object):
                                     heading=heading,
                                     options=options,
                                     physics_enabled=physics_enabled,
+                                    physics_disabled_onload=physics_disabled_onload,
                                     use_DOT=self.use_DOT,
                                     dot_lang=self.dot_lang,
                                     widget=self.widget,
@@ -964,6 +966,20 @@ class Network(object):
         :type status: bool
         """
         self.options.physics.enabled = status
+
+    def toggle_disable_physics_onload(self, status):
+        """
+        Disables (or enables) physics simulation after the visualization
+        finished loading.
+
+        :param status: When True, once the visualization has been loaded,
+                       nodes will no longer be part of the physics
+                       simulation. They will not move except for from
+                       manual dragging.
+                       Default is set to False.
+        :type status: bool
+        """
+        self.options.physics.disabled_onload = status
 
     def toggle_drag_nodes(self, status):
         """

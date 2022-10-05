@@ -243,6 +243,11 @@ class PhysicsTestCase(unittest.TestCase):
         self.g.toggle_physics(False)
         self.assertFalse(self.g.options.physics['enabled'])
 
+    def test_toggle_disable_physics_onload(self):
+        self.assertFalse(self.g.options.physics['disabled_onload'])
+        self.g.toggle_disable_physics_onload(True)
+        self.assertTrue(self.g.options.physics['disabled_onload'])
+
     def test_stabilization(self):
         self.g.toggle_stabilization(True)
         self.assertTrue(self.g.options.physics.stabilization['enabled'])
