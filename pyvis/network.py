@@ -415,10 +415,11 @@ class Network(object):
                 ed[edges[i]].update({k: v[i]})
 
         for edge in edges:
-            try:
+            # if incoming tuple contains a weight
+            if len(edge) == 3:
+                self.add_edge(edge[0], edge[1], width=edge[2], **ed[edge])
+            else:
                 self.add_edge(edge[0], edge[1], **ed[edge])
-            except:
-                raise Exception("Invalid edge: %s" % str(edge))
 
     def get_network_data(self):
         """
