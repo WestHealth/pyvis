@@ -269,7 +269,7 @@ class Network(object):
         :type nodes: list
         """
         valid_args = ["size", "value", "title",
-            "x", "y", "label", "color", "shape"]
+                      "x", "y", "label", "color", "shape"]
         for k in kwargs:
             assert k in valid_args, "invalid arg '" + k + "'"
 
@@ -385,7 +385,7 @@ class Network(object):
             e = Edge(source, to, self.directed, **options)
             self.edges.append(e.options)
 
-    def add_edges(self, edges):
+    def add_edges(self, edges, **kwargs):
         """
         This method serves to add multiple edges between existing nodes
         in the network instance. Adding of the edges is done based off
@@ -393,16 +393,32 @@ class Network(object):
         directed graph.
 
         :param edges: A list of tuples, each tuple consists of source of edge,
-                      edge destination and and optional width.
+                      edge destination and optional width.
 
         :type arrowStrikethrough: list of tuples
         """
+        valid_args = ["arrowStrikethrough", "hidden", "physics", "title", "from", "to", "value", "width"]
+
+        for k in kwargs:
+            assert k in valid_args, "invalid arg '" + k + "'"
+
+        ed = defaultdict(dict)
+        for i in range(len(edges)):
+            for k, v in kwargs.items():
+                assert (
+                        len(v) == len(edges)
+                ), "keyword arg %s [length %s] does not match" \
+                   "[length %s] of nodes" % \
+                   (
+                       k, len(v), len(edges)
+                   )
+                ed[edges[i]].update({k: v[i]})
+
         for edge in edges:
-            # if incoming tuple contains a weight
-            if len(edge) == 3:
-                self.add_edge(edge[0], edge[1], width=edge[2])
-            else:
-                self.add_edge(edge[0], edge[1])
+            try:
+                self.add_edge(edge[0], edge[1], **ed[edge])
+            except:
+                raise Exception("Invalid edge: %s" % str(edge))
 
     def get_network_data(self):
         """
@@ -651,7 +667,7 @@ class Network(object):
         return self.get_adj_list()[node]
 
     def from_nx(self, nx_graph, node_size_transf=(lambda x: x), edge_weight_transf=(lambda x: x),
-                default_node_size =10, default_edge_weight=1, show_edge_weights=True, edge_scaling=False):
+                default_node_size=10, default_edge_weight=1, show_edge_weights=True, edge_scaling=False):
         """
         This method takes an exisitng Networkx graph and translates
         it to a PyVis graph format that can be accepted by the VisJs
@@ -679,18 +695,18 @@ class Network(object):
         >>> nt.from_nx(nx_graph)
         >>> nt.show("nx.html")
         """
-        assert(isinstance(nx_graph, nx.Graph))
-        edges=nx_graph.edges(data = True)
-        nodes=nx_graph.nodes(data = True)
+        assert (isinstance(nx_graph, nx.Graph))
+        edges = nx_graph.edges(data=True)
+        nodes = nx_graph.nodes(data=True)
 
         if len(edges) > 0:
             for e in edges:
                 if 'size' not in nodes[e[0]].keys():
-                    nodes[e[0]]['size']=default_node_size
-                nodes[e[0]]['size']=int(node_size_transf(nodes[e[0]]['size']))
+                    nodes[e[0]]['size'] = default_node_size
+                nodes[e[0]]['size'] = int(node_size_transf(nodes[e[0]]['size']))
                 if 'size' not in nodes[e[1]].keys():
-                    nodes[e[1]]['size']=default_node_size
-                nodes[e[1]]['size']=int(node_size_transf(nodes[e[1]]['size']))
+                    nodes[e[1]]['size'] = default_node_size
+                nodes[e[1]]['size'] = int(node_size_transf(nodes[e[1]]['size']))
                 self.add_node(e[0], **nodes[e[0]])
                 self.add_node(e[1], **nodes[e[1]])
 
