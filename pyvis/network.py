@@ -526,7 +526,6 @@ class Network(object):
 
             with open(f"{tempdir}/{name}", "w+") as out:
                 out.write(self.html)
-                # webbrowser.open(f"{tempdir}/{name}")
 
     def show(self, name, local=True):
         """
