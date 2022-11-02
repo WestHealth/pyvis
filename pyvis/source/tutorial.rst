@@ -166,7 +166,7 @@ The following code block is a minimal example of the capabilities of pyvis.
 
 		# set the physics layout of the network
 		got_net.barnes_hut()
-		got_data = pd.read_csv("https://www.macalester.edu/~abeverid/data/stormofswords.csv")
+		got_data = pd.read_csv("../../notebooks/NetworkOfThrones.csv")
 
 		sources = got_data['Source']
 		targets = got_data['Target']
