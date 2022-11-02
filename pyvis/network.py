@@ -27,7 +27,7 @@ class Network(object):
     """
 
     def __init__(self,
-                 height="500px",
+                 height="600px",
                  width="100%",
                  directed=False,
                  notebook=False,
@@ -513,7 +513,7 @@ class Network(object):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib", "lib")
             with open(name, "w+") as out:
                 out.write(self.html)
-            return IFrame(name, width=self.width, height="600px")
+            return IFrame(name, width=self.width, height=self.height)
         else:
             if local:
                 tempdir = "."
