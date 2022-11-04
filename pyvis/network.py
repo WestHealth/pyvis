@@ -27,7 +27,7 @@ class Network(object):
     """
 
     def __init__(self,
-                 height="500px",
+                 height="600px",
                  width="100%",
                  directed=False,
                  notebook=False,
@@ -508,12 +508,21 @@ class Network(object):
             out.write(self.html)
 
         if notebook:
-            if os.path.exists("lib"):
-                shutil.rmtree(f"lib")
-                shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib", "lib")
             with open(name, "w+") as out:
                 out.write(self.html)
-            return IFrame(name, width=self.width, height="600px")
+            return IFrame(name, width=self.width, height=self.height)
+        elif notebook and local:
+            if not os.path.exists("lib"):
+                os.makedirs(os.path.dirname("lib"))
+            if not os.path.exists("lib/bindings"):
+                shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/bindings", "lib/bindings")
+            if not os.path.exists("lib/tom-select"):
+                shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/tom-select", "lib/tom-select")
+            if not os.path.exists("lib/bindings"):
+                shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/vis-9.1.2", "lib/vis-9.1.2")
+            with open(name, "w+") as out:
+                out.write(self.html)
+            return IFrame(name, width=self.width, height=self.height)
         else:
             if local:
                 tempdir = "."
