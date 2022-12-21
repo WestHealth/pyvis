@@ -535,7 +535,7 @@ class Network(object):
 
             with open(f"{tempdir}/{name}", "w+") as out:
                 out.write(self.html)
-                webbrowser.open(f"{tempdir}/{name}")
+                # webbrowser.open(f"{tempdir}/{name}")
 
     def show(self, name, local=True):
         """
@@ -549,7 +549,7 @@ class Network(object):
             return self.write_html(name, local, notebook=True)
         else:
             self.write_html(name, local)
-            # webbrowser.open(name)
+            webbrowser.open(name)
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):
