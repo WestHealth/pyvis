@@ -94,7 +94,9 @@ class Network(object):
         self.templateEnv = Environment(loader=FileSystemLoader(self.template_dir))
 
         if cdn_resources == "local" and notebook == True:
-            print("Local cdn resources have problems on chrome/safari when used in jupyter-notebook. ")
+            print("Warning: Local CDN resources have problems on chrome/safari when used in jupyter-notebook."
+                  " Use cdn_resources='in_line' or cdn_resources='remote' if you have issues "
+                  "viewing graphics in a notebook")
         self.cdn_resources = cdn_resources
 
         if notebook:
@@ -494,26 +496,25 @@ class Network(object):
                                     )
         return self.html
 
-    def write_html(self, name, local=True, notebook=False):
+    def write_html(self, name, local=True, notebook=False,open_browser=False):
         """
         This method gets the data structures supporting the nodes, edges,
         and options and updates the template to write the HTML holding
         the visualization.
+
+        To work with the old local methods local is being depricated, but not removed.
         :type name_html: str
+        @param name: name of the file to save the graph as.
+        @param local: Depricated parameter. Used to be used to determine how the graph needs deploy. Has been removed in favor of using the class cdn_resources instead.
+        @param notebook: If true, this object will return the iframe document for use in juptyer notebook.
+        @param open_browser: If true, will open a web browser with the generated graph.
         """
         check_html(name)
         self.html = self.generate_html(notebook=notebook)
 
-        with open(name, "w+") as out:
-            out.write(self.html)
-
-        if notebook:
-            with open(name, "w+") as out:
-                out.write(self.html)
-            return IFrame(name, width=self.width, height=self.height)
-        elif notebook and local:
+        if self.cdn_resources == "local":
             if not os.path.exists("lib"):
-                os.makedirs(os.path.dirname("lib"))
+                os.makedirs("lib")
             if not os.path.exists("lib/bindings"):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/bindings", "lib/bindings")
             if not os.path.exists("lib/tom-select"):
@@ -522,20 +523,15 @@ class Network(object):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/vis-9.1.2", "lib/vis-9.1.2")
             with open(name, "w+") as out:
                 out.write(self.html)
-            return IFrame(name, width=self.width, height=self.height)
-        else:
-            if local:
-                tempdir = "."
-            else:
-                tempdir = tempfile.mkdtemp()
-            # with tempfile.mkdtemp() as tempdir:
-            if os.path.exists(f"{tempdir}/lib"):
-                shutil.rmtree(f"{tempdir}/lib")
-            shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib", f"{tempdir}/lib")
-
-            with open(f"{tempdir}/{name}", "w+") as out:
+        elif self.cdn_resources == "in_line" or self.cdn_resources == "remote":
+            with open(name, "w+") as out:
                 out.write(self.html)
-                webbrowser.open(f"{tempdir}/{name}")
+        else:
+            assert "cdn_resources is not in ['in_line','remote','local']."
+        if open_browser: # open the saved file in a new browser window.
+            webbrowser.open(f"{name}")
+        if notebook:
+            return IFrame(name, width=self.width, height=self.height)
 
     def show(self, name, local=True):
         """
@@ -546,10 +542,13 @@ class Network(object):
         """
         check_html(name)
         if self.template is not None:
-            return self.write_html(name, local, notebook=True)
+            check_html(name)
+            self.html = self.generate_html(notebook=True)
+            return IFrame(name, width=self.width, height=self.height)
+            # return self.write_html(name, local, notebook=True)
         else:
             self.write_html(name, local)
-            # webbrowser.open(name)
+            webbrowser.open(name)
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):
