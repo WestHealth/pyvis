@@ -94,9 +94,9 @@ class Network(object):
         self.templateEnv = Environment(loader=FileSystemLoader(self.template_dir))
 
         if cdn_resources == "local" and notebook == True:
-            print("Warning: Local CDN resources have problems on chrome/safari when used in jupyter-notebook."
+            print("Warning: When  cdn_resources is 'local' jupyter notebook has issues displaying graphics on chrome/safari."
                   " Use cdn_resources='in_line' or cdn_resources='remote' if you have issues "
-                  "viewing graphics in a notebook")
+                  "viewing graphics in a notebook.")
         self.cdn_resources = cdn_resources
 
         if notebook:
@@ -533,7 +533,7 @@ class Network(object):
         if notebook:
             return IFrame(name, width=self.width, height=self.height)
 
-    def show(self, name, local=True):
+    def show(self, name, local=True,notebook=True):
         """
         Writes a static HTML file and saves it locally before opening.
 
@@ -541,14 +541,12 @@ class Network(object):
         :type name: str
         """
         check_html(name)
-        if self.template is not None:
+        if notebook:
             check_html(name)
-            self.html = self.generate_html(notebook=True)
-            return IFrame(name, width=self.width, height=self.height)
+            return self.write_html(name, open_browser=False)
             # return self.write_html(name, local, notebook=True)
         else:
-            self.write_html(name, local)
-            webbrowser.open(name)
+            self.write_html(name, open_browser=True)
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):
