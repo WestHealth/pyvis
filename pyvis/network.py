@@ -510,7 +510,7 @@ class Network(object):
         @param notebook: If true, this object will return the iframe document for use in juptyer notebook.
         @param open_browser: If true, will open a web browser with the generated graph.
         """
-        getcwd_name = os.getcwd() + "/" + name
+        getcwd_name = name
         check_html(getcwd_name)
         self.html = self.generate_html(notebook=notebook)
 
