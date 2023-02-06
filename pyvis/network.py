@@ -521,7 +521,7 @@ class Network(object):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/bindings", "lib/bindings")
             if not os.path.exists(os.getcwd()+"/lib/tom-select"):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/tom-select", "lib/tom-select")
-            if not os.path.exists(os.getcwd()+"/lib/bindings"):
+            if not os.path.exists(os.getcwd()+"/lib/vis-9.1.2"):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/vis-9.1.2", "lib/vis-9.1.2")
             with open(getcwd_name, "w+") as out:
                 out.write(self.html)
