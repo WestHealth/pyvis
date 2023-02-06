@@ -85,11 +85,12 @@ class Network(object):
         self.node_map = {}
         self.template = None
         self.conf = False
-        self.path = "template.html"  # os.path.dirname(__file__) + "/templates/
         self.neighborhood_highlight = neighborhood_highlight
         self.select_menu = select_menu
         self.filter_menu = filter_menu
         assert cdn_resources in ["local", "in_line", "remote"], "cdn_resources not in [local, in_line, remote]."
+        # path is the root template located in the template_dir
+        self.path = "template.html"
         self.template_dir = os.path.dirname(__file__) + "/templates/"
         self.templateEnv = Environment(loader=FileSystemLoader(self.template_dir))
 
@@ -509,7 +510,8 @@ class Network(object):
         @param notebook: If true, this object will return the iframe document for use in juptyer notebook.
         @param open_browser: If true, will open a web browser with the generated graph.
         """
-        check_html(name)
+        getcwd_name = os.getcwd() + "/" + name
+        check_html(getcwd_name)
         self.html = self.generate_html(notebook=notebook)
 
         if self.cdn_resources == "local":
@@ -517,21 +519,20 @@ class Network(object):
                 os.makedirs("lib")
             if not os.path.exists("lib/bindings"):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/bindings", "lib/bindings")
-            if not os.path.exists("lib/tom-select"):
+            if not os.path.exists(os.getcwd()+"/lib/tom-select"):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/tom-select", "lib/tom-select")
-            if not os.path.exists("lib/bindings"):
+            if not os.path.exists(os.getcwd()+"/lib/bindings"):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/vis-9.1.2", "lib/vis-9.1.2")
-            with open(name, "w+") as out:
+            with open(getcwd_name, "w+") as out:
                 out.write(self.html)
         elif self.cdn_resources == "in_line" or self.cdn_resources == "remote":
-            with open(name, "w+") as out:
+            with open(getcwd_name, "w+") as out:
                 out.write(self.html)
         else:
             assert "cdn_resources is not in ['in_line','remote','local']."
         if open_browser: # open the saved file in a new browser window.
-            webbrowser.open(f"{name}")
-        if notebook:
-            return IFrame(name, width=self.width, height=self.height)
+            webbrowser.open(getcwd_name)
+
 
     def show(self, name, local=True,notebook=True):
         """
@@ -540,13 +541,13 @@ class Network(object):
         :param: name: the name of the html file to save as
         :type name: str
         """
-        check_html(name)
+        print(name)
         if notebook:
-            check_html(name)
-            return self.write_html(name, open_browser=False)
-            # return self.write_html(name, local, notebook=True)
+            self.write_html(name, open_browser=False,notebook=True)
         else:
             self.write_html(name, open_browser=True)
+        if notebook:
+            return IFrame(name, width=self.width, height=self.height)
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):
