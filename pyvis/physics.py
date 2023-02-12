@@ -90,6 +90,7 @@ class Physics(object):
 
     def __init__(self):
         self.enabled = True
+        self.disabled_onload = False
         self.stabilization = self.Stabilization()
 
     def use_barnes_hut(self, params):
