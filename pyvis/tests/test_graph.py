@@ -193,6 +193,24 @@ class EdgeTestCase(unittest.TestCase):
             list([1, None, 3, None, 5, None]),
             list(map(lambda x: x.get("width", None), self.g.edges)))
 
+    def test_add_edges_with_options(self):
+        self.g.add_edges(
+            [
+                (0, 1), (0, 2), (0, 3),
+                (1, 2), (1, 3), (2, 3)
+            ], width=[1, 2, 3, 4, 5, 6]
+        )
+        self.assertEqual(self.g.num_edges(), 6)
+        self.assertEqual(self.g.neighbors(0), set([1, 2, 3]))
+        self.assertEqual(self.g.neighbors(1), set([0, 2, 3]))
+        self.assertEqual(self.g.neighbors(2), set([0, 1, 3]))
+        self.assertEqual(self.g.neighbors(3), set([0, 1, 2]))
+        for edges in self.g.edges:
+            self.assertTrue("width" in edges)
+        self.assertEqual(
+            list([1, 2, 3, 4, 5, 6]),
+            list(map(lambda x: x["width"], self.g.edges)))
+
     def test_add_edge_directed(self):
         self.g.directed = True
         self.g.add_edge(0, 1)
@@ -308,23 +326,23 @@ class LayoutTestCase(unittest.TestCase):
 
     def test_can_enable_init(self):
         self.assertTrue(self.g.options['layout'])
-    
+
     def test_layout_disabled(self):
         self.g = Network()
         self.assertRaises(KeyError, lambda: self.g.options['layout'])
-    
+
     def test_levelSeparation(self):
         self.assertTrue(self.g.options.layout.hierarchical.levelSeparation)
-    
+
     def test_treeSpacing(self):
         self.assertTrue(self.g.options.layout.hierarchical.treeSpacing)
-    
+
     def test_blockShifting(self):
         self.assertTrue(self.g.options.layout.hierarchical.blockShifting)
-    
+
     def test_edgeMinimization(self):
         self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization)
-    
+
     def test_parentCentralization(self):
         self.assertTrue(self.g.options.layout.hierarchical.parentCentralization)
 
@@ -334,7 +352,7 @@ class LayoutTestCase(unittest.TestCase):
     def test_set_edge_minimization(self):
         self.g.options.layout.set_separation(10)
         self.assertTrue(self.g.options.layout.hierarchical.levelSeparation == 10)
-    
+
     def test_set_tree_spacing(self):
         self.g.options.layout.set_tree_spacing(10)
         self.assertTrue(self.g.options.layout.hierarchical.treeSpacing == 10)
@@ -344,7 +362,3 @@ class LayoutTestCase(unittest.TestCase):
         self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization == True)
         self.g.options.layout.set_edge_minimization(False)
         self.assertTrue(self.g.options.layout.hierarchical.edgeMinimization == False)
-
-        
-
-    
