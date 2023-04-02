@@ -534,7 +534,7 @@ class Network(object):
             webbrowser.open(getcwd_name)
 
 
-    def show(self, name, local=True,notebook=True):
+    def show(self, name, local=True, notebook=False):
         """
         Writes a static HTML file and saves it locally before opening.
 
@@ -543,7 +543,7 @@ class Network(object):
         """
         print(name)
         if notebook:
-            self.write_html(name, open_browser=False,notebook=True)
+            self.write_html(name, open_browser=False, notebook=True)
         else:
             self.write_html(name, open_browser=True)
         if notebook:
