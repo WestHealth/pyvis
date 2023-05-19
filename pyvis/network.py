@@ -523,10 +523,10 @@ class Network(object):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/tom-select", "lib/tom-select")
             if not os.path.exists(os.getcwd()+"/lib/vis-9.1.2"):
                 shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/vis-9.1.2", "lib/vis-9.1.2")
-            with open(getcwd_name, "w+") as out:
+            with open(getcwd_name, "w+", encoding="utf-8") as out:
                 out.write(self.html)
         elif self.cdn_resources == "in_line" or self.cdn_resources == "remote":
-            with open(getcwd_name, "w+") as out:
+            with open(getcwd_name, "w+", encoding="utf-8") as out:
                 out.write(self.html)
         else:
             assert "cdn_resources is not in ['in_line','remote','local']."
