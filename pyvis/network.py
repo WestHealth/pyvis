@@ -437,7 +437,7 @@ class Network(object):
         check_html(name)
         self.write_html(name)
 
-    def generate_html(self, name="index.html", local=True, notebook=False):
+    def generate_html(self, name="index.html", notebook=False):
         """
         This method gets the data structures supporting the nodes, edges,
         and options and updates the template to write the HTML holding
@@ -497,7 +497,7 @@ class Network(object):
                                     )
         return self.html
 
-    def write_html(self, name, local=True, notebook=False,open_browser=False):
+    def write_html(self, name, notebook=False, open_browser=False):
         """
         This method gets the data structures supporting the nodes, edges,
         and options and updates the template to write the HTML holding
@@ -530,22 +530,26 @@ class Network(object):
                 out.write(self.html)
         else:
             assert "cdn_resources is not in ['in_line','remote','local']."
-        if open_browser: # open the saved file in a new browser window.
+        if open_browser:  # open the saved file in a new browser window.
             webbrowser.open(getcwd_name)
 
-
-    def show(self, name, local=True,notebook=True):
+    def show(self, name=None, notebook=True, string=False):
         """
         Writes a static HTML file and saves it locally before opening.
 
         :param: name: the name of the html file to save as
+        :param: notebook: if true, return an object displayable in a notebook
+        :param: string: return the html as a string instead
         :type name: str
+        :type notebook: bool
+        :type string: bool
         """
+        if string:
+            return self.generate_html(notebook=notebook)
+
         print(name)
-        if notebook:
-            self.write_html(name, open_browser=False,notebook=True)
-        else:
-            self.write_html(name, open_browser=True)
+        name = name or tempfile.mkdtemp() + "/index.hml"
+        self.write_html(name, open_browser=False, notebook=notebook)
         if notebook:
             return IFrame(name, width=self.width, height=self.height)
 
