@@ -14,6 +14,7 @@ from .edge import Edge
 from .node import Node
 from .options import Options, Configure
 from .utils import check_html
+from .JScode import JSONEncoder as JS_encoder
 
 
 class Network(object):
@@ -93,6 +94,10 @@ class Network(object):
         self.path = "template.html"
         self.template_dir = os.path.dirname(__file__) + "/templates/"
         self.templateEnv = Environment(loader=FileSystemLoader(self.template_dir))
+        if "json.dumps_kwargs" in self.templateEnv.policies:
+            self.templateEnv.policies["json.dumps_kwargs"].update({"cls": JS_encoder})
+        else:
+            self.templateEnv.policies["json.dumps_kwargs"] = {"cls": JS_encoder}
 
         if cdn_resources == "local" and notebook == True:
             print("Warning: When  cdn_resources is 'local' jupyter notebook has issues displaying graphics on chrome/safari."
@@ -590,6 +595,11 @@ class Network(object):
         self.path = template_file
         self.template_dir = template_directory
         self.templateEnv = Environment(loader=FileSystemLoader(self.template_dir))
+        if "json.dumps_kwargs" in self.templateEnv.policies:
+            self.templateEnv.policies["json.dumps_kwargs"].update({"cls": JS_encoder})
+        else:
+            self.templateEnv.policies["json.dumps_kwargs"] = {"cls": JS_encoder}
+
 
     def from_DOT(self, dot):
         """
