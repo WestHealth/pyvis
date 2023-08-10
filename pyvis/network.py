@@ -239,7 +239,7 @@ class Network(object):
 
         :type nodes: list
         """
-        valid_args = ["label", "borderWidth", "borderWidthSelected", 
+        valid_args = ["label", "color", "borderWidth", "borderWidthSelected", 
         "brokenImage", "group", "hidden", "image", "labelHighlightBold", 
         "level", "mass", "physics", "shape", "size", "title", "value", "x", "y"]
         for k in kwargs:
