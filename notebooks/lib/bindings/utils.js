@@ -1,3 +1,5 @@
+let highlightActive = false;
+
 function neighbourhoodHighlight(params) {
   // console.log("in nieghbourhoodhighlight");
   allNodes = nodes.get({ returnType: "Object" });
