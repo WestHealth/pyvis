@@ -147,10 +147,8 @@ The displaying of a graph is achieved by a single method call on
 :meth:`network.Network.show()` after the underlying network is constructed.
 The interactive visualization is presented as a static HTML file.
 
->>> net.toggle_physics(True)
->>> net.show('mygraph.html')
-
-.. note:: Triggering the :meth:`toggle_physics` method allows for more fluid graph interactions 
+>>> net.toggle_physics(True) # Triggering the `toggle_physics` method allows for more fluid graph interactions 
+>>> net.show('mygraph.html') # Note that if you work from a normal python file you need to pass "notebook=False" kwarg
 
 Example: Visualizing a Game of Thrones character network
 --------------------------------------------------------
@@ -251,7 +249,7 @@ Using pyvis within `Jupyter <https://jupyter.org>`_ notebook
 Pyvis supports `Jupyter <https://jupyter.org>`_ notebook embedding through the
 use of the 
 :meth:`network.Network` constructor.  The network instance must be
-"prepped" during instantiation by supplying the `notebook=True` kwarg.
+"prepped" during instantiation by supplying the `notebook=True` kwarg, which is the default.
 Example:
 
 .. image:: jup.png
