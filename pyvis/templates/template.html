@@ -265,6 +265,7 @@
               var network;
               var container;
               var options, data;
+              var highlightActive = false;
               var filter = {
                   item : '',
                   property : '',
@@ -456,12 +457,8 @@
 
                   network = new vis.Network(container, data, options);
 
-                  {% if neighborhood_highlight %}
+                  {% if neighborhood_highlight or select_menu %}
                     network.on("click", neighbourhoodHighlight);
-                  {% endif %}
-
-                  {% if select_menu %}
-                    network.on("selectNode", neighbourhoodHighlight);
                   {% endif %}
 
                   {% if tooltip_link %}
