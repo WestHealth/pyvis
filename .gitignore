@@ -14,7 +14,6 @@ pyvis/test.py
 # local files
 pyvis/full_graph.txt
 pyvis/source/stormofswords.csv
-rough/
 
 # package details
 pyvis.egg-info/
