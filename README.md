@@ -47,3 +47,17 @@ g.show("basic.html")
 
 ## Interactive Notebook playground with examples
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/WestHealth/pyvis/master?filepath=notebooks%2Fexample.ipynb)
+
+## Editable Graph
+For options to visually edit the graph, add `editable=True` while creating the Network. There is a download option to save the modified graph. Download will not work in notebook instances.
+
+```python
+from pyvis.network import Network
+
+g = Network( editable=True)
+g.add_node(0)
+g.add_node(1)
+g.add_edge(0, 1)
+
+g.show("example_editable_graph.html", notebook=False)
+```
