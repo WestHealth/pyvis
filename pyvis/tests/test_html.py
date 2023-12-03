@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.select import Select
 
-from ..network import Network
+from pyvis.network import Network
 
 
 class GraphTests(unittest.TestCase):
@@ -194,6 +194,59 @@ class FilterAndSelectMenuTests(unittest.TestCase):
         self.assertIsNotNone(driver.find_element(By.ID, "select-item"))
         self.assertIsNotNone(driver.find_element(By.ID, "select-value"))
         self.assertIsNotNone(driver.find_element(By.ID, "select-property"))
+
+        # close the driver and delete the testing file
+        driver.quit()
+        if os.path.exists("./" + file_name):
+            os.remove("./" + file_name)
+
+
+class EditMenuTest(unittest.TestCase):
+    service = ChromeService(executable_path=ChromeDriverManager().install())
+
+    def setUp(self):
+        self.g = Network(filter_menu=True, select_menu=True, editable=True)
+
+    def test_graph(self):
+        # create simple network and save it in a file
+        self.g.add_nodes([1, 2, 3],
+                         value=[10, 100, 400],
+                         title=["I am node 1", "node 2 here", "and im node 3"],
+                         x=[21.4, 21.4, 21.4], y=[100.2, 223.54, 32.1],
+                         label=["NODE 1", "NODE 2", "NODE 3"],
+                         color=["#00ff1e", "#162347", "#dd4b39"])
+        file_name = "EditMenuTest.html"
+        self.g.show(file_name, notebook=False)
+
+        # get the saved file path and change it into required format for the driver to read it
+        file_path = os.getcwd()
+        file_path = "file:///" + file_path.replace(os.sep, '/') + "/" + file_name
+
+        # start the web driver, load the file and wait for a few seconds in precaution
+        driver = webdriver.Chrome(service=self.service)
+        driver.get(file_path)
+        driver.implicitly_wait(0.1)
+
+        # test for the main html container and then canvas
+        self.assertIsNotNone(driver.find_element(By.ID, "mynetwork"))
+        self.assertIsNotNone(driver.find_element(By.TAG_NAME, "canvas"))
+
+        self.assertIsNotNone(driver.find_element(By.ID, "node-popUp"))
+        self.assertIsNotNone(driver.find_element(By.ID, "node-operation"))
+        self.assertIsNotNone(driver.find_element(By.ID, "node-label"))
+        self.assertIsNotNone(driver.find_element(By.ID, "node-saveButton"))
+        self.assertIsNotNone(driver.find_element(By.ID, "node-cancelButton"))
+
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-popUp"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-operation"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-label"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-saveButton"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-cancelButton"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-label"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-label"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-label"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-label"))
+        self.assertIsNotNone(driver.find_element(By.ID, "edge-label"))
 
         # close the driver and delete the testing file
         driver.quit()

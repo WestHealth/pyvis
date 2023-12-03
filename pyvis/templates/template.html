@@ -56,6 +56,62 @@
         </center>
         <style type="text/css">
 
+            {% if editable %}
+            table.legend_table {
+                font-size: 11px;
+                border-width: 1px;
+                border-color: #d3d3d3;
+                border-style: solid;
+            }
+            table.legend_table,
+            td {
+                border-width: 1px;
+                border-color: #d3d3d3;
+                border-style: solid;
+                padding: 2px;
+            }
+            div.table_content {
+                width: 80px;
+                text-align: center;
+            }
+            div.table_description {
+                width: 100px;
+            }
+
+            #operation {
+                font-size: 28px;
+            }
+            #node-popUp {
+                display: none;
+                position: absolute;
+                top: 350px;
+                left: 170px;
+                z-index: 299;
+                width: 350px;
+                height: 150px;
+                background-color: #f9f9f9;
+                border-style: solid;
+                border-width: 3px;
+                border-color: #5394ed;
+                padding: 10px;
+                text-align: center;
+            }
+            #edge-popUp {
+                display: none;
+                position: absolute;
+                top: 350px;
+                left: 170px;
+                z-index: 299;
+                width: 350px;
+                height: 120px;
+                background-color: #f9f9f9;
+                border-style: solid;
+                border-width: 3px;
+                border-color: #5394ed;
+                padding: 10px;
+                text-align: center;
+            }
+            {% endif %}
              #mynetwork {
                  width: {{width}};
                  height: {{height}};
@@ -236,8 +292,49 @@
                 </div>
               </div>
             {% endif %}
+
+            {% if editable %}
+            <div id="node-popUp">
+                <span id="node-operation">node</span> <br />
+                <table style="margin: auto">
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td><input id="node-id" value="new value" /></td>
+                        </tr>
+                        <tr>
+                            <td>label</td>
+                            <td><input id="node-label" value="new value" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="button" value="save" id="node-saveButton" />
+                <input type="button" value="cancel" id="node-cancelButton" />
+            </div>
+
+            <div id="edge-popUp">
+                <span id="edge-operation">edge</span> <br />
+                <table style="margin: auto">
+                    <tbody>
+                        <tr>
+                            <td>label</td>
+                            <td><input id="edge-label" value="new value" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="button" value="save" id="edge-saveButton" />
+                <input type="button" value="cancel" id="edge-cancelButton" />
+            </div>
+            {% endif %}
+
             <div id="mynetwork" class="card-body"></div>
         </div>
+
+        {% if (editable and not notebook) %}
+        <div class="text-center" style="padding:10px">
+            <button type="button" class="btn btn-primary btn-block" onclick="downloadGraph()">Download Graph Data</button>
+        </div>
+        {% endif %}
 
         {% if nodes|length > 100 and physics_enabled %}
             <div id="loadingBar">
@@ -409,6 +506,96 @@
 
               {%  endif %}
 
+              {% if editable %}
+              function downloadGraph() {
+                    const nodeIdsAndLabels = nodes.map(node => ({ id: node.id, label: node.label }));
+                    const edgeIdsAndLabels = edges.map(edge => ({ from: edge.from, to: edge.to, id: edge.id, label: edge.label }));
+                    const graphData = {
+                        nodes : nodeIdsAndLabels,
+                        edges : edgeIdsAndLabels
+                    }
+                    // Convert the graphData to a JSON string
+                    const jsonData = JSON.stringify(graphData, null, 2);
+
+                    // Create a Blob with the JSON data
+                    const blob = new Blob([jsonData], { type: 'application/json' });
+
+                    // Create an anchor element to trigger the download
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "graphData.json";
+
+                    // Trigger a click event on the anchor element to initiate the download
+                    a.click();
+
+                    // Clean up by revoking the Blob URL
+                    URL.revokeObjectURL(a.href);
+                    getData()
+                }
+
+                function editNode(data, cancelAction, callback) {
+                    document.getElementById("node-label").value = data.label;
+                    document.getElementById("node-saveButton").onclick = saveNodeData.bind(
+                    this,
+                    data,
+                    callback
+                    );
+                    document.getElementById("node-cancelButton").onclick =
+                    cancelAction.bind(this, callback);
+                    document.getElementById("node-popUp").style.display = "block";
+                }
+
+                // Callback passed as parameter is ignored
+                function clearNodePopUp() {
+                    document.getElementById("node-saveButton").onclick = null;
+                    document.getElementById("node-cancelButton").onclick = null;
+                    document.getElementById("node-popUp").style.display = "none";
+                }
+
+                function cancelNodeEdit(callback) {
+                    clearNodePopUp();
+                    callback(null);
+                }
+
+                function saveNodeData(data, callback) {
+                    data.label = document.getElementById("node-label").value;
+                    clearNodePopUp();
+                    callback(data);
+                }
+
+                function editEdgeWithoutDrag(data, callback) {
+                    // filling in the popup DOM elements
+                    document.getElementById("edge-label").value = data.label;
+                    document.getElementById("edge-saveButton").onclick = saveEdgeData.bind(
+                    this,
+                    data,
+                    callback
+                    );
+                    document.getElementById("edge-cancelButton").onclick =
+                    cancelEdgeEdit.bind(this, callback);
+                    document.getElementById("edge-popUp").style.display = "block";
+                }
+
+                function clearEdgePopUp() {
+                    document.getElementById("edge-saveButton").onclick = null;
+                    document.getElementById("edge-cancelButton").onclick = null;
+                    document.getElementById("edge-popUp").style.display = "none";
+                }
+
+                function cancelEdgeEdit(callback) {
+                    clearEdgePopUp();
+                    callback(null);
+                }
+
+                function saveEdgeData(data, callback) {
+                    if (typeof data.to === "object") data.to = data.to.id;
+                    if (typeof data.from === "object") data.from = data.from.id;
+                    data.label = document.getElementById("edge-label").value;
+                    clearEdgePopUp();
+                    callback(data);
+                }
+              {% endif %}
+
               // This method is responsible for drawing the graph, returns the drawn network
               function drawGraph() {
                   var container = document.getElementById('mynetwork');
@@ -424,6 +611,33 @@
                   }
 
                   var options = parsedData.options;
+
+                  {% if editable %}
+                  options.manipulation =  {
+                        addNode: function (data, callback) {
+                        // filling in the popup DOM elements
+                        document.getElementById("node-operation").innerText = "Add Node";
+                        editNode(data, clearNodePopUp, callback);
+                        },
+                        editNode: function (data, callback) {
+                        // filling in the popup DOM elements
+                        document.getElementById("node-operation").innerText = "Edit Node";
+                        editNode(data, cancelNodeEdit, callback);
+                        },
+                        addEdge: function (data, callback) {
+                        document.getElementById("edge-operation").innerText = "Add Edge";
+                        editEdgeWithoutDrag(data, callback);
+                        },
+                        editEdge: {
+                        editWithoutDrag: function (data, callback) {
+                            document.getElementById("edge-operation").innerText =
+                            "Edit Edge";
+                            editEdgeWithoutDrag(data, callback);
+                        },
+                        },
+                    };
+                  {% endif %}
+                  
                   options.nodes = {
                       shape: "dot"
                   }
@@ -444,6 +658,32 @@
                   data = {nodes: nodes, edges: edges};
 
                   var options = {{options|safe}};
+
+                  {% if editable %}
+                  options.manipulation =  {
+                        addNode: function (data, callback) {
+                        // filling in the popup DOM elements
+                        document.getElementById("node-operation").innerText = "Add Node";
+                        editNode(data, clearNodePopUp, callback);
+                        },
+                        editNode: function (data, callback) {
+                        // filling in the popup DOM elements
+                        document.getElementById("node-operation").innerText = "Edit Node";
+                        editNode(data, cancelNodeEdit, callback);
+                        },
+                        addEdge: function (data, callback) {
+                        document.getElementById("edge-operation").innerText = "Add Edge";
+                        editEdgeWithoutDrag(data, callback);
+                        },
+                        editEdge: {
+                        editWithoutDrag: function (data, callback) {
+                            document.getElementById("edge-operation").innerText =
+                            "Edit Edge";
+                            editEdgeWithoutDrag(data, callback);
+                        },
+                        },
+                    };
+                    {% endif %}
 
                   {% endif %}
 

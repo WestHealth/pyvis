@@ -38,7 +38,8 @@ class Network(object):
                  font_color=False,
                  layout=None,
                  heading="",
-                 cdn_resources="local"):
+                 cdn_resources="local",
+                 editable=False):
         """
         :param height: The height of the canvas
         :param width: The width of the canvas
@@ -88,6 +89,7 @@ class Network(object):
         self.neighborhood_highlight = neighborhood_highlight
         self.select_menu = select_menu
         self.filter_menu = filter_menu
+        self.editable = editable
         assert cdn_resources in ["local", "in_line", "remote"], "cdn_resources not in [local, in_line, remote]."
         # path is the root template located in the template_dir
         self.path = "template.html"
@@ -493,7 +495,8 @@ class Network(object):
                                     select_menu=self.select_menu,
                                     filter_menu=self.filter_menu,
                                     notebook=notebook,
-                                    cdn_resources=self.cdn_resources
+                                    cdn_resources=self.cdn_resources,
+                                    editable=self.editable
                                     )
         return self.html
 
