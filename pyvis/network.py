@@ -372,21 +372,21 @@ class Network(object):
         assert to in self.get_nodes(), \
             "non existent node '" + str(to) + "'"
 
-        # we only check existing edge for undirected graphs
-        if not self.directed:
-            for e in self.edges:
-                frm = e['from']
-                dest = e['to']
-                if (
-                        (source == dest and to == frm) or
-                        (source == frm and to == dest)
-                ):
-                    # edge already exists
-                    edge_exists = True
+        # # we only check existing edge for undirected graphs
+        # if not self.directed:
+            # for e in self.edges:
+                # frm = e['from']
+                # dest = e['to']
+                # if (
+                        # (source == dest and to == frm) or
+                        # (source == frm and to == dest)
+                # ):
+                    # # edge already exists
+                    # edge_exists = True
 
-        if not edge_exists:
-            e = Edge(source, to, self.directed, **options)
-            self.edges.append(e.options)
+        # if not edge_exists:
+        e = Edge(source, to, self.directed, **options)
+        self.edges.append(e.options)
 
     def add_edges(self, edges):
         """
@@ -761,7 +761,7 @@ class Network(object):
         :param gravity: The more negative the gravity value is, the stronger the
                         repulsion is.
         :param central_gravity: The gravity attractor to pull the entire network
-                                to the center. 
+                                to the center.
         :param spring_length: The rest length of the edges
         :param spring_strength: The strong the edges springs are
         :param damping: A value ranging from 0 to 1 of how much of the velocity
@@ -859,7 +859,7 @@ class Network(object):
         :param gravity: The more negative the gravity value is, the stronger the
                         repulsion is.
         :param central_gravity: The gravity attractor to pull the entire network
-                                to the center. 
+                                to the center.
         :param spring_length: The rest length of the edges
         :param spring_strength: The strong the edges springs are
         :param damping: A value ranging from 0 to 1 of how much of the velocity
@@ -906,7 +906,7 @@ class Network(object):
         panning of the network easy.
 
         :param status: True if edges should be hidden on drag
-        
+
         :type status: bool
         """
         self.options.interaction.hideEdgesOnDrag = status
@@ -961,7 +961,7 @@ class Network(object):
 
     def toggle_physics(self, status):
         """
-        Toggles physics simulation 
+        Toggles physics simulation
 
         :param status: When False, nodes are not part of the physics
                        simulation. They will not move except for from
@@ -1000,7 +1000,7 @@ class Network(object):
 
         :param options: The string representation of the Javascript-like object
                         to be used to override default options.
-        
+
         :type options: str
         """
         self.options = self.options.set(options)
