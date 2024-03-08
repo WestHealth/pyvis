@@ -533,8 +533,7 @@ class Network(object):
         if open_browser: # open the saved file in a new browser window.
             webbrowser.open(getcwd_name)
 
-
-    def show(self, name, local=True,notebook=True):
+    def show(self, name, local=True, notebook=False):
         """
         Writes a static HTML file and saves it locally before opening.
 
@@ -542,10 +541,9 @@ class Network(object):
         :type name: str
         """
         print(name)
-        if notebook:
-            self.write_html(name, open_browser=False,notebook=True)
-        else:
-            self.write_html(name, open_browser=True)
+
+        open_browser = not notebook
+        self.write_html(name, open_browser=open_browser, notebook=notebook)
         if notebook:
             return IFrame(name, width=self.width, height=self.height)
 
