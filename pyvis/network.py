@@ -233,7 +233,8 @@ class Network(object):
         :type x: num (optional)
         :type y: num (optional)
         """
-        assert isinstance(n_id, str) or isinstance(n_id, int)
+        if not isinstance(n_id, (str, int)):
+            raise TypeError("Node IDs should be of type str or int")
         if label:
             node_label = label
         else:
@@ -274,28 +275,23 @@ class Network(object):
         valid_args = ["size", "value", "title",
             "x", "y", "label", "color", "shape"]
         for k in kwargs:
-            assert k in valid_args, "invalid arg '" + k + "'"
+            if not k in valid_args:
+                raise ValueError("invalid arg '" + k + "'")
 
         nd = defaultdict(dict)
-        for i in range(len(nodes)):
+        for i, node in enumerate(nodes):
             for k, v in kwargs.items():
-                assert (
-                        len(v) == len(nodes)
-                ), "keyword arg %s [length %s] does not match" \
-                   "[length %s] of nodes" % \
-                   (
-                       k, len(v), len(nodes)
-                   )
-                nd[nodes[i]].update({k: v[i]})
+                if not len(v) == len(nodes):
+                    raise ValueError(
+                        f"keyword arg {k} [length {len(v)}] does not match " 
+                        f"[length {len(nodes)}] of nodes"
+                    )
+                nd[node].update({k: v[i]})
 
         for node in nodes:
-            # check if node is `number-like`
-            try:
-                node = int(node)
-                self.add_node(node, **nd[node])
-            except:
-                # or node could be string
-                assert isinstance(node, str)
+            if not isinstance(node, (str, int)):
+                raise TypeError("Node IDs should be of type str or int")
+            else:
                 self.add_node(node, **nd[node])
 
     def num_nodes(self):
