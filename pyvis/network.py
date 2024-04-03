@@ -4,6 +4,8 @@ import shutil
 import tempfile
 import webbrowser
 from collections import defaultdict
+from io import TextIOBase
+from pathlib import Path
 
 import jsonpickle
 import networkx as nx
@@ -497,41 +499,51 @@ class Network(object):
                                     )
         return self.html
 
-    def write_html(self, name, local=True, notebook=False,open_browser=False):
+    def write_html(self, html_file, local=True, notebook=False, open_browser=False):
         """
         This method gets the data structures supporting the nodes, edges,
         and options and updates the template to write the HTML holding
         the visualization.
 
         To work with the old local methods local is being depricated, but not removed.
-        :type name_html: str
-        @param name: name of the file to save the graph as.
+        :type html_file: Union[PathLike, TextIOBase]
+        @param html_file: path to or file object of the file to save the graph as.
         @param local: Depricated parameter. Used to be used to determine how the graph needs deploy. Has been removed in favor of using the class cdn_resources instead.
         @param notebook: If true, this object will return the iframe document for use in juptyer notebook.
         @param open_browser: If true, will open a web browser with the generated graph.
         """
-        getcwd_name = name
-        check_html(getcwd_name)
+        if self.cdn_resources not in ['in_line','remote','local']:
+            raise ValueError("cdn_resources should be 'local', 'in_line', or 'remote'")
+
+        if isinstance(html_file, TextIOBase):
+            # the filename of this file object
+            filename = Path(html_file.name).resolve()
+        else:
+            filename = Path(html_file).resolve()
+
+        check_html(filename)
         self.html = self.generate_html(notebook=notebook)
 
         if self.cdn_resources == "local":
-            if not os.path.exists("lib"):
-                os.makedirs("lib")
-            if not os.path.exists("lib/bindings"):
-                shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/bindings", "lib/bindings")
-            if not os.path.exists(os.getcwd()+"/lib/tom-select"):
-                shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/tom-select", "lib/tom-select")
-            if not os.path.exists(os.getcwd()+"/lib/vis-9.1.2"):
-                shutil.copytree(f"{os.path.dirname(__file__)}/templates/lib/vis-9.1.2", "lib/vis-9.1.2")
-            with open(getcwd_name, "w+") as out:
-                out.write(self.html)
-        elif self.cdn_resources == "in_line" or self.cdn_resources == "remote":
-            with open(getcwd_name, "w+") as out:
-                out.write(self.html)
+            # copy local cdn resources to lib_dir lib_dir will always be a sibling of filename
+            lib_dir = filename.parent / "lib"
+            if not lib_dir.exists():
+                lib_dir.mkdir(parents=True, exist_ok=True)
+            if not (lib_dir/"bindings").exists():
+                shutil.copytree(Path(__file__)/"templates/lib/bindings", lib_dir/"bindings")
+            if not (lib_dir/"tom-select").exists():
+                shutil.copytree(Path(__file__)/"templates/lib/tom-select", lib_dir/"tom-select")
+            if not (lib_dir/"vis-9.1.2").exists():
+                shutil.copytree(Path(__file__)/"templates/lib/vis-9.1.2", lib_dir/"vis-9.1.2")
+                    
+        if isinstance(html_file, TextIOBase):
+            html_file.write(self.html)
         else:
-            assert "cdn_resources is not in ['in_line','remote','local']."
+            with open(filename, "w+") as out:
+                out.write(self.html)
+
         if open_browser: # open the saved file in a new browser window.
-            webbrowser.open(getcwd_name)
+            webbrowser.open(str(filename))
 
 
     def show(self, name, local=True,notebook=True):
@@ -539,15 +551,15 @@ class Network(object):
         Writes a static HTML file and saves it locally before opening.
 
         :param: name: the name of the html file to save as
-        :type name: str
+        :type name: PathLike
         """
-        print(name)
+        print(str(name))
         if notebook:
             self.write_html(name, open_browser=False,notebook=True)
+            return IFrame(name, width=self.width, height=self.height)
         else:
             self.write_html(name, open_browser=True)
-        if notebook:
-            return IFrame(name, width=self.width, height=self.height)
+    
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):

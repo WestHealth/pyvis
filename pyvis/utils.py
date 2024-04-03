@@ -1,13 +1,17 @@
 # utility and helper functions for use in pyvis
+from os import PathLike
+from pathlib import Path
 
-
-def check_html(name):
+def check_html(name: PathLike):
     """
     Given a name of graph to save or write, check if it is of valid syntax
 
     :param: name: the name to check
-    :type name: str
+    :type name: PathLike
     """
-    assert len(name.split(".")) >= 2, "invalid file type for %s" % name
-    assert name.split(
-        ".")[-1] == "html", "%s is not a valid html file" % name
+    name = Path(name)
+    if (name.suffix != ".html") or (name.suffixes[-1] != ".html"):
+        raise ValueError(f"{name} is not a valid html file")
+    if not name.parent.exists():
+        # ensures that the parent folder exists and creates it if it doesn't exist
+        name.parent.mkdir(parents=True, exist_ok=True)
