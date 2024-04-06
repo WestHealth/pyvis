@@ -541,7 +541,6 @@ class Network(object):
         :param: name: the name of the html file to save as
         :type name: str
         """
-        print(name)
         if notebook:
             self.write_html(name, open_browser=False,notebook=True)
         else:
