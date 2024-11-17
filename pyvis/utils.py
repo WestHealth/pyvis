@@ -1,13 +1,10 @@
 # utility and helper functions for use in pyvis
 
 
-def check_html(name):
+def check_html(filename: str):
     """
-    Given a name of graph to save or write, check if it is of valid syntax
+    Raise an AssertionError if the given filename does not end with '.html'
 
-    :param: name: the name to check
-    :type name: str
+    :param: filename: the filename to check
     """
-    assert len(name.split(".")) >= 2, "invalid file type for %s" % name
-    assert name.split(
-        ".")[-1] == "html", "%s is not a valid html file" % name
+    assert filename.endswith('.html'), "filename %r must end with '.html'" % filename
