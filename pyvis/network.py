@@ -779,7 +779,10 @@ class Network(object):
         :type damping: float
         :type overlap: float
         """
-        self.options.physics.use_barnes_hut(locals())
+        if isinstance(self.options, dict):
+            self.options['physics']['solver'] = 'barnes_hut'
+        else:
+            self.options.physics.use_barnes_hut(locals())
 
     def repulsion(
             self,
@@ -808,7 +811,10 @@ class Network(object):
         :type spring_strength: float
         :type damping: float
         """
-        self.options.physics.use_repulsion(locals())
+        if isinstance(self.options, dict):
+            self.options['physics']['solver'] = 'repulsion'
+        else:
+            self.options.physics.use_repulsion(locals())
 
     def hrepulsion(
             self,
@@ -837,7 +843,10 @@ class Network(object):
         :type spring_strength: float
         :type damping: float
         """
-        self.options.physics.use_hrepulsion(locals())
+        if isinstance(self.options, dict):
+            self.options['physics']['solver'] = 'hierarchicalRepulsion'
+        else:
+            self.options.physics.use_hrepulsion(locals())
 
     def force_atlas_2based(
             self,
@@ -877,7 +886,10 @@ class Network(object):
         :type damping: float
         :type overlap: float
         """
-        self.options.physics.use_force_atlas_2based(locals())
+        if isinstance(self.options, dict):
+            self.options['physics']['solver'] = 'forceAtlas2Based'
+        else:
+            self.options.physics.use_force_atlas_2based(locals())
 
     def to_json(self, max_depth=1, **args):
         return jsonpickle.encode(self, max_depth=max_depth, **args)
@@ -897,8 +909,12 @@ class Network(object):
 
         :type smooth_type: string
         """
-        self.options.edges.smooth.enabled = True
-        self.options.edges.smooth.type = smooth_type
+        if isinstance(self.options, dict):
+            self.options['edges']['smooth']['enabled'] = True
+            self.options['edges']['smooth']['type'] = smooth_type
+        else:
+            self.options.edges.smooth.enabled = True
+            self.options.edges.smooth.type = smooth_type
 
     def toggle_hide_edges_on_drag(self, status):
         """
@@ -909,7 +925,10 @@ class Network(object):
         
         :type status: bool
         """
-        self.options.interaction.hideEdgesOnDrag = status
+        if isinstance(self.options, dict):
+            self.options['interaction']['hideEdgesOnDrag'] = status
+        else:
+            self.options.interaction.hideEdgesOnDrag = status
 
     def toggle_hide_nodes_on_drag(self, status):
         """
@@ -921,7 +940,10 @@ class Network(object):
 
         :type status: bool
         """
-        self.options.interaction.hideNodesOnDrag = status
+        if isinstance(self.options, dict):
+            self.options['interaction']['hideNodesOnDrag'] = status
+        else:
+            self.options.interaction.hideNodesOnDrag = status
 
     def inherit_edge_colors(self, status):
         """
@@ -930,7 +952,10 @@ class Network(object):
         :param status: True if edges should adopt color coming from.
         :type status: bool
         """
-        self.options.edges.inherit_colors(status)
+        if isinstance(self.options, dict):
+            self.options['edges']['color']['inherit'] = status
+        else:
+            self.options.edges.inherit_colors(status)
 
     def show_buttons(self, filter_=None):
         """
@@ -956,7 +981,15 @@ class Network(object):
         :type filter_: bool or list:
         """
         self.conf = True
-        self.options.configure = Configure(enabled=True, filter_=filter_)
+        if isinstance(self.options, dict):
+            self.options['configure']['enabled'] = True
+            if filter_ == None:
+                if 'filter' in self.options['configure']:
+                    self.options['configure'].pop('filter')
+            else:
+                self.options['configure']['filter'] = filter_
+        else:
+            self.options.configure = Configure(enabled=True, filter_=filter_)
         self.widget = True
 
     def toggle_physics(self, status):
@@ -970,7 +1003,10 @@ class Network(object):
 
         :type status: bool
         """
-        self.options.physics.enabled = status
+        if isinstance(self.options, dict):
+            self.options['physics']['enabled'] = True
+        else:
+            self.options.physics.enabled = status
 
     def toggle_drag_nodes(self, status):
         """
@@ -981,7 +1017,10 @@ class Network(object):
 
         :type status: bool
         """
-        self.options.interaction.dragNodes = status
+        if isinstance(self.options, dict):
+            self.options['interaction']['dragNodes'] = status
+        else:
+            self.options.interaction.dragNodes = status
 
     def toggle_stabilization(self, status):
         """
@@ -991,7 +1030,10 @@ class Network(object):
 
         :type status: bool
         """
-        self.options.physics.toggle_stabilization(status)
+        if isinstance(self.options, dict):
+            self.options['physics']['stabilization']['enabled'] = status
+        else:
+            self.options.physics.toggle_stabilization(status)
 
     def set_options(self, options):
         """
@@ -1003,4 +1045,32 @@ class Network(object):
         
         :type options: str
         """
-        self.options = self.options.set(options)
+        if isinstance(self.options, dict):
+            def del_nulls(prop_dict):
+                for key in list(prop_dict.keys()):
+                    if (prop_dict[key] == None):
+                            prop_dict.pop(key)
+                    elif isinstance(prop_dict[key], dict):
+                            del_nulls(prop_dict[key])
+                return prop_dict
+
+            def deep_merge(dict1, dict2):
+                merged_dict=dict1
+                
+                for key in dict2:
+                    if (key in dict1) and isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+                        merged_dict[key] = deep_merge(dict1[key], dict2[key])
+                    else:
+                        merged_dict[key] = dict2[key]
+                return merged_dict
+            
+            new_options = options
+            new_options = new_options.replace("\n", "").replace(" ", "")
+            first_bracket = new_options.find("{")
+            new_options = new_options[first_bracket:]
+            new_options = json.loads(new_options)
+            new_options = del_nulls(new_options)
+            
+            self.options = deep_merge(self.options, new_options)
+        else:
+            self.options = self.options.set(options)

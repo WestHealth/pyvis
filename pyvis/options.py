@@ -218,11 +218,35 @@ class Options(object):
         :type new_options: str
         """
         
-        options = new_options.replace("\n", "").replace(" ", "")
-        first_bracket = options.find("{")
-        options = options[first_bracket:]
-        options = json.loads(options)
-        return options
+        def del_nulls(prop_dict):
+            for key in list(prop_dict.keys()):
+                if (prop_dict[key] == None):
+                        prop_dict.pop(key)
+                elif isinstance(prop_dict[key], dict):
+                        del_nulls(prop_dict[key])
+            return prop_dict
+
+        def deep_merge(dict1, dict2):
+            merged_dict=dict1
+            
+            for key in dict2:
+                if (key in dict1) and isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+                    merged_dict[key] = deep_merge(dict1[key], dict2[key])
+                else:
+                    merged_dict[key] = dict2[key]
+            return merged_dict
+
+        new_options = new_options.replace("\n", "").replace(" ", "")
+        first_bracket = new_options.find("{")
+        new_options = new_options[first_bracket:]
+        new_options = json.loads(new_options)
+        new_options = del_nulls(new_options)
+        
+        current_options = self.to_json()
+        current_options = json.loads(current_options)
+        
+        options_to_set = deep_merge(current_options, new_options)
+        return options_to_set
         
 
     def to_json(self):
