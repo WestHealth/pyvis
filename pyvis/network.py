@@ -1,13 +1,15 @@
+from collections import defaultdict
+from io import TextIOWrapper
+from jinja2 import Environment, FileSystemLoader
 import json
+import jsonpickle
+import networkx as nx
 import os
 import shutil
-import tempfile
 import webbrowser
-from collections import defaultdict
 
 import jsonpickle
 import networkx as nx
-from IPython.display import IFrame
 from jinja2 import Environment, FileSystemLoader
 
 from .edge import Edge
@@ -15,6 +17,11 @@ from .node import Node
 from .options import Options, Configure
 from .utils import check_html
 
+# from ase_uni_rehoming.utils.third_party.pyvis.edge import Edge
+# from ase_uni_rehoming.utils.third_party.pyvis.node import Node
+# from ase_uni_rehoming.utils.third_party.pyvis.options import Options, Configure
+# from ase_uni_rehoming.utils.third_party.pyvis.utils import check_html
+# from ase_uni_rehoming.utils.third_party.pyvis.template import template_str
 
 class Network(object):
     """
@@ -372,21 +379,21 @@ class Network(object):
         assert to in self.get_nodes(), \
             "non existent node '" + str(to) + "'"
 
-        # we only check existing edge for undirected graphs
-        if not self.directed:
-            for e in self.edges:
-                frm = e['from']
-                dest = e['to']
-                if (
-                        (source == dest and to == frm) or
-                        (source == frm and to == dest)
-                ):
-                    # edge already exists
-                    edge_exists = True
+        # # we only check existing edge for undirected graphs
+        # if not self.directed:
+            # for e in self.edges:
+                # frm = e['from']
+                # dest = e['to']
+                # if (
+                        # (source == dest and to == frm) or
+                        # (source == frm and to == dest)
+                # ):
+                    # # edge already exists
+                    # edge_exists = True
 
-        if not edge_exists:
-            e = Edge(source, to, self.directed, **options)
-            self.edges.append(e.options)
+        # if not edge_exists:
+        e = Edge(source, to, self.directed, **options)
+        self.edges.append(e.options)
 
     def add_edges(self, edges):
         """
@@ -461,7 +468,9 @@ class Network(object):
         if not notebook:
             # with open(self.path) as html:
             #     content = html.read()
-            template = self.templateEnv.get_template(self.path)  # Template(content)
+            #template = self.templateEnv.get_template(self.path)  # Template(content)
+            template = self.templateEnv.from_string(template_str)
+
         else:
             template = self.template
 
@@ -533,6 +542,17 @@ class Network(object):
         if open_browser: # open the saved file in a new browser window.
             webbrowser.open(getcwd_name)
 
+    def write_html_on_stream(self, output: TextIOWrapper):
+        """
+        This method gets the data structures supporting the nodes, edges,
+        and options and updates the template to write the HTML holding
+        the visualization.
+
+        @param name: name of the file to save the graph as.
+        """
+
+        self.html = self.generate_html(notebook=False)
+        output.write(self.html)
 
     def show(self, name, local=True,notebook=True):
         """
@@ -546,8 +566,6 @@ class Network(object):
             self.write_html(name, open_browser=False,notebook=True)
         else:
             self.write_html(name, open_browser=True)
-        if notebook:
-            return IFrame(name, width=self.width, height=self.height)
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):
@@ -568,7 +586,8 @@ class Network(object):
             self.set_template(custom_template_path)
         # with open(self.path) as html:
         #     content = html.read()
-        self.template = self.templateEnv.get_template(self.path)  # Template(content)
+        # self.template = self.templateEnv.get_template(self.path)  # Template(content)
+        self.template = self.templateEnv.from_string(template_str)
 
     def set_template(self, path_to_template: str):
         """
@@ -761,7 +780,7 @@ class Network(object):
         :param gravity: The more negative the gravity value is, the stronger the
                         repulsion is.
         :param central_gravity: The gravity attractor to pull the entire network
-                                to the center. 
+                                to the center.
         :param spring_length: The rest length of the edges
         :param spring_strength: The strong the edges springs are
         :param damping: A value ranging from 0 to 1 of how much of the velocity
@@ -859,7 +878,7 @@ class Network(object):
         :param gravity: The more negative the gravity value is, the stronger the
                         repulsion is.
         :param central_gravity: The gravity attractor to pull the entire network
-                                to the center. 
+                                to the center.
         :param spring_length: The rest length of the edges
         :param spring_strength: The strong the edges springs are
         :param damping: A value ranging from 0 to 1 of how much of the velocity
@@ -906,7 +925,7 @@ class Network(object):
         panning of the network easy.
 
         :param status: True if edges should be hidden on drag
-        
+
         :type status: bool
         """
         self.options.interaction.hideEdgesOnDrag = status
@@ -961,7 +980,7 @@ class Network(object):
 
     def toggle_physics(self, status):
         """
-        Toggles physics simulation 
+        Toggles physics simulation
 
         :param status: When False, nodes are not part of the physics
                        simulation. They will not move except for from
@@ -1000,7 +1019,7 @@ class Network(object):
 
         :param options: The string representation of the Javascript-like object
                         to be used to override default options.
-        
+
         :type options: str
         """
         self.options = self.options.set(options)
