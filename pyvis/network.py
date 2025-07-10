@@ -1,13 +1,15 @@
+from collections import defaultdict
+from io import TextIOWrapper
+from jinja2 import Environment, FileSystemLoader
 import json
+import jsonpickle
+import networkx as nx
 import os
 import shutil
-import tempfile
 import webbrowser
-from collections import defaultdict
 
 import jsonpickle
 import networkx as nx
-from IPython.display import IFrame
 from jinja2 import Environment, FileSystemLoader
 
 from .edge import Edge
@@ -15,6 +17,11 @@ from .node import Node
 from .options import Options, Configure
 from .utils import check_html
 
+# from ase_uni_rehoming.utils.third_party.pyvis.edge import Edge
+# from ase_uni_rehoming.utils.third_party.pyvis.node import Node
+# from ase_uni_rehoming.utils.third_party.pyvis.options import Options, Configure
+# from ase_uni_rehoming.utils.third_party.pyvis.utils import check_html
+# from ase_uni_rehoming.utils.third_party.pyvis.template import template_str
 
 class Network(object):
     """
@@ -461,7 +468,9 @@ class Network(object):
         if not notebook:
             # with open(self.path) as html:
             #     content = html.read()
-            template = self.templateEnv.get_template(self.path)  # Template(content)
+            #template = self.templateEnv.get_template(self.path)  # Template(content)
+            template = self.templateEnv.from_string(template_str)
+
         else:
             template = self.template
 
@@ -533,6 +542,17 @@ class Network(object):
         if open_browser: # open the saved file in a new browser window.
             webbrowser.open(getcwd_name)
 
+    def write_html_on_stream(self, output: TextIOWrapper):
+        """
+        This method gets the data structures supporting the nodes, edges,
+        and options and updates the template to write the HTML holding
+        the visualization.
+
+        @param name: name of the file to save the graph as.
+        """
+
+        self.html = self.generate_html(notebook=False)
+        output.write(self.html)
 
     def show(self, name, local=True,notebook=True):
         """
@@ -546,8 +566,6 @@ class Network(object):
             self.write_html(name, open_browser=False,notebook=True)
         else:
             self.write_html(name, open_browser=True)
-        if notebook:
-            return IFrame(name, width=self.width, height=self.height)
 
     def prep_notebook(self,
                       custom_template=False, custom_template_path=None):
@@ -568,7 +586,8 @@ class Network(object):
             self.set_template(custom_template_path)
         # with open(self.path) as html:
         #     content = html.read()
-        self.template = self.templateEnv.get_template(self.path)  # Template(content)
+        # self.template = self.templateEnv.get_template(self.path)  # Template(content)
+        self.template = self.templateEnv.from_string(template_str)
 
     def set_template(self, path_to_template: str):
         """

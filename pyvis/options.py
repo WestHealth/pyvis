@@ -1,10 +1,11 @@
+# from ase_uni_rehoming.utils.third_party.pyvis.physics import *
 from .physics import *
 
 class EdgeOptions(object):
     """
     This is where the construction of the edges' options takes place.
     So far, the edge smoothness can be switched through this object
-    as well as the edge color's inheritance. 
+    as well as the edge color's inheritance.
     """
 
     def __init__(self):
@@ -32,7 +33,7 @@ class EdgeOptions(object):
         :param smooth_type: Possible options are dynamic, continuous, discrete,
                             diagonalCross, straightCross, horizontal, vertical,
                             curvedCW, curvedCCW, cubicBezier
-        
+
         :type smooth_type: str
         """
         self.smooth.type = smooth_type
@@ -71,7 +72,7 @@ class EdgeOptions(object):
         def __init__(self):
             self.inherit = True
 
-    
+
 class Interaction(object):
     """
     Used for all user interaction with the network. Handles mouse
@@ -101,7 +102,7 @@ class Configure(object):
     def __init__(self, enabled=False, filter_=None):
         self.enabled = enabled
         if filter_:
-            self.filter = filter_ 
+            self.filter = filter_
 
     def __getitem__(self, item):
         return self.__dict__[item]
@@ -112,7 +113,7 @@ class Layout(object):
     Acts as the camera that looks on the canvas.
     Does the animation, zooming and focusing.
     """
-    
+
     def __repr__(self):
         return str(self.__dict__)
 
@@ -123,13 +124,13 @@ class Layout(object):
             self.randomSeed = randomSeed
         self.improvedLayout = improvedLayout
         self.hierarchical = self.Hierarchical(enabled=True)
-    
+
     def set_separation(self, distance):
         """
         The distance between the different levels.
         """
         self.hierarchical.levelSeparation = distance
-    
+
     def set_tree_spacing(self, distance):
         """
         Distance between different trees (independent networks). This is
@@ -171,7 +172,7 @@ class Layout(object):
             self.parentCentralization = parentCentralization
             self.sortMethod = sortMethod
 
-    
+
 
 class Options(object):
     """
@@ -183,7 +184,7 @@ class Options(object):
         - interaction
         - physics
         - edges
-    
+
     The JSON representation of this object is directly passed
     in to the VisJS framework.
     In the future this can be expanded to completely mimic
@@ -214,16 +215,16 @@ class Options(object):
 
         :param new_options: The JSON like string of the options that will
                             override.
-        
+
         :type new_options: str
         """
-        
+
         options = new_options.replace("\n", "").replace(" ", "")
         first_bracket = options.find("{")
         options = options[first_bracket:]
         options = json.loads(options)
         return options
-        
+
 
     def to_json(self):
         return json.dumps(
