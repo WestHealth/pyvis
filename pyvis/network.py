@@ -35,7 +35,7 @@ class Network(object):
                  select_menu=False,
                  filter_menu=False,
                  bgcolor="#ffffff",
-                 font_color=False,
+                 font_color=None,
                  layout=None,
                  heading="",
                  cdn_resources="local"):
@@ -63,7 +63,7 @@ class Network(object):
         :type select_menu: bool
         :type filter_menu: bool
         :type bgcolor: str
-        :type font_color: str
+        :type font_color: str or None
         :type layout: bool
         :type cdn_resources: str
         """
